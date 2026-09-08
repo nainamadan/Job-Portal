@@ -15,7 +15,8 @@ const Navbar = () => {
 
 useEffect(() => {
   const recruiter =
-    localStorage.getItem("isRecruiterLoggedIn") === "true";
+    localStorage.getItem("isRecruiterLoggedIn") === "true" ||
+    !!localStorage.getItem("companyToken");
 
   setIsRecruiterLoggedIn(recruiter);
 }, []);

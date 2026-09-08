@@ -7,6 +7,7 @@ const Dashboard = () => {
 
   const logoutRecruiter = () => {
     localStorage.removeItem("isRecruiterLoggedIn");
+    localStorage.removeItem("companyToken");
     window.location.href = "/";
   };
 

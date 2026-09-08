@@ -19,10 +19,13 @@ const isDashboardRoute = location.pathname.startsWith("/dashboard");
 
   useEffect(() => {
     const recruiter =
-      localStorage.getItem("isRecruiterLoggedIn") === "true";
+      localStorage.getItem("isRecruiterLoggedIn") === "true" ||
+      !!localStorage.getItem("companyToken");
 
     setIsRecruiterLoggedIn(recruiter);
-  }, []);
+  }, [location.pathname]);
+
+  const hasRecruiterAccess = isRecruiterLoggedIn || !!localStorage.getItem("companyToken");
 
   return (
   <>
@@ -34,7 +37,7 @@ const isDashboardRoute = location.pathname.startsWith("/dashboard");
       <Route path="/apply-job/:id" element={<Applyjob />} />
       <Route path="/my-applications" element={<ApplicationDashboard />} />
 
-      {isRecruiterLoggedIn && (
+      {hasRecruiterAccess && (
         <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<AddJob />} />
           <Route path="add-job" element={<AddJob />} />

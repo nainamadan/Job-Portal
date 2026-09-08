@@ -4,7 +4,7 @@ import { jobsData as staticJobsData } from "../assets/assets";
 export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
-
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
   const [jobs, setJobs] = useState([]);
 
   const [searchFilter, setSearchFilter] = useState({
@@ -13,7 +13,9 @@ export const AppContextProvider = ({ children }) => {
   });
 
   const [isSearched, setIsSearched] = useState(false);
-
+const [showRecriterLogin, setShowRecriterLogin] = useState(false);
+const [companyToken, setCompanyToken] = useState(null);
+const[companyData, setCompanyData] = useState(null);
   // ✅ fetch jobs function (future API ready)
   const fetchJobs = () => {
     setJobs(staticJobsData);
@@ -31,6 +33,13 @@ export const AppContextProvider = ({ children }) => {
     setSearchFilter,
     isSearched,
     setIsSearched,
+    showRecriterLogin,
+    setShowRecriterLogin,
+    companyToken,
+    setCompanyToken,
+    companyData,
+    setCompanyData,
+    backendUrl,
   };
 
   return (

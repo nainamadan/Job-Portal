@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AppContext } from "../context/AppContext";
 const RecruiterLogin = ({ open, onClose }) => {
 
   // "login" | "signup" | "forgot-email" | "forgot-otp" | "forgot-reset" | "upload-logo"
@@ -10,13 +12,12 @@ const RecruiterLogin = ({ open, onClose }) => {
   const [logoPreview, setLogoPreview] = useState(null);
 
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const [signupData, setSignupData] = useState({
-    name: "",
-    company: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+ const [signupData, setSignupData] = useState({
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+});
 
   const [forgotEmail, setForgotEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -29,14 +30,13 @@ const RecruiterLogin = ({ open, onClose }) => {
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
-
+const { setShowRecriterLogin, backendUrl, setCompanyToken } = useContext(AppContext);
   if (!open) return null;
 
   const resetAllState = () => {
     setLoginData({ email: "", password: "" });
     setSignupData({
       name: "",
-      company: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -71,22 +71,38 @@ const RecruiterLogin = ({ open, onClose }) => {
     setError("");
   };
 
- const handleLoginSubmit = (e) => {
+const handleLoginSubmit = async (e) => {
   e.preventDefault();
-
+console.log("handleLoginSubmit");
+  console.log(loginData);
   if (!loginData.email || !loginData.password) {
     setError("Please fill in all fields");
     return;
   }
 
-  console.log("Recruiter login data:", loginData);
- localStorage.setItem("isRecruiterLoggedIn", "true");
- navigate("/dashboard");
-  setError("");
-  setInfo("");
+  try {
+    console.log("Before API");
+    const { data } = await axios.post(
+      `${backendUrl}/api/company/login`,
+      loginData
+    );
+    console.log("API Response:", data);
+    if (data.success) {
+      localStorage.setItem("companyToken", data.token);
+      localStorage.setItem("isRecruiterLoggedIn", "true");
+      if (setCompanyToken) setCompanyToken(data.token);
+      handleClose();
+      navigate("/dashboard");
+    } else {
+      setError(data.message);
+    }
+  } catch (error) {
+  console.error("Login Error:", error);
+  console.error("Response:", error.response);
+  console.error("Data:", error.response?.data);
 
-  // Login successful
-  handleClose();
+  setError(error.response?.data?.message || error.message);
+}
 };
   // ---------- Signup ----------
 
@@ -96,44 +112,29 @@ const RecruiterLogin = ({ open, onClose }) => {
     setError("");
   };
 
-  const handleSignupSubmit = (e) => {
-    e.preventDefault();
+const handleSignupSubmit = (e) => {
+  e.preventDefault();
 
-    const { name, company, email, password, confirmPassword } = signupData;
+  const { name, email, password, confirmPassword } = signupData;
 
-    if (!name || !company || !email || !password || !confirmPassword) {
-      setError("Please fill in all fields");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
-
-    // Yahan apna actual signup API call karo
-    console.log("Recruiter signup data:", signupData);
-
-    // Signup ke baad pehle login karwao
-    setSignupData({
-  name: "",
-  company: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-});
-
-setError("");
-setInfo("");
-
-switchView("upload-logo");
+  if (!name || !email || !password || !confirmPassword) {
+    setError("Please fill in all fields");
+    return;
   }
-  // ---------- Forgot password: step 1 (email) ----------
+
+  if (password !== confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
+
+  if (password.length < 6) {
+    setError("Password must be at least 6 characters");
+    return;
+  }
+
+  setError("");
+  switchView("upload-logo");
+};
 
   const handleForgotEmailSubmit = (e) => {
     e.preventDefault();
@@ -264,21 +265,81 @@ switchView("upload-logo");
     setLogoPreview(null);
   };
 
- const handleLogoSubmit = (e) => {
+const handleLogoSubmit = async (e) => {
   e.preventDefault();
 
   if (!companyLogo) {
-    setError("Please upload your company logo");
+    setError("Please upload company logo");
     return;
   }
 
-  console.log("Uploading company logo:", companyLogo);
+  try {
+    setLoading(true);
+    setError("");
 
-  alert("Company profile created successfully!");
+    const formData = new FormData();
 
-  handleClose();
+    formData.append("name", signupData.name);
+    formData.append("email", signupData.email);
+    formData.append("password", signupData.password);
+    formData.append("image", companyLogo);
+
+    const { data } = await axios.post(
+      `${backendUrl}/api/company/register`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    if (data.success) {
+      localStorage.setItem("companyToken", data.token);
+      localStorage.setItem("isRecruiterLoggedIn", "true");
+      if (setCompanyToken) setCompanyToken(data.token);
+
+      alert("Company Registered Successfully");
+
+      handleClose();
+      navigate("/dashboard");
+    } else {
+      setError(data.message);
+    }
+  } catch (error) {
+    console.error(error);
+
+    setError(
+      error.response?.data?.message || "Something went wrong"
+    );
+  } finally {
+    setLoading(false);
+  }
 };
- 
+//  const handleSkipLogo = async () => {
+//   try {
+//     const formData = new FormData();
+
+//     formData.append("name", signupData.name);
+//     formData.append("email", signupData.email);
+//     formData.append("password", signupData.password);
+
+//     const { data } = await axios.post(
+//       "http://localhost:5000/api/company/register",
+//       formData
+//     );
+
+//     if (data.success) {
+//       localStorage.setItem("companyToken", data.token);
+
+//       handleClose();
+
+//       navigate("/dashboard");
+//     }
+//   } catch (error) {
+//     setError(error.response?.data?.message || "Something went wrong");
+//   }
+// };
 
   // ---------- Shared bits ----------
 
@@ -392,6 +453,7 @@ switchView("upload-logo");
             <button
               type="submit"
               className="mt-2 w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+              onClick={() => console.log("Clicked")}
             >
               Login
             </button>
@@ -430,7 +492,7 @@ switchView("upload-logo");
               />
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium mb-1">
                 Company
               </label>
@@ -442,7 +504,7 @@ switchView("upload-logo");
                 placeholder="Company name"
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium mb-1">
@@ -730,14 +792,14 @@ switchView("upload-logo");
               Save and Continue
             </button>
 
-            <p className="text-center text-sm text-gray-500 mt-4">
+            {/* <p className="text-center text-sm text-gray-500 mt-4">
               <span
                 className="text-blue-600 cursor-pointer font-medium"
                 onClick={handleSkipLogo}
               >
                 Skip for now
               </span>
-            </p>
+            </p> */}
 
           </form>
 
