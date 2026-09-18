@@ -1,22 +1,62 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
+import { useAuth } from "@clerk/clerk-react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { AppContext } from "../context/AppContext";
 
-const ResumeModal = ({ open, onClose }) => {
-  const [resume, setResume] = useState(null);
+const ResumeModal = ({ open, onClose, existingResume, onSuccess }) => {
+  const { getToken } = useAuth();
+  const { backendUrl } = useContext(AppContext);
+  const [resumeFile, setResumeFile] = useState(null);
+  const [loading, setLoading] = useState(false);
   const editInputRef = useRef(null);
 
   if (!open) return null;
 
-  const handleUpload = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setResume(e.target.files[0]);
+  const handleUpload = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    try {
+      setLoading(true);
+      setResumeFile(file);
+
+      const token = await getToken();
+      const formData = new FormData();
+      formData.append("resume", file);
+
+      const { data } = await axios.post(`${backendUrl}/api/users/update-resume`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (data.success) {
+        toast.success(data.message || "Resume updated successfully!");
+        if (onSuccess) onSuccess();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error("Upload Resume Error:", error);
+      toast.error(error.response?.data?.message || "Failed to upload resume");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleView = () => {
-    if (!resume) return;
+  const handleViewExisting = () => {
+    if (existingResume) {
+      window.open(existingResume, "_blank");
+    }
+  };
 
-    const fileURL = URL.createObjectURL(resume);
-    window.open(fileURL, "_blank");
+  const handleViewLocal = () => {
+    if (resumeFile) {
+      const fileURL = URL.createObjectURL(resumeFile);
+      window.open(fileURL, "_blank");
+    }
   };
 
   const handleEditClick = () => {
@@ -26,12 +66,9 @@ const ResumeModal = ({ open, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4">
       <div className="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden">
-
         {/* Header */}
         <div className="flex justify-between items-center px-8 py-6 border-b">
-          <h2 className="text-2xl font-bold text-gray-800">
-            My Resume
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-800">My Resume</h2>
 
           <button
             onClick={onClose}
@@ -43,22 +80,21 @@ const ResumeModal = ({ open, onClose }) => {
 
         {/* Body */}
         <div className="p-8">
-
-          {!resume ? (
+          {loading ? (
+            <div className="py-12 text-center text-blue-600 font-medium">
+              Uploading resume to cloud...
+            </div>
+          ) : !existingResume && !resumeFile ? (
             <div className="border-2 border-dashed border-gray-300 rounded-xl p-10 text-center">
-
               <div className="text-6xl mb-4">📄</div>
 
-              <h3 className="text-xl font-semibold">
-                No Resume Uploaded
-              </h3>
+              <h3 className="text-xl font-semibold">No Resume Uploaded</h3>
 
               <p className="text-gray-500 mt-2">
                 Upload your latest resume (PDF, DOC or DOCX)
               </p>
 
               <label className="cursor-pointer">
-
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx"
@@ -69,41 +105,37 @@ const ResumeModal = ({ open, onClose }) => {
                 <div className="mt-6 inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition">
                   Upload Resume
                 </div>
-
               </label>
-
             </div>
           ) : (
             <div className="border rounded-xl p-8 text-center bg-gray-50">
-
               <div className="text-6xl mb-4">📄</div>
 
               <h3 className="text-xl font-bold text-gray-800">
-                {resume.name}
+                {resumeFile ? resumeFile.name : "Resume Uploaded"}
               </h3>
 
-              <p className="text-gray-500 mt-2">
-                {(resume.size / 1024).toFixed(1)} KB
-              </p>
+              {resumeFile && (
+                <p className="text-gray-500 mt-2">
+                  {(resumeFile.size / 1024).toFixed(1)} KB
+                </p>
+              )}
 
               <div className="flex justify-center gap-4 mt-8">
-
                 <button
-                  onClick={handleView}
-                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition"
+                  onClick={existingResume ? handleViewExisting : handleViewLocal}
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition font-medium"
                 >
                   View Resume
                 </button>
 
                 <button
                   onClick={handleEditClick}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition font-medium"
                 >
                   Replace Resume
                 </button>
-
               </div>
-
             </div>
           )}
 
@@ -115,21 +147,17 @@ const ResumeModal = ({ open, onClose }) => {
             ref={editInputRef}
             onChange={handleUpload}
           />
-
         </div>
 
         {/* Footer */}
         <div className="border-t px-8 py-5 flex justify-end">
-
           <button
             onClick={onClose}
             className="px-6 py-2 rounded-lg border hover:bg-gray-100 transition"
           >
             Close
           </button>
-
         </div>
-
       </div>
     </div>
   );

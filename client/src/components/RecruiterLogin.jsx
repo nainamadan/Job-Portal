@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 const RecruiterLogin = ({ open, onClose }) => {
 
@@ -30,7 +31,7 @@ const RecruiterLogin = ({ open, onClose }) => {
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
-const { setShowRecriterLogin, backendUrl, setCompanyToken } = useContext(AppContext);
+const { setShowRecriterLogin, backendUrl, setCompanyToken, fetchCompanyData } = useContext(AppContext);
   if (!open) return null;
 
   const resetAllState = () => {
@@ -73,36 +74,31 @@ const { setShowRecriterLogin, backendUrl, setCompanyToken } = useContext(AppCont
 
 const handleLoginSubmit = async (e) => {
   e.preventDefault();
-console.log("handleLoginSubmit");
-  console.log(loginData);
   if (!loginData.email || !loginData.password) {
     setError("Please fill in all fields");
     return;
   }
 
   try {
-    console.log("Before API");
     const { data } = await axios.post(
       `${backendUrl}/api/company/login`,
       loginData
     );
-    console.log("API Response:", data);
     if (data.success) {
       localStorage.setItem("companyToken", data.token);
       localStorage.setItem("isRecruiterLoggedIn", "true");
       if (setCompanyToken) setCompanyToken(data.token);
+      if (fetchCompanyData) fetchCompanyData();
+      toast.success("Login Successful");
       handleClose();
       navigate("/dashboard");
     } else {
       setError(data.message);
     }
   } catch (error) {
-  console.error("Login Error:", error);
-  console.error("Response:", error.response);
-  console.error("Data:", error.response?.data);
-
-  setError(error.response?.data?.message || error.message);
-}
+    console.error("Login Error:", error);
+    setError(error.response?.data?.message || error.message);
+  }
 };
   // ---------- Signup ----------
 
@@ -298,8 +294,9 @@ const handleLogoSubmit = async (e) => {
       localStorage.setItem("companyToken", data.token);
       localStorage.setItem("isRecruiterLoggedIn", "true");
       if (setCompanyToken) setCompanyToken(data.token);
+      if (fetchCompanyData) fetchCompanyData();
 
-      alert("Company Registered Successfully");
+      toast.success("Company Registered Successfully");
 
       handleClose();
       navigate("/dashboard");

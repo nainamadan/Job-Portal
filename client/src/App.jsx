@@ -1,55 +1,53 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route , useLocation } from 'react-router-dom'
+import React, { useContext } from "react";
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Home from './pages/Home'
-import Applyjob from './pages/Applyjob'
+import Home from './pages/Home';
+import Applyjob from './pages/Applyjob';
 import JobDetails from "./pages/JobDetails";
+import AIMatcher from "./pages/AIMatcher";
 import ApplicationDashboard from "./pages/ApplicationDashboard";
- import Dashboard from "./pages/Dashboard";
- import AddJob from "./pages/AddJob";
+import Dashboard from "./pages/Dashboard";
+import AddJob from "./pages/AddJob";
 import ManageJobs from "./pages/ManageJobs";
 import ViewApplications from "./pages/ViewApplications";
+import { AppContext } from "./context/AppContext";
 
 const App = () => {
-const location = useLocation();
+  const location = useLocation();
+  const { companyToken } = useContext(AppContext);
 
-const isDashboardRoute = location.pathname.startsWith("/dashboard");
-  const [isRecruiterLoggedIn, setIsRecruiterLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const recruiter =
-      localStorage.getItem("isRecruiterLoggedIn") === "true" ||
-      !!localStorage.getItem("companyToken");
-
-    setIsRecruiterLoggedIn(recruiter);
-  }, [location.pathname]);
-
-  const hasRecruiterAccess = isRecruiterLoggedIn || !!localStorage.getItem("companyToken");
+  const isDashboardRoute = location.pathname.startsWith("/dashboard");
+  const hasRecruiterAccess = !!companyToken || !!localStorage.getItem("companyToken");
 
   return (
-  <>
-    {!isDashboardRoute && <Navbar />}
+    <>
+      <ToastContainer position="top-right" autoClose={3000} />
+      {!isDashboardRoute && <Navbar />}
 
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/job/:id" element={<JobDetails />} />
-      <Route path="/apply-job/:id" element={<Applyjob />} />
-      <Route path="/my-applications" element={<ApplicationDashboard />} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/job/:id" element={<JobDetails />} />
+        <Route path="/apply-job/:id" element={<Applyjob />} />
+        <Route path="/ai-match" element={<AIMatcher />} />
+        <Route path="/my-applications" element={<ApplicationDashboard />} />
 
-      {hasRecruiterAccess && (
-        <Route path="/dashboard" element={<Dashboard />}>
+        <Route
+          path="/dashboard"
+          element={hasRecruiterAccess ? <Dashboard /> : <Navigate to="/" replace />}
+        >
           <Route index element={<AddJob />} />
           <Route path="add-job" element={<AddJob />} />
           <Route path="manage-jobs" element={<ManageJobs />} />
           <Route path="view-applications" element={<ViewApplications />} />
         </Route>
-      )}
-    </Routes>
+      </Routes>
 
-    {!isDashboardRoute && <Footer />}
-  </>
-);
+      {!isDashboardRoute && <Footer />}
+    </>
+  );
 };
 
 export default App;

@@ -1,14 +1,20 @@
-import React, { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
 
 const Dashboard = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();
+
+  const { companyData, setCompanyToken, setCompanyData } = useContext(AppContext);
 
   const logoutRecruiter = () => {
     localStorage.removeItem("isRecruiterLoggedIn");
     localStorage.removeItem("companyToken");
-    window.location.href = "/";
+    if (setCompanyToken) setCompanyToken(null);
+    if (setCompanyData) setCompanyData(null);
+    navigate("/");
   };
 
   return (
@@ -20,8 +26,9 @@ const Dashboard = () => {
 
         <img
           src={assets.logo}
-          className="h-10"
-          alt=""
+          className="h-10 cursor-pointer"
+          alt="Logo"
+          onClick={() => navigate("/")}
         />
 
         <div className="relative">
@@ -30,15 +37,19 @@ const Dashboard = () => {
             onClick={() => setShowMenu(!showMenu)}
             className="flex items-center gap-3"
           >
+
+            {/* Company Logo */}
             <img
-              src={assets.company_icon}
-              className="w-10 h-10 rounded-full"
-              alt=""
+              src={companyData?.image || assets.company_icon}
+              className="w-10 h-10 rounded-full object-cover border"
+              alt="Company"
             />
 
+            {/* Company Name */}
             <p className="font-medium">
-              HR Recruiter
+              {companyData?.name || companyData?.companyName || "Recruiter"}
             </p>
+
           </button>
 
           {showMenu && (

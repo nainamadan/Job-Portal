@@ -1,5 +1,6 @@
 import Company from "../models/Company.js";
 import Job from "../models/Job.js";
+import JobApplication from "../models/JobAppliaction.js";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import generateToken from "../utils/generateToken.js";
@@ -314,16 +315,21 @@ category,
 // Get all jobs posted by company
 export const getCompanyPostedJobs = async (req, res) => {
   try {
-    // Get the logged-in company's ID from protectCompany middleware
     const companyId = req.companyId;
 
-    // Find all jobs posted by this company
     const jobs = await Job.find({ companyId });
 
-    // Send the jobs in the response
+    const jobsData = await Promise.all(
+      jobs.map(async (job) => {
+        const applicants = await JobApplication.find({ jobId: job._id });
+        return { ...job._doc, applicants: applicants.length };
+      })
+    );
+
     return res.status(200).json({
       success: true,
-      jobs,
+      jobsData,
+      jobs: jobsData,
     });
 
   } catch (error) {
@@ -336,12 +342,72 @@ export const getCompanyPostedJobs = async (req, res) => {
   }
 };
 
-// Get applicants for a specific job
-export const getJobApplicants = async (req, res) => {};
+// Get applicants for company jobs
+export const getJobApplicants = async (req, res) => {
+  try {
+    const companyId = req.companyId;
+
+    const applications = await JobApplication.find({ companyId })
+      .populate("userId", "name email image resume")
+      .populate("jobId", "title location category level salary description")
+      .exec();
+
+    return res.status(200).json({
+      success: true,
+      applications: applications || [],
+    });
+  } catch (error) {
+    console.error("Get Job Applicants Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 export const getCompanyJobApplicants = getJobApplicants;
 
 // Change application status
-export const changeJobApplicationStatus = async (req, res) => {};
+export const changeJobApplicationStatus = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const { status } = req.body;
+    const companyId = req.companyId;
+
+    const application = await JobApplication.findById(applicationId);
+
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        message: "Application not found",
+      });
+    }
+
+    if (application.companyId.toString() !== companyId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to modify this application",
+      });
+    }
+
+    application.status = status;
+    await application.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Application status updated successfully",
+      application,
+    });
+
+  } catch (error) {
+    console.error("Change Job Application Status Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 // Change job visibility (active/inactive)
 export const changeVisibility = async (req, res) => {

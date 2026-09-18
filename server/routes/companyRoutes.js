@@ -32,7 +32,7 @@ router.get("/list-jobs",protectCompany, getCompanyPostedJobs);
 // router.get("/job-applicants/:jobId", getJobApplicants);
 
 // Job Application
-router.put("/change-status/:applicationId", changeJobApplicationStatus);
+router.put("/change-status/:applicationId", protectCompany, changeJobApplicationStatus);
 
 // Job Visibility
 router.put("/change-visibility", protectCompany, changeVisibility);

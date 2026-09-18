@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 const AddJob = () => {
+  const navigate = useNavigate();
+  const { backendUrl, companyToken, fetchJobs } = useContext(AppContext);
+
   const [jobData, setJobData] = useState({
     title: "",
     category: "",
@@ -12,6 +19,7 @@ const AddJob = () => {
   });
 
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setJobData({
@@ -19,7 +27,8 @@ const AddJob = () => {
       [e.target.name]: e.target.value,
     });
   };
-const modules = {
+
+  const modules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
       ["bold", "italic", "underline", "strike"],
@@ -29,15 +38,52 @@ const modules = {
       ["clean"],
     ],
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const finalData = {
-      ...jobData,
-      description,
-    };
+    if (!jobData.title || !description || !jobData.category || !jobData.location || !jobData.level || !jobData.salary) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
 
-    console.log(finalData);
+    try {
+      setLoading(true);
+      const token = companyToken || localStorage.getItem("companyToken");
+
+      const finalData = {
+        ...jobData,
+        salary: Number(jobData.salary),
+        description,
+      };
+
+      const { data } = await axios.post(
+        `${backendUrl}/api/company/post-job`,
+        finalData,
+        { headers: { token } }
+      );
+
+      if (data.success) {
+        toast.success(data.message || "Job Posted Successfully!");
+        setJobData({
+          title: "",
+          category: "",
+          location: "",
+          level: "",
+          salary: "",
+        });
+        setDescription("");
+        if (fetchJobs) fetchJobs();
+        navigate("/dashboard/manage-jobs");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error("Add Job Error:", error);
+      toast.error(error.response?.data?.message || "Failed to post job");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -167,9 +213,11 @@ const modules = {
         </div>
 
         <button
-          className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-lg font-semibold transition"
+          type="submit"
+          disabled={loading}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-lg font-semibold transition disabled:opacity-60"
         >
-          Add Job
+          {loading ? "Adding Job..." : "Add Job"}
         </button>
 
       </form>

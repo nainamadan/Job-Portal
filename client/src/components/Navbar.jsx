@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import RecruiterLogin from "./RecruiterLogin";
+import { AppContext } from "../context/AppContext";
 
 import {
   SignedIn,
@@ -11,15 +12,8 @@ import {
 } from "@clerk/clerk-react";
 
 const Navbar = () => {
-  const [isRecruiterLoggedIn, setIsRecruiterLoggedIn] = useState(false);
-
-useEffect(() => {
-  const recruiter =
-    localStorage.getItem("isRecruiterLoggedIn") === "true" ||
-    !!localStorage.getItem("companyToken");
-
-  setIsRecruiterLoggedIn(recruiter);
-}, []);
+  const { companyToken } = useContext(AppContext);
+  const isRecruiterLoggedIn = !!companyToken || !!localStorage.getItem("companyToken");
   const [showRecruiterLogin, setShowRecruiterLogin] = useState(false);
   const navigate = useNavigate();
 

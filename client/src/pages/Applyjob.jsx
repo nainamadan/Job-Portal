@@ -1,21 +1,37 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useUser, useAuth, useClerk } from "@clerk/clerk-react";
+import axios from "axios";
+import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 
 const Applyjob = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { jobs } = useContext(AppContext);
+  const { user, isSignedIn } = useUser();
+  const { getToken } = useAuth();
+  const { openSignIn } = useClerk();
+  const { jobs, backendUrl } = useContext(AppContext);
 
   const job = jobs.find((item) => item._id === id);
 
   const [form, setForm] = useState({
-    name: "",
-    email: "",
+    name: user?.fullName || "",
+    email: user?.primaryEmailAddress?.emailAddress || "",
     phone: "",
     cover: "",
   });
+
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        name: prev.name || user.fullName || "",
+        email: prev.email || user.primaryEmailAddress?.emailAddress || "",
+      }));
+    }
+  }, [user]);
 
   const [resume, setResume] = useState(null);
   const [dragActive, setDragActive] = useState(false);
@@ -78,7 +94,6 @@ const Applyjob = () => {
     } else if (!/^\d{10}$/.test(form.phone)) {
       newErrors.phone = "Enter a valid 10-digit phone number";
     }
-    if (!resume) newErrors.resume = "Attach your resume to apply";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -88,26 +103,60 @@ const Applyjob = () => {
     e.preventDefault();
     if (!validate()) return;
 
+    if (!isSignedIn) {
+      toast.info("Please sign in to apply for jobs");
+      openSignIn();
+      return;
+    }
+
     try {
       setSubmitting(true);
+      const token = await getToken();
 
-      const formData = new FormData();
-      formData.append("jobId", job._id);
-      formData.append("name", form.name);
-      formData.append("email", form.email);
-      formData.append("phone", form.phone);
-      formData.append("cover", form.cover);
-      formData.append("resume", resume);
+      // If user uploaded a new resume, update resume first
+      if (resume) {
+        const resumeData = new FormData();
+        resumeData.append("resume", resume);
+        resumeData.append("name", form.name);
+        resumeData.append("email", form.email);
 
-      // TODO: wire to your actual endpoint
-      // await axios.post(`${backendUrl}/api/applications`, formData);
+        await axios.post(`${backendUrl}/api/users/update-resume`, resumeData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
 
-      setSubmitted(true);
-      setForm({ name: "", email: "", phone: "", cover: "" });
-      setResume(null);
+      // Submit application
+      const { data } = await axios.post(
+        `${backendUrl}/api/users/apply`,
+        {
+          jobId: job._id,
+          name: form.name,
+          email: form.email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message || "Application submitted successfully!");
+        setSubmitted(true);
+        setForm({ name: "", email: "", phone: "", cover: "" });
+        setResume(null);
+      } else {
+        toast.error(data.message);
+        setErrors({ submit: data.message });
+      }
     } catch (err) {
-      console.error(err);
-      setErrors({ submit: "Something went wrong. Please try again." });
+      console.error("Apply Job Error:", err);
+      const msg = err.response?.data?.message || "Something went wrong. Please try again.";
+      toast.error(msg);
+      setErrors({ submit: msg });
     } finally {
       setSubmitting(false);
     }
@@ -310,6 +359,19 @@ const Applyjob = () => {
                   {errors.resume && (
                     <p className="text-red-500 text-xs mt-1">{errors.resume}</p>
                   )}
+
+                  {/* AI Resume Matcher Button */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      navigate("/ai-match", {
+                        state: { jobId: job._id, resumeName: resume?.name },
+                      })
+                    }
+                    className="w-full mt-2.5 py-2.5 px-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-2 shadow-sm transition-all"
+                  >
+                    <span>✨</span> Check AI Resume Match Score
+                  </button>
                 </div>
 
                 <div>

@@ -1,16 +1,20 @@
 import React, { useContext, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 
 const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { jobs } = useContext(AppContext);
+  const { jobs, backendUrl } = useContext(AppContext);
 
   const job = jobs.find((item) => item._id === id);
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [skillsText, setSkillsText] = useState("");
+  const [matchData, setMatchData] = useState(null);
+  const [analyzing, setAnalyzing] = useState(false);
 
   const relatedJobs = useMemo(() => {
     if (!job) return [];
@@ -183,6 +187,138 @@ const JobDetails = () => {
               className="prose prose-slate max-w-none prose-headings:font-semibold prose-a:text-indigo-600"
               dangerouslySetInnerHTML={{ __html: job.description }}
             />
+          </div>
+
+          {/* AI Skill Match Analysis Widget */}
+          <div className="bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-800 text-white rounded-2xl p-6 sm:p-8 shadow-md">
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <div>
+                <span className="inline-block bg-indigo-500/30 text-indigo-200 text-xs font-semibold px-3 py-1 rounded-full mb-1 border border-indigo-400/30">
+                  ✨ Instant Match Check
+                </span>
+                <h3 className="text-xl font-bold text-white">
+                  AI Skill Match Analyzer
+                </h3>
+              </div>
+              <button
+                onClick={() => navigate("/ai-match")}
+                className="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-2 rounded-lg font-semibold transition"
+              >
+                Full Matcher →
+              </button>
+            </div>
+
+            <p className="text-slate-300 text-sm mb-4">
+              Paste your resume or skills below to see your match percentage, matched skills, and missing requirements for this position.
+            </p>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!skillsText.trim()) return;
+                try {
+                  setAnalyzing(true);
+                  const { data } = await axios.post(`${backendUrl}/api/jobs/match`, {
+                    jobId: job._id,
+                    jobTitle: job.title,
+                    jobDescription: job.description,
+                    resumeText: skillsText,
+                  });
+                  if (data.success) {
+                    setMatchData(data);
+                  }
+                } catch (err) {
+                  console.error(err);
+                } finally {
+                  setAnalyzing(false);
+                }
+              }}
+              className="space-y-4"
+            >
+              <textarea
+                rows="3"
+                value={skillsText}
+                onChange={(e) => setSkillsText(e.target.value)}
+                placeholder="Paste your skills or resume text (e.g., React, JavaScript, HTML/CSS, Node.js...)"
+                className="w-full bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-400 outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 resize-none"
+              />
+
+              <button
+                type="submit"
+                disabled={analyzing}
+                className="bg-indigo-500 hover:bg-indigo-400 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition shadow"
+              >
+                {analyzing ? "Analyzing..." : "Calculate Match %"}
+              </button>
+            </form>
+
+            {matchData && (
+              <div className="mt-6 pt-6 border-t border-slate-700/80 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-slate-400 font-semibold uppercase">
+                      Skill Match Score
+                    </p>
+                    <p className="text-2xl font-extrabold text-white mt-0.5">
+                      {matchData.matchLevel} ({matchData.matchPercentage}%)
+                    </p>
+                  </div>
+                  <div
+                    className={`w-14 h-14 rounded-full border-2 flex items-center justify-center font-bold text-lg ${
+                      matchData.matchPercentage >= 75
+                        ? "border-emerald-400 text-emerald-400 bg-emerald-950/40"
+                        : matchData.matchPercentage >= 50
+                        ? "border-amber-400 text-amber-400 bg-amber-950/40"
+                        : "border-rose-400 text-rose-400 bg-rose-950/40"
+                    }`}
+                  >
+                    {matchData.matchPercentage}%
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4 text-xs">
+                  <div className="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700">
+                    <p className="font-bold text-emerald-400 mb-2">
+                      ✅ Matched Skills ({matchData.matchedSkills.length})
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {matchData.matchedSkills.length > 0 ? (
+                        matchData.matchedSkills.map((s, i) => (
+                          <span
+                            key={i}
+                            className="bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800"
+                          >
+                            ✅ {s}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-slate-400">None detected</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700">
+                    <p className="font-bold text-rose-400 mb-2">
+                      ❌ Missing Skills ({matchData.missingSkills.length})
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {matchData.missingSkills.length > 0 ? (
+                        matchData.missingSkills.map((s, i) => (
+                          <span
+                            key={i}
+                            className="bg-rose-950 text-rose-300 px-2 py-0.5 rounded border border-rose-800"
+                          >
+                            ❌ {s}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-emerald-400">All required skills present!</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {job.companyId?.about && (
