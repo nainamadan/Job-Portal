@@ -241,21 +241,23 @@ const ViewApplications = () => {
 
                     {/* Resume */}
                     <td className="px-4 py-4">
-                      {user.resume ? (
+                      {user.resume && user.resume.trim() !== "" && !user.resume.includes("dummy.pdf") ? (
                         <a
                           href={user.resume}
                           target="_blank"
                           rel="noreferrer"
                           className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition border border-indigo-200"
+                          title={`Open resume: ${user.resume}`}
                         >
                           📄 View Resume
                         </a>
                       ) : (
                         <span className="text-slate-400 text-xs italic">
-                          No Resume
+                          No Resume Uploaded
                         </span>
                       )}
                     </td>
+
 
                     {/* Status */}
                     <td className="px-4 py-4 text-center">

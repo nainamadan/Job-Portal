@@ -1,3 +1,4 @@
+
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
@@ -13,7 +14,9 @@ import {
 
 const Navbar = () => {
   const { companyToken } = useContext(AppContext);
-  const isRecruiterLoggedIn = !!companyToken || !!localStorage.getItem("companyToken");
+  const isRecruiterLoggedIn =
+    !!companyToken || !!localStorage.getItem("companyToken");
+
   const [showRecruiterLogin, setShowRecruiterLogin] = useState(false);
   const navigate = useNavigate();
 
@@ -31,32 +34,33 @@ const Navbar = () => {
         </Link>
 
         {/* RIGHT SIDE */}
-        <div className="flex items-center gap-3 sm:gap-5">
+        <div className="flex items-center gap-2 sm:gap-3">
 
           {/* My Applications */}
           <button
             onClick={() => navigate("/my-applications")}
-            className="px-5 py-2 rounded-lg bg-blue-600 text-white"
+            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold transition shadow-sm"
           >
             My Applications
           </button>
 
+
           {/* Recruiter Login */}
-      {isRecruiterLoggedIn ? (
-  <button
-    onClick={() => navigate("/dashboard")}
-    className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
-  >
-    Recruiter Dashboard
-  </button>
-) : (
-  <button
-    onClick={() => setShowRecruiterLogin(true)}
-    className="px-4 py-2 border border-gray-300 rounded-lg font-medium hover:bg-gray-100 transition"
-  >
-    Recruiter Login
-  </button>
-)}
+          {isRecruiterLoggedIn ? (
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
+            >
+              Recruiter Dashboard
+            </button>
+          ) : (
+            <button
+              onClick={() => setShowRecruiterLogin(true)}
+              className="px-4 py-2 border border-gray-300 rounded-lg font-medium hover:bg-gray-100 transition"
+            >
+              Recruiter Login
+            </button>
+          )}
 
           <RecruiterLogin
             open={showRecruiterLogin}

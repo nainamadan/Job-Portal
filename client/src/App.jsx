@@ -8,7 +8,9 @@ import Home from './pages/Home';
 import Applyjob from './pages/Applyjob';
 import JobDetails from "./pages/JobDetails";
 import AIMatcher from "./pages/AIMatcher";
+import ResumeATSSimulator from "./pages/ResumeATSSimulator";
 import ApplicationDashboard from "./pages/ApplicationDashboard";
+import SavedJobs from "./pages/SavedJobs";
 import Dashboard from "./pages/Dashboard";
 import AddJob from "./pages/AddJob";
 import ManageJobs from "./pages/ManageJobs";
@@ -32,7 +34,11 @@ const App = () => {
         <Route path="/job/:id" element={<JobDetails />} />
         <Route path="/apply-job/:id" element={<Applyjob />} />
         <Route path="/ai-match" element={<AIMatcher />} />
+        <Route path="/ats-simulator" element={<ResumeATSSimulator />} />
         <Route path="/my-applications" element={<ApplicationDashboard />} />
+        <Route path="/saved-jobs" element={<SavedJobs />} />
+
+
 
         <Route
           path="/dashboard"

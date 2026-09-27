@@ -1,6 +1,8 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 
@@ -8,6 +10,8 @@ const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { jobs, backendUrl } = useContext(AppContext);
+  const { isSignedIn } = useUser();
+  const { getToken } = useAuth();
 
   const job = jobs.find((item) => item._id === id);
   const [saved, setSaved] = useState(false);
@@ -15,6 +19,63 @@ const JobDetails = () => {
   const [skillsText, setSkillsText] = useState("");
   const [matchData, setMatchData] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
+
+  // Check initial saved status
+  useEffect(() => {
+    if (!id) return;
+    try {
+      const localSaved = JSON.parse(localStorage.getItem("savedJobIds")) || [];
+      if (localSaved.includes(id.toString())) {
+        setSaved(true);
+      }
+    } catch (e) {
+      console.warn("Error reading local saved jobs:", e);
+    }
+  }, [id]);
+
+  const toggleSaveJob = async () => {
+    if (!job) return;
+
+    try {
+      let localSaved = [];
+      try {
+        localSaved = JSON.parse(localStorage.getItem("savedJobIds")) || [];
+      } catch (e) {
+        localSaved = [];
+      }
+
+      const jobIdStr = job._id.toString();
+      let nextSavedState = false;
+
+      if (localSaved.includes(jobIdStr)) {
+        localSaved = localSaved.filter((i) => i !== jobIdStr);
+        nextSavedState = false;
+        toast.info("Job removed from saved list");
+      } else {
+        localSaved.push(jobIdStr);
+        nextSavedState = true;
+        toast.success("Job saved to your bookmarks! 💾");
+      }
+
+      localStorage.setItem("savedJobIds", JSON.stringify(localSaved));
+      setSaved(nextSavedState);
+
+      if (isSignedIn) {
+        try {
+          const token = await getToken();
+          await axios.post(
+            `${backendUrl}/api/users/toggle-save`,
+            { jobId: job._id },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+        } catch (apiErr) {
+          console.warn("Backend toggle-save notice:", apiErr.message);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const relatedJobs = useMemo(() => {
     if (!job) return [];
@@ -113,20 +174,20 @@ const JobDetails = () => {
 
               <div className="flex items-center gap-2 flex-shrink-0">
                 <button
-                  onClick={() => setSaved((prev) => !prev)}
-                  title={saved ? "Remove from saved" : "Save job"}
-                  className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-colors ${
+                  onClick={toggleSaveJob}
+                  title={saved ? "Remove from saved jobs" : "Save job to bookmarks"}
+                  className={`px-3 py-2 rounded-xl border flex items-center gap-1.5 font-bold text-xs transition-colors shadow-sm ${
                     saved
-                      ? "bg-indigo-50 border-indigo-200 text-indigo-600"
-                      : "border-slate-200 text-slate-400 hover:border-indigo-300 hover:text-indigo-600"
+                      ? "bg-amber-500 border-amber-500 text-white"
+                      : "border-slate-300 text-slate-600 hover:border-amber-400 hover:text-amber-600 hover:bg-amber-50"
                   }`}
                 >
-                  {saved ? "★" : "☆"}
+                  <span>{saved ? "★ Saved" : "☆ Save"}</span>
                 </button>
                 <button
                   onClick={handleShare}
                   title="Share this job"
-                  className="w-10 h-10 rounded-lg border border-slate-200 text-slate-400 hover:border-indigo-300 hover:text-indigo-600 flex items-center justify-center transition-colors relative"
+                  className="w-10 h-10 rounded-xl border border-slate-200 text-slate-400 hover:border-indigo-300 hover:text-indigo-600 flex items-center justify-center transition-colors relative"
                 >
                   ⤴
                   {copied && (
@@ -137,6 +198,7 @@ const JobDetails = () => {
                 </button>
               </div>
             </div>
+
 
             <div className="flex gap-2 mt-5 flex-wrap">
               <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-md">
@@ -393,6 +455,41 @@ const JobDetails = () => {
               </div>
             </div>
           )}
+          {/* Upskill / Learning Box */}
+<div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl border border-indigo-100 shadow-sm p-6">
+  <div className="flex items-start gap-3">
+    <div className="w-11 h-11 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xl flex-shrink-0">
+      📚
+    </div>
+
+    <div>
+      <h2 className="text-base font-bold text-slate-900">
+        Missing skills in your resume?
+      </h2>
+
+      <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+        Learn the skills required for this job and improve your resume
+        with the right courses.
+      </p>
+    </div>
+  </div>
+
+  <button
+    onClick={() =>
+      window.open(
+        "https://learning-management-system-hazel-two.vercel.app/",
+        "_blank"
+      )
+    }
+    className="w-full mt-5 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg text-sm font-semibold transition shadow-sm shadow-indigo-200"
+  >
+    Learn Missing Skills →
+  </button>
+
+  <p className="text-[11px] text-slate-400 text-center mt-3">
+    Explore courses & build job-ready skills
+  </p>
+</div>
         </div>
 
       </div>

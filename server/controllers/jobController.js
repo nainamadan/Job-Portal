@@ -1,5 +1,6 @@
+import mongoose from "mongoose";
 import Job from "../models/Job.js";
-import { analyzeJobMatch } from "../utils/skillMatcher.js";
+import { analyzeJobMatch, analyzeResumeATS } from "../utils/skillMatcher.js";
 
 // get all jobs
 export const getJobs = async (req, res) => {
@@ -29,6 +30,13 @@ export const getJobs = async (req, res) => {
 export const getJobById = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found",
+      });
+    }
 
     const job = await Job.findById(id)
       .populate({
@@ -66,7 +74,7 @@ export const matchJobWithResume = async (req, res) => {
     let targetTitle = jobTitle || "";
     let targetDescription = jobDescription || "";
 
-    if (jobId) {
+    if (jobId && mongoose.Types.ObjectId.isValid(jobId)) {
       const job = await Job.findById(jobId);
       if (job) {
         targetTitle = targetTitle || job.title;
@@ -74,7 +82,7 @@ export const matchJobWithResume = async (req, res) => {
       }
     }
 
-    if (!targetDescription && !targetTitle) {
+    if (!targetDescription && !targetTitle && !jobId) {
       return res.status(400).json({
         success: false,
         message: "Job ID or Job description is required",
@@ -87,9 +95,16 @@ export const matchJobWithResume = async (req, res) => {
       targetTitle
     );
 
+    const atsAnalysis = analyzeResumeATS(
+      resumeText || "",
+      targetDescription,
+      targetTitle
+    );
+
     return res.status(200).json({
       success: true,
       ...matchAnalysis,
+      ...atsAnalysis,
     });
 
   } catch (error) {
@@ -101,3 +116,41 @@ export const matchJobWithResume = async (req, res) => {
     });
   }
 };
+
+
+// ATS Resume Analysis Controller
+export const analyzeATS = async (req, res) => {
+  try {
+    const { resumeText, jobId, jobTitle, jobDescription } = req.body;
+
+    let targetTitle = jobTitle || "";
+    let targetDescription = jobDescription || "";
+
+    if (jobId && mongoose.Types.ObjectId.isValid(jobId)) {
+      const job = await Job.findById(jobId);
+      if (job) {
+        targetTitle = targetTitle || job.title;
+        targetDescription = targetDescription || job.description;
+      }
+    }
+
+    const atsResult = analyzeResumeATS(
+      resumeText || "",
+      targetDescription,
+      targetTitle
+    );
+
+    return res.status(200).json({
+      success: true,
+      ...atsResult,
+    });
+
+  } catch (error) {
+    console.error("ATS Analysis Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

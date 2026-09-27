@@ -30,6 +30,13 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
+    savedJobs: [
+      {
+        type: String,
+      },
+    ],
+
+
     // role: {
     //   type: String,
     //   enum: ["user", "recruiter"],

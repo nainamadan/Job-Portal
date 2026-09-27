@@ -20,7 +20,7 @@ const AddJob = () => {
 
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
-
+const [aiLoading, setAiLoading] = useState(false);
   const handleChange = (e) => {
     setJobData({
       ...jobData,
@@ -38,7 +38,52 @@ const AddJob = () => {
       ["clean"],
     ],
   };
+const generateAIJobDescription = async () => {
+  if (!jobData.title) {
+    toast.error("Please enter Job Title first");
+    return;
+  }
 
+  try {
+    setAiLoading(true);
+
+    const token = companyToken || localStorage.getItem("companyToken");
+
+    const { data } = await axios.post(
+      `${backendUrl}/api/company/generate-job-description`,
+      {
+        title: jobData.title,
+        category: jobData.category,
+        level: jobData.level,
+        location: jobData.location,
+        salary: jobData.salary,
+      },
+      {
+        headers: {
+          token,
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+
+    if (data.success) {
+      setDescription(data.description);
+      toast.success("AI Job Description Generated!");
+    } else {
+      toast.error(data.message || "Failed to generate description");
+    }
+  } catch (error) {
+    console.error("AI Description Error:", error);
+
+    toast.error(
+      error.response?.data?.message ||
+      "Failed to generate AI description"
+    );
+  } finally {
+    setAiLoading(false);
+  }
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -115,18 +160,38 @@ const AddJob = () => {
         {/* Description */}
 
         <div>
-          <label className="font-medium mb-2 block">
-            Job Description
-          </label>
+  <div className="flex items-center justify-between mb-2">
+    
+    <label className="font-medium">
+      Job Description
+    </label>
 
-          <ReactQuill
-            theme="snow"
-            value={description}
-            onChange={setDescription}
-            className="bg-white"
-             modules={modules}
-          />
-        </div>
+    <button
+      type="button"
+      onClick={generateAIJobDescription}
+      disabled={aiLoading}
+      className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition disabled:opacity-60"
+    >
+      <span>✨</span>
+
+      {aiLoading ? "Generating..." : "Generate with AI"}
+    </button>
+
+  </div>
+
+  <ReactQuill
+    theme="snow"
+    value={description}
+    onChange={setDescription}
+    className="bg-white"
+    modules={modules}
+  />
+
+  <p className="text-sm text-gray-500 mt-2">
+    Generate a professional job description using AI.
+    You can edit it before posting.
+  </p>
+</div>
 
         {/* Category Location */}
 

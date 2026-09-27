@@ -1,6 +1,13 @@
 import express from "express";
 const router = express.Router();
-import { getUserData, applyForJob, getUserJobApplications, updateUserResume } from "../controllers/userController.js";
+import {
+  getUserData,
+  applyForJob,
+  getUserJobApplications,
+  updateUserResume,
+  toggleSaveJob,
+  getSavedJobs,
+} from "../controllers/userController.js";
 import upload from "../middleware/multer.js";
 
 // get user data
@@ -12,7 +19,11 @@ router.post("/apply", applyForJob);
 // get user applied applications
 router.get("/applications", getUserJobApplications);
 
-// /upadte resume
-router.post("/update-resume", upload.single('resume'),updateUserResume);
+// update resume
+router.post("/update-resume", upload.single('resume'), updateUserResume);
 
-export default router;
+// toggle save job & get saved jobs
+router.post("/toggle-save", toggleSaveJob);
+router.get("/saved-jobs", getSavedJobs);
+
+export default router;

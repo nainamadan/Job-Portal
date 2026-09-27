@@ -4,6 +4,8 @@ import JobApplication from "../models/JobAppliaction.js";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import generateToken from "../utils/generateToken.js";
+import { sendApplicationStatusEmail } from "../utils/sendEmail.js";
+
 
 
 // Register a new company
@@ -367,14 +369,18 @@ export const getJobApplicants = async (req, res) => {
 };
 export const getCompanyJobApplicants = getJobApplicants;
 
-// Change application status
+// Change application status & notify candidate via email
 export const changeJobApplicationStatus = async (req, res) => {
   try {
     const { applicationId } = req.params;
-    const { status } = req.body;
+    const { status, id } = req.body;
+    const targetAppId = applicationId || id;
     const companyId = req.companyId;
 
-    const application = await JobApplication.findById(applicationId);
+    const application = await JobApplication.findById(targetAppId)
+      .populate("userId", "name email")
+      .populate("jobId", "title location")
+      .populate("companyId", "name email");
 
     if (!application) {
       return res.status(404).json({
@@ -383,7 +389,8 @@ export const changeJobApplicationStatus = async (req, res) => {
       });
     }
 
-    if (application.companyId.toString() !== companyId.toString()) {
+    const appCompanyId = application.companyId?._id || application.companyId;
+    if (appCompanyId.toString() !== companyId.toString()) {
       return res.status(403).json({
         success: false,
         message: "You are not authorized to modify this application",
@@ -393,9 +400,20 @@ export const changeJobApplicationStatus = async (req, res) => {
     application.status = status;
     await application.save();
 
+    // Trigger email notification to candidate
+    if (application.userId && application.userId.email) {
+      sendApplicationStatusEmail({
+        candidateEmail: application.userId.email,
+        candidateName: application.userId.name || "Candidate",
+        jobTitle: application.jobId?.title || "Position",
+        companyName: application.companyId?.name || "Company",
+        status: status,
+      }).catch((err) => console.error("Email send error:", err.message));
+    }
+
     return res.status(200).json({
       success: true,
-      message: "Application status updated successfully",
+      message: `Application status updated to '${status}' & email sent to candidate!`,
       application,
     });
 
@@ -408,6 +426,7 @@ export const changeJobApplicationStatus = async (req, res) => {
     });
   }
 };
+
 
 // Change job visibility (active/inactive)
 export const changeVisibility = async (req, res) => {

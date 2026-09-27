@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useUser, useAuth } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ResumeModal from "../components/ResumeModal";
@@ -9,6 +10,7 @@ const ApplicationDashboard = () => {
   const { user, isSignedIn } = useUser();
   const { getToken } = useAuth();
   const { backendUrl } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const [resumeOpen, setResumeOpen] = useState(false);
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -72,11 +74,22 @@ const ApplicationDashboard = () => {
   return (
     <div className="bg-slate-100 min-h-screen py-10">
       <div className="max-w-7xl mx-auto px-5">
-        <h1 className="text-4xl font-bold">My Applications</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+  <div>
+    <h1 className="text-4xl font-bold">My Applications</h1>
 
-        <p className="text-gray-500 mt-2">
-          Track applications and manage resume.
-        </p>
+    <p className="text-gray-500 mt-2">
+      Track applications and manage resume.
+    </p>
+  </div>
+
+  <button
+    onClick={() => navigate("/saved-jobs")}
+    className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition shadow-sm"
+  >
+    🔖 Saved Jobs
+  </button>
+</div>
 
         <div className="grid lg:grid-cols-3 gap-8 mt-10">
           {/* LEFT */}
@@ -102,15 +115,22 @@ const ApplicationDashboard = () => {
                 {user?.primaryEmailAddress?.emailAddress || userProfile?.email}
               </p>
 
-              {userProfile?.resume ? (
+              {userProfile?.resume && !userProfile.resume.includes("dummy.pdf") && userProfile.resume.trim() !== "" ? (
                 <div className="mt-6 space-y-3">
                   <a
                     href={userProfile.resume}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block w-full text-center bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium transition shadow-sm"
+                    onClick={(e) => {
+                      // Ensure the resume URL is accessible
+                      if (!userProfile.resume.startsWith("http")) {
+                        e.preventDefault();
+                        toast.error("Resume URL is invalid. Please re-upload your resume.");
+                      }
+                    }}
                   >
-                    📄 View Resume
+                    📄 View Uploaded Resume
                   </a>
                   <button
                     onClick={() => setResumeOpen(true)}
@@ -127,6 +147,7 @@ const ApplicationDashboard = () => {
                   Upload Resume
                 </button>
               )}
+
             </div>
           </div>
 

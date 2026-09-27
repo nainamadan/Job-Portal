@@ -1,12 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
+import { analyzeJobMatch as localAnalyzeJobMatch } from "../utils/clientSkillMatcher";
 
 const AIMatcher = () => {
   const { jobs, backendUrl } = useContext(AppContext);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [selectedJobId, setSelectedJobId] = useState("");
   const [customJobTitle, setCustomJobTitle] = useState("");
@@ -17,6 +19,8 @@ const AIMatcher = () => {
   const [resumeFileName, setResumeFileName] = useState("");
   const [loading, setLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
+
+  const sampleSkillsText = "React, Node.js, Express, MongoDB, JavaScript, HTML5, CSS3, TailwindCSS, REST API, Git, Redux";
 
   // Auto select job from URL query params, location state, or fallback to first job
   useEffect(() => {
@@ -39,15 +43,38 @@ const AIMatcher = () => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("File size is too large (max 10MB)");
+      return;
+    }
+
     setResumeFileName(file.name);
 
-    // Read file text if plain text / doc or parse name
     const reader = new FileReader();
     reader.onload = (event) => {
-      const text = event.target.result || "";
+      let text = event.target.result || "";
+      text = text
+        .replace(/[^\x20-\x7E\xA0-\xFF\n\r\t]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      if (text.length > 30000) {
+        text = text.slice(0, 30000);
+      }
+
+      if (!text || text.length < 10) {
+        toast.warning("Could not extract clean text from file. Please paste text directly or load sample skills.");
+      }
+
       setResumeText(text);
     };
     reader.readAsText(file);
+  };
+
+  const loadSample = () => {
+    setResumeText(sampleSkillsText);
+    setResumeFileName("Sample_Skills.txt");
+    toast.info("Sample MERN Skills Loaded!");
   };
 
   const handleAnalyze = async (e) => {
@@ -62,31 +89,44 @@ const AIMatcher = () => {
       setLoading(true);
 
       const targetJob = jobs.find((j) => j._id === selectedJobId);
+      const safeResumeText = resumeText.trim().slice(0, 30000);
 
       const payload = useCustomJob
-        ? { jobTitle: customJobTitle, jobDescription: customJobDescription, resumeText }
+        ? { jobTitle: customJobTitle, jobDescription: customJobDescription, resumeText: safeResumeText }
         : {
             jobId: selectedJobId,
             jobTitle: targetJob?.title || "",
             jobDescription: targetJob?.description || "",
-            resumeText,
+            resumeText: safeResumeText,
           };
 
-      const { data } = await axios.post(`${backendUrl}/api/jobs/match`, payload);
+      let responseData = null;
+      try {
+        const { data } = await axios.post(`${backendUrl}/api/jobs/match`, payload);
+        responseData = data;
+      } catch (netErr) {
+        console.warn("Backend API unavailable, using client-side skill analysis:", netErr.message);
+        responseData = localAnalyzeJobMatch(
+          safeResumeText,
+          payload.jobDescription,
+          payload.jobTitle
+        );
+      }
 
-      if (data.success) {
-        setAnalysisResult(data);
+      if (responseData && responseData.success) {
+        setAnalysisResult(responseData);
         toast.success("AI Match Analysis Complete!");
       } else {
-        toast.error(data.message);
+        toast.error(responseData?.message || "Failed to calculate match score");
       }
     } catch (error) {
       console.error("AI Match Error:", error);
-      toast.error(error.response?.data?.message || "Failed to calculate match score");
+      toast.error("Failed to calculate match score");
     } finally {
       setLoading(false);
     }
   };
+
 
   const getScoreColor = (pct) => {
     if (pct >= 75) return "text-emerald-600 bg-emerald-50 border-emerald-200";
@@ -103,18 +143,34 @@ const AIMatcher = () => {
   return (
     <div className="bg-slate-50 min-h-screen py-10 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto">
-          <span className="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-3">
-            ✨ Powered by AI Keyword Matching
-          </span>
-          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
-            AI Resume → Job Matcher
-          </h1>
-          <p className="text-slate-600 mt-2 text-base">
-            Upload or paste your resume to instantly compare your skills against job requirements, calculate match percentage, and discover missing skills.
-          </p>
+        
+        {/* Header with Navigation Tabs */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-6 border-slate-200">
+          <div>
+            
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              AI Resume → Job Matcher
+            </h1>
+            <p className="text-slate-600 text-sm mt-1">
+              Compare candidate skills against job requirements, calculate match percentage, and identify skill gaps.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 self-start md:self-auto bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm">
+            <button
+              className="px-4 py-2 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow-sm"
+            >
+              ⚡ Skill Matcher
+            </button>
+            <button
+              onClick={() => navigate("/ats-simulator")}
+              className="px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition"
+            >
+              📄 ATS Simulator
+            </button>
+          </div>
         </div>
+
 
         {/* Main Grid */}
         <div className="grid lg:grid-cols-2 gap-8 items-start">

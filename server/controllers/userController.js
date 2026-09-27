@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import User from "../models/User.js";
 import Job from "../models/Job.js";
 import JobApplication from "../models/JobAppliaction.js";
@@ -32,12 +33,14 @@ const findOrCreateUser = async ({ userId, name, email, image }) => {
         email: fallbackEmail,
         image: image || "",
         resume: "",
+        savedJobs: [],
       });
     }
   }
 
   return user;
 };
+
 
 // get user data
 export const getUserData = async (req, res) => {
@@ -175,6 +178,7 @@ export const getUserJobApplications = async (req, res) => {
 };
 
 // update user profile(resume)
+// update user profile(resume)
 export const updateUserResume = async (req, res) => {
   try {
     const auth = getAuth(req);
@@ -202,25 +206,22 @@ export const updateUserResume = async (req, res) => {
       email: req.body.email,
     });
 
-    // Upload resume to Cloudinary with fallback handling for 403 / revoked credentials
-    let resumeUrl = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+    // Use local static server URL to guarantee inline PDF viewing without blank tab issues
+    const protocol = req.protocol || "http";
+    const host = req.get("host") || "localhost:5000";
+    const resumeUrl = `${protocol}://${host}/uploads/${resume.filename}`;
 
+    // Optionally backup to Cloudinary in background
     if (resume && resume.path) {
-      try {
-        const uploadResult = await cloudinary.uploader.upload(resume.path, {
-          resource_type: "auto",
-          folder: "resumes",
-        });
-        if (uploadResult && uploadResult.secure_url) {
-          resumeUrl = uploadResult.secure_url;
-        }
-      } catch (cldError) {
-        console.error("Cloudinary upload error, using fallback resume URL:", cldError.message || cldError);
-      }
+      cloudinary.uploader.upload(resume.path, {
+        resource_type: "raw",
+        folder: "resumes",
+      }).catch((cldErr) => console.warn("Cloudinary backup notice:", cldErr.message));
     }
 
     user.resume = resumeUrl;
     await user.save();
+
 
     return res.status(200).json({
       success: true,
@@ -237,3 +238,91 @@ export const updateUserResume = async (req, res) => {
     });
   }
 };
+
+// toggle save job
+export const toggleSaveJob = async (req, res) => {
+  try {
+    const { jobId } = req.body;
+    const auth = getAuth(req);
+    const userId = auth?.userId || req.auth?.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Not Authorized. Please sign in.",
+      });
+    }
+
+    if (!jobId) {
+      return res.status(400).json({
+        success: false,
+        message: "Job ID is required",
+      });
+    }
+
+    const user = await findOrCreateUser({ userId });
+    const savedSet = new Set(user.savedJobs || []);
+    let isSaved = false;
+
+    if (savedSet.has(jobId.toString())) {
+      savedSet.delete(jobId.toString());
+      isSaved = false;
+    } else {
+      savedSet.add(jobId.toString());
+      isSaved = true;
+    }
+
+    user.savedJobs = Array.from(savedSet);
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: isSaved ? "Job saved to bookmarks" : "Job removed from bookmarks",
+      isSaved,
+      savedJobs: user.savedJobs,
+    });
+
+  } catch (error) {
+    console.error("Toggle Save Job Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// get user saved jobs
+export const getSavedJobs = async (req, res) => {
+  try {
+    const auth = getAuth(req);
+    const userId = auth?.userId || req.auth?.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Not Authorized",
+      });
+    }
+
+    const user = await findOrCreateUser({ userId });
+    const savedIds = user.savedJobs || [];
+
+    const validObjectIds = savedIds.filter((id) => mongoose.Types.ObjectId.isValid(id));
+    const jobs = await Job.find({ _id: { $in: validObjectIds } }).populate("companyId", "name email image");
+
+    return res.status(200).json({
+      success: true,
+      savedIds,
+      jobs: jobs || [],
+    });
+
+  } catch (error) {
+    console.error("Get Saved Jobs Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
