@@ -1,10 +1,11 @@
 import Company from "../models/Company.js";
 import Job from "../models/Job.js";
 import JobApplication from "../models/JobAppliaction.js";
+import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import generateToken from "../utils/generateToken.js";
-import { sendApplicationStatusEmail } from "../utils/sendEmail.js";
+import { sendApplicationStatusEmail, sendNewJobNotificationEmail } from "../utils/sendEmail.js";
 
 
 
@@ -266,44 +267,159 @@ export const getCompanyData = async (req, res) => {
   }
 };
 // Post a new job
- export const postJob = async (req, res) => {
+//  export const postJob = async (req, res) => {
+//   try {
+//     // Get job details from body
+//     const { title, description, location, salary ,level,category} = req.body;
+
+//     // Get company ID from protectCompany middleware
+//     const companyId = req.companyId;
+
+//     // Check details
+//     console.log("Title:", title);
+//     console.log("Description:", description);
+//     console.log("Location:", location);
+//     console.log("Salary:", salary);
+//     console.log("Company ID:", companyId);
+
+//     // Create new Job
+//     const newJob = new Job({
+//       title,
+//       description,
+//       location,
+//       salary,
+//       companyId,
+//       date:Date.now(),
+//       level,
+// category,
+//     });
+
+//     // Save job
+//     await newJob.save();
+
+//     console.log("New Job:", newJob);
+
+//     return res.status(201).json({
+//       success: true,
+//       message: "Job Posted Successfully",
+//       job: newJob,
+//     });
+
+//   } catch (error) {
+//     console.error("Post Job Error:", error);
+
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+export const postJob = async (req, res) => {
   try {
-    // Get job details from body
-    const { title, description, location, salary ,level,category} = req.body;
-
-    // Get company ID from protectCompany middleware
-    const companyId = req.companyId;
-
-    // Check details
-    console.log("Title:", title);
-    console.log("Description:", description);
-    console.log("Location:", location);
-    console.log("Salary:", salary);
-    console.log("Company ID:", companyId);
-
-    // Create new Job
-    const newJob = new Job({
+    const {
       title,
       description,
       location,
       salary,
-      companyId,
-      date:Date.now(),
       level,
-category,
+      category,
+      applicationDurationDays,
+    } = req.body;
+
+    const companyId = req.companyId;
+
+    // Validate required fields
+    if (
+      !title ||
+      !description ||
+      !location ||
+      !salary ||
+      !level ||
+      !category
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill in all required job details",
+      });
+    }
+
+    // Validate application duration
+    const allowedDurations = [7, 15, 30, 45, 60];
+    const duration = Number(applicationDurationDays);
+
+    if (!allowedDurations.includes(duration)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please select a valid application duration",
+      });
+    }
+
+    const postedDate = new Date();
+
+    // Calculate deadline from posting date
+    // const applicationDeadline = new Date(postedDate);
+    // applicationDeadline.setDate(
+    //   applicationDeadline.getDate() + duration
+    // );
+    const applicationDeadline = new Date(postedDate);
+
+applicationDeadline.setDate(
+  applicationDeadline.getDate() + duration
+);
+
+applicationDeadline.setHours(23, 59, 59, 999);
+
+    const newJob = new Job({
+      title,
+      description,
+      location,
+      salary: Number(salary),
+      level,
+      category,
+      companyId,
+      date: postedDate,
+      applicationDurationDays: duration,
+      applicationDeadline,
     });
 
-    // Save job
     await newJob.save();
 
-    console.log("New Job:", newJob);
+    // Send email notifications to all registered users (background, non-blocking)
+    const company = await Company.findById(companyId).select("name");
+    const companyNameStr = company?.name || "Company";
+
+    User.find({}, "name email")
+      .then((users) => {
+        console.log(`📧 Sending new job notifications to ${users.length} users...`);
+        users.forEach((user) => {
+          if (user.email) {
+            sendNewJobNotificationEmail({
+              userEmail: user.email,
+              userName: user.name || "User",
+              jobTitle: title,
+              companyName: companyNameStr,
+              location,
+              salary: Number(salary),
+              level,
+              category,
+              applicationDeadline,
+              jobDescription: description,
+            }).catch((err) =>
+              console.error(`Failed to notify ${user.email}:`, err.message)
+            );
+          }
+        });
+      })
+      .catch((err) =>
+        console.error("Failed to fetch users for job notifications:", err.message)
+      );
 
     return res.status(201).json({
       success: true,
-      message: "Job Posted Successfully",
+      message: "Job Posted Successfully!",
       job: newJob,
     });
-
   } catch (error) {
     console.error("Post Job Error:", error);
 

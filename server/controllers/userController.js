@@ -73,6 +73,78 @@ export const getUserData = async (req, res) => {
 };
 
 // apply for a job
+// export const applyForJob = async (req, res) => {
+//   try {
+//     const { jobId, name, email, image } = req.body;
+//     const auth = getAuth(req);
+//     const userId = auth?.userId || req.auth?.userId;
+
+//     if (!userId) {
+//       return res.status(401).json({
+//         success: false,
+//         message: "Not Authorized. Please sign in.",
+//       });
+//     }
+
+//     if (!jobId) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Job ID is required",
+//       });
+//     }
+
+//     const job = await Job.findById(jobId);
+
+//     if (!job) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Job not found",
+//       });
+//     }
+
+//     // Check if user has already applied for this job
+//     const alreadyApplied = await JobApplication.findOne({
+//       userId,
+//       jobId,
+//     });
+
+//     if (alreadyApplied) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "You have already applied for this job",
+//       });
+//     }
+
+//     // Ensure User exists in DB
+//     await findOrCreateUser({ userId, name, email, image });
+
+//     // Create new job application
+//     const jobApplication = new JobApplication({
+//       userId,
+//       companyId: job.companyId,
+//       jobId,
+//       date: Date.now(),
+//     });
+
+//     await jobApplication.save();
+
+//     return res.status(201).json({
+//       success: true,
+//       message: "Job application submitted successfully",
+//       application: jobApplication,
+//     });
+
+//   } catch (error) {
+//     console.error("Apply For Job Error:", error);
+
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+// apply for a job
 export const applyForJob = async (req, res) => {
   try {
     const { jobId, name, email, image } = req.body;
@@ -100,6 +172,25 @@ export const applyForJob = async (req, res) => {
         success: false,
         message: "Job not found",
       });
+    }
+
+    // Check application deadline
+    if (job.applicationDeadline) {
+      const deadline = new Date(job.applicationDeadline);
+
+      if (Number.isNaN(deadline.getTime())) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid application deadline for this job",
+        });
+      }
+
+      if (Date.now() > deadline.getTime()) {
+        return res.status(400).json({
+          success: false,
+          message: "Application deadline has expired. You can no longer apply for this job.",
+        });
+      }
     }
 
     // Check if user has already applied for this job
@@ -325,4 +416,4 @@ export const getSavedJobs = async (req, res) => {
       message: error.message,
     });
   }
-};
+};
