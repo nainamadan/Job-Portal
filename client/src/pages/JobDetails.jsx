@@ -1251,7 +1251,7 @@ const JobDetails = () => {
       <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-6 items-start">
 
         {/* LEFT SECTION */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-6 min-w-0 w-full">
 
           {/* JOB HEADER */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
@@ -1452,21 +1452,52 @@ const JobDetails = () => {
           </div>
 
           {/* JOB DESCRIPTION */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+         {/* JOB DESCRIPTION */}
+<div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 w-full min-w-0 overflow-hidden">
 
-            <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <span className="w-1 h-5 bg-indigo-600 rounded-full inline-block" />
-              Job Description
-            </h2>
+  <h2 className="text-lg font-bold text-slate-900 mb-5 flex items-center gap-2">
+    <span className="w-1 h-5 bg-indigo-600 rounded-full inline-block" />
+    Job Description
+  </h2>
 
-            <div
-              className="prose prose-slate max-w-none prose-headings:font-semibold prose-a:text-indigo-600"
-              dangerouslySetInnerHTML={{
-                __html: job.description,
-              }}
-            />
+  <div
+    className="
+      w-full
+      min-w-0
+      max-w-full
+      overflow-x-auto
+      break-words
+      [overflow-wrap:anywhere]
+      text-slate-600
+      leading-7
+      prose
+      prose-slate
+      prose-headings:text-slate-900
+      prose-headings:font-semibold
+      prose-h2:text-lg
+      prose-h3:text-base
+      prose-p:my-3
+      prose-li:my-1
+      prose-a:text-indigo-600
+      prose-a:break-all
+      [&_*]:!max-w-full
+      [&_p]:whitespace-normal
+      [&_span]:whitespace-normal
+      [&_li]:whitespace-normal
+      [&_img]:h-auto
+      [&_img]:rounded-lg
+      [&_table]:w-full
+      [&_table]:text-sm
+      [&_pre]:whitespace-pre-wrap
+      [&_pre]:break-words
+    "
+    style={{ overflowWrap: "anywhere" }}
+    dangerouslySetInnerHTML={{
+      __html: job.description,
+    }}
+  />
 
-          </div>
+</div>
 
           {/* AI SKILL MATCH ANALYZER */}
           <div className="bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-800 text-white rounded-2xl p-6 sm:p-8 shadow-md">
