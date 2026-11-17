@@ -304,14 +304,15 @@
 
 
 
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
+import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import JobCard from "./JobCard";
-import { assets, JobCategories, JobLocations } from "../assets/assets";
+import { JobCategories, JobLocations } from "../assets/assets";
 
 const JobListing = () => {
   const {
-    jobs,
+    backendUrl,
     searchFilter,
     setSearchFilter,
     setIsSearched,
@@ -332,7 +333,41 @@ const JobListing = () => {
   });
   const [salaryError, setSalaryError] = useState("");
 
+  const [filteredJobs, setFilteredJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchError, setSearchError] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState("");
+  const [skills, setSkills] = useState("");
   const jobsPerPage = 6;
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      setLoading(true);
+      setSearchError("");
+      setFilteredJobs([]);
+      setCurrentPage(1);
+      try {
+        const params = new URLSearchParams();
+        if (searchFilter.title) params.set("title", searchFilter.title);
+        if (searchFilter.location) params.set("location", searchFilter.location);
+        selectedCategories.forEach((value) => params.append("categories", value));
+        selectedLocations.forEach((value) => params.append("locations", value));
+        if (selectedLevel) params.set("levels", selectedLevel);
+        if (skills.trim()) params.set("skills", skills.trim());
+        if (appliedSalaryRange.min !== "") params.set("minSalary", appliedSalaryRange.min);
+        if (appliedSalaryRange.max !== "") params.set("maxSalary", appliedSalaryRange.max);
+        const { data } = await axios.get(backendUrl + "/api/jobs", { params, signal: controller.signal });
+        if (!data.success || !Array.isArray(data.jobs)) throw new Error(data.message || "Unable to load jobs.");
+        if (!controller.signal.aborted) setFilteredJobs(data.jobs);
+      } catch (error) {
+        if (!controller.signal.aborted) setSearchError(error.response?.data?.message || error.message || "Unable to load jobs. Please try again.");
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    }, 250);
+    return () => { clearTimeout(timer); controller.abort(); };
+  }, [backendUrl, searchFilter, selectedCategories, selectedLocations, selectedLevel, skills, appliedSalaryRange]);
 
   // Apply salary filter
   const handleSalarySearch = () => {
@@ -358,53 +393,11 @@ const JobListing = () => {
     setShowFilters(false);
   };
 
-  // Filter jobs
-  const filteredJobs = jobs.filter((job) => {
-    const matchTitle =
-      !searchFilter.title ||
-      job.title?.toLowerCase().includes(searchFilter.title.toLowerCase());
-
-    const matchLocationSearch =
-      !searchFilter.location ||
-      job.location?.toLowerCase().includes(searchFilter.location.toLowerCase());
-
-    const matchCategory =
-      selectedCategories.length === 0 ||
-      selectedCategories.includes(job.category);
-
-    const matchLocationFilter =
-      selectedLocations.length === 0 ||
-      selectedLocations.includes(job.location);
-
-    const salary = Number(job.salary);
-
-    const matchMinSalary =
-      appliedSalaryRange.min === "" ||
-      (Number.isFinite(salary) && salary >= appliedSalaryRange.min);
-
-    const matchMaxSalary =
-      appliedSalaryRange.max === "" ||
-      (Number.isFinite(salary) && salary <= appliedSalaryRange.max);
-
-    return (
-      matchTitle &&
-      matchLocationSearch &&
-      matchCategory &&
-      matchLocationFilter &&
-      matchMinSalary &&
-      matchMaxSalary
-    );
-  });
-
   // Pagination
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const lastIndex = currentPage * jobsPerPage;
   const firstIndex = lastIndex - jobsPerPage;
   const currentJobs = filteredJobs.slice(firstIndex, lastIndex);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchFilter, selectedCategories, selectedLocations, appliedSalaryRange]);
 
   // Clear all filters
   const clearSearch = () => {
@@ -413,6 +406,8 @@ const JobListing = () => {
       location: "",
     });
 
+    setSelectedLevel("");
+    setSkills("");
     setSelectedCategories([]);
     setSelectedLocations([]);
 
@@ -492,9 +487,9 @@ const JobListing = () => {
 
               {hasActiveSalaryFilter && (
                 <span className="bg-green-100 px-3 py-2 rounded-full text-sm">
-                  ₹{appliedSalaryRange.min === "" ? "0" : appliedSalaryRange.min}
+                  {appliedSalaryRange.min === "" ? "0" : appliedSalaryRange.min}
                   {" - "}
-                  {appliedSalaryRange.max === "" ? "No limit" : `₹${appliedSalaryRange.max}`}
+                  {appliedSalaryRange.max === "" ? "No limit" : appliedSalaryRange.max} LPA
                 </span>
               )}
             </div>
@@ -514,34 +509,38 @@ const JobListing = () => {
             Search By Salary Range
           </h3>
 
-          <label className="block text-sm text-gray-600 mb-1">
-            Minimum Salary (₹)
+          <label htmlFor="min-salary" className="block text-sm text-gray-600 mb-1">
+            Minimum Salary (LPA)
           </label>
 
           <input
             type="number"
             min="0"
-            placeholder="e.g. 10000"
+            id="min-salary"
+            step="0.1"
+            placeholder="e.g. 10"
             value={minSalary}
             onChange={(e) => setMinSalary(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 outline-none focus:border-blue-500"
           />
 
-          <label className="block text-sm text-gray-600 mb-1">
-            Maximum Salary (₹)
+          <label htmlFor="max-salary" className="block text-sm text-gray-600 mb-1">
+            Maximum Salary (LPA)
           </label>
 
           <input
             type="number"
             min="0"
-            placeholder="e.g. 50000"
+            id="max-salary"
+            step="0.1"
+            placeholder="e.g. 20"
             value={maxSalary}
             onChange={(e) => setMaxSalary(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-blue-500"
           />
 
           {salaryError && (
-            <p className="text-red-500 text-sm mt-2">
+            <p role="alert" className="text-red-500 text-sm mt-2">
               {salaryError}
             </p>
           )}
@@ -554,6 +553,18 @@ const JobListing = () => {
           </button>
         </div>
 
+        <div className="mb-8">
+          <label htmlFor="job-level" className="block font-semibold text-lg mb-4">Experience Level</label>
+          <select id="job-level" value={selectedLevel} onChange={(e) => setSelectedLevel(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2">
+            <option value="">All levels</option>
+            {["Fresher", "Beginner Level", "Intermediate Level", "Senior Level", "0-1 Years", "1-3 Years", "3-5 Years", "5+ Years"].map((level) => <option key={level}>{level}</option>)}
+          </select>
+        </div>
+        <div className="mb-8">
+          <label htmlFor="job-skills" className="block font-semibold text-lg mb-4">Skills</label>
+          <input id="job-skills" value={skills} onChange={(e) => setSkills(e.target.value)} placeholder="e.g. React, JavaScript" className="w-full border border-gray-300 rounded-lg px-3 py-2" />
+          <p className="text-xs text-gray-500 mt-2">Separate skills with commas. Jobs must match each skill.</p>
+        </div>
         {/* CATEGORIES */}
         <div className="mb-8">
           <h3 className="font-semibold text-lg mb-4">
@@ -628,12 +639,13 @@ const JobListing = () => {
         </p>
 
         <p className="text-sm text-gray-500 mb-6">
-          Showing {filteredJobs.length} matching jobs
+          {loading ? "Searching jobs..." : searchError ? "Search unavailable" : `Showing ${filteredJobs.length} matching jobs`}
         </p>
 
+        {searchError && <p role="alert" className="text-red-600 mb-4">{searchError} <button className="underline" onClick={clearSearch}>Reset and retry</button></p>}
         {/* JOB GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentJobs.length > 0 ? (
+          {!loading && !searchError && (currentJobs.length > 0 ? (
             currentJobs.map((job) => (
               <JobCard key={job._id} job={job} />
             ))
@@ -644,7 +656,7 @@ const JobListing = () => {
                 Try another salary range or remove filters.
               </p>
             </div>
-          )}
+          ))}
         </div>
 
         {/* PAGINATION */}

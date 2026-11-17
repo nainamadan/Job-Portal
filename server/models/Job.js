@@ -66,6 +66,7 @@
 
 
 import mongoose from "mongoose";
+import { normalizeSalary } from "../utils/salary.js";
 
 const jobSchema = new mongoose.Schema(
   {
@@ -102,6 +103,8 @@ const jobSchema = new mongoose.Schema(
     salary: {
       type: Number,
       required: true,
+      min: 0,
+      set: (value) => normalizeSalary(value),
     },
 
     // Application duration selected by the company

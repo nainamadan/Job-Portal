@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { jobsData as staticJobsData } from "../assets/assets";
 
 export const AppContext = createContext();
 
@@ -25,16 +24,14 @@ export const AppContextProvider = ({ children }) => {
   const fetchJobs = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/jobs`);
-      if (data.success && Array.isArray(data.jobs) && data.jobs.length > 0) {
+      if (data.success && Array.isArray(data.jobs)) {
         setJobs(data.jobs);
       } else {
-        // Fallback to static jobs if API returns empty array
-        setJobs(staticJobsData);
+        setJobs([]);
       }
     } catch (error) {
       console.error("Fetch Jobs Error:", error);
-      // Use static fallback on error
-      setJobs(staticJobsData);
+      setJobs([]);
     }
   };
 

@@ -1,4 +1,7 @@
 import Company from "../models/Company.js";
+import mongoose from "mongoose";
+import { normalizeSalary } from "../utils/salary.js";
+import { ensureCandidateProfile } from "../utils/candidateProfile.js";
 import Job from "../models/Job.js";
 import JobApplication from "../models/JobAppliaction.js";
 import User from "../models/User.js";
@@ -316,6 +319,13 @@ export const getCompanyData = async (req, res) => {
 // };
 
 export const postJob = async (req, res) => {
+  let normalizedSalary;
+  try {
+    normalizedSalary = normalizeSalary(req.body.salary, req.body.salaryUnit || "LPA");
+    if (normalizedSalary <= 0) throw new Error("Salary must be greater than zero.");
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error.message });
+  }
   try {
     const {
       title,
@@ -374,7 +384,7 @@ applicationDeadline.setHours(23, 59, 59, 999);
       title,
       description,
       location,
-      salary: Number(salary),
+      salary: normalizedSalary,
       level,
       category,
       companyId,
@@ -400,7 +410,7 @@ applicationDeadline.setHours(23, 59, 59, 999);
               jobTitle: title,
               companyName: companyNameStr,
               location,
-              salary: Number(salary),
+              salary: normalizedSalary,
               level,
               category,
               applicationDeadline,
@@ -488,24 +498,25 @@ export const getCompanyJobApplicants = getJobApplicants;
 // Change application status & notify candidate via email
 export const changeJobApplicationStatus = async (req, res) => {
   try {
-    const { applicationId } = req.params;
-    const { status, id } = req.body;
-    const targetAppId = applicationId || id;
+    const targetAppId = req.params.applicationId || req.body.id;
+    const normalized = typeof req.body.status === "string" ? req.body.status.trim().toLowerCase() : "";
+    const statuses = { accepted: "Accepted", rejected: "Rejected", pending: "Pending" };
+    const status = Object.hasOwn(statuses, normalized) ? statuses[normalized] : null;
+    if (!mongoose.isValidObjectId(targetAppId) || !status) {
+      return res.status(400).json({ success: false, message: "Provide a valid application ID and status (Accepted, Rejected, or Pending)." });
+    }
     const companyId = req.companyId;
 
-    const application = await JobApplication.findById(targetAppId)
-      .populate("userId", "name email")
-      .populate("jobId", "title location")
-      .populate("companyId", "name email");
+    const existing = await JobApplication.findById(targetAppId);
 
-    if (!application) {
+    if (!existing) {
       return res.status(404).json({
         success: false,
         message: "Application not found",
       });
     }
 
-    const appCompanyId = application.companyId?._id || application.companyId;
+    const appCompanyId = existing.companyId;
     if (appCompanyId.toString() !== companyId.toString()) {
       return res.status(403).json({
         success: false,
@@ -513,23 +524,72 @@ export const changeJobApplicationStatus = async (req, res) => {
       });
     }
 
-    application.status = status;
-    await application.save();
-
-    // Trigger email notification to candidate
-    if (application.userId && application.userId.email) {
-      sendApplicationStatusEmail({
-        candidateEmail: application.userId.email,
-        candidateName: application.userId.name || "Candidate",
-        jobTitle: application.jobId?.title || "Position",
-        companyName: application.companyId?.name || "Company",
-        status: status,
-      }).catch((err) => console.error("Email send error:", err.message));
+    const notify = normalized === "accepted" || normalized === "rejected";
+    const details = {};
+    for (const field of ["interviewDate", "interviewTime", "interviewType", "interviewLink", "interviewLocation", "notes", "rejectionReason"]) {
+      if (req.body[field] !== undefined && (typeof req.body[field] !== "string" || req.body[field].length > 2000)) {
+        return res.status(400).json({ success: false, message: `Invalid ${field}.` });
+      }
+    }
+    if (normalized === "accepted" && req.body.interviewDate) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(req.body.interviewDate) || Number.isNaN(Date.parse(req.body.interviewDate))) {
+        return res.status(400).json({ success: false, message: "Invalid interview date." });
+      }
+      details.interviewDetails = {
+        date: req.body.interviewDate, time: req.body.interviewTime || "",
+        type: req.body.interviewType || "", link: req.body.interviewLink || "",
+        location: req.body.interviewLocation || "", notes: req.body.notes || "",
+      };
+    }
+    if (normalized === "rejected" && req.body.rejectionReason) details.feedback = req.body.rejectionReason;
+    // Atomic transition: concurrent clicks/retries for the same status have one winner.
+    const application = await JobApplication.findOneAndUpdate({
+      _id: targetAppId, companyId,
+      $expr: { $ne: [{ $toLower: { $ifNull: ["$status", "pending"] } }, normalized] },
+    }, {
+      $set: { status, ...details, statusNotification: { state: notify ? "sending" : "not_required", updatedAt: new Date() } },
+      $inc: { statusRevision: 1 },
+    }, { new: true, runValidators: true });
+    if (!application) {
+      return res.status(200).json({ success: true, changed: false, emailSent: false,
+        message: "Application status is unchanged. No additional email was sent." });
+    }
+    let emailSent = false;
+    if (notify) {
+      try {
+        const [candidate, job, company] = await Promise.all([
+          ensureCandidateProfile(application.userId),
+          Job.findById(application.jobId).select("title"),
+          Company.findById(application.companyId).select("name email"),
+        ]);
+        if (!candidate?.email) throw new Error("Candidate's registered email is unavailable.");
+        await sendApplicationStatusEmail({
+          candidateEmail: candidate.email, candidateName: candidate.name || "Candidate",
+          jobTitle: job?.title || "Position", companyName: company?.name || "Company",
+          companyEmail: company?.email, status,
+          interviewDetails: details.interviewDetails, feedback: details.feedback,
+        });
+        emailSent = true;
+      } catch (error) {
+        console.error("Application status notification failed:", error.code || error.name);
+      }
+      application.statusNotification = { state: emailSent ? "sent" : "failed", updatedAt: new Date() };
+      try {
+        await JobApplication.updateOne({ _id: targetAppId, statusRevision: application.statusRevision }, {
+          $set: { statusNotification: application.statusNotification },
+        });
+      } catch (error) {
+        console.error("Could not record notification outcome:", error.code || error.name);
+      }
     }
 
     return res.status(200).json({
       success: true,
-      message: `Application status updated to '${status}' & email sent to candidate!`,
+      changed: true,
+      emailSent,
+      message: `Application marked as ${status}.` + (notify
+        ? emailSent ? " Notification email sent." : " Notification email could not be sent; the status was saved."
+        : ""),
       application,
     });
 

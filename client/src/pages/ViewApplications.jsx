@@ -985,7 +985,9 @@ const ViewApplications = () => {
       );
 
       if (data.success) {
-        if (data.emailSent) {
+        if (data.changed === false) {
+          toast.info(data.message);
+        } else if (data.emailSent || status.toLowerCase() === "pending") {
           toast.success(data.message || `Application marked as ${status} & email sent!`);
         } else {
           toast.warning(data.message || `Application marked as ${status}, but email could not be sent.`);
@@ -996,9 +998,7 @@ const ViewApplications = () => {
             app._id === id
               ? {
                   ...app,
-                  status,
-                  applicantEmail: extraData.candidateEmail || app.applicantEmail,
-                  applicantName: extraData.candidateName || app.applicantName,
+                  status: data.application?.status || status,
                   interviewDetails: extraData.interviewDate
                     ? {
                         date: extraData.interviewDate,
@@ -1268,31 +1268,32 @@ const ViewApplications = () => {
               </span>
             </div>
 
-            {/* Candidate Email Input (Verified & Editable) */}
+            {/* Candidate email comes from the registered account. */}
             <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3.5 space-y-1.5">
               <div className="flex items-center justify-between">
                 <label className="block text-xs font-bold text-amber-950">
                   📧 Candidate Email Address <span className="text-rose-500">*</span>
                 </label>
                 <span className="text-[10px] font-semibold text-amber-800">
-                  (Interview invite will be sent to this email)
+                  (Registered account email)
                 </span>
               </div>
               <input
                 type="email"
                 required
                 value={candidateEmail}
-                onChange={(e) => setCandidateEmail(e.target.value)}
+                readOnly
+                aria-label="Registered candidate email"
                 placeholder="e.g. applicant@gmail.com"
                 className="w-full text-xs font-semibold bg-white border border-amber-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
               {!candidateEmail ? (
                 <p className="text-[11px] text-rose-600 font-semibold">
-                  ⚠️ Please enter candidate's valid email address so they receive the email.
+                  ⚠️ The backend will check the registered account email before sending.
                 </p>
               ) : (
                 <p className="text-[11px] text-emerald-700 font-medium">
-                  ✔ Interview invitation & documents checklist will be delivered to: <strong>{candidateEmail}</strong>
+                  ✔ Application status notification will be sent to: <strong>{candidateEmail}</strong>
                 </p>
               )}
             </div>
@@ -1373,7 +1374,7 @@ const ViewApplications = () => {
               <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3.5 text-xs text-emerald-900">
                 <p className="font-bold flex items-center gap-1.5 text-emerald-950 mb-1.5">
                   <span>📄</span>
-                  <span>Documents Candidate will be instructed to bring:</span>
+                  <span>Suggested documents to discuss with the candidate:</span>
                 </p>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] text-emerald-800 pl-4 list-disc">
                   <li>2 Printed Resumes / Latest CV</li>
@@ -1400,10 +1401,6 @@ const ViewApplications = () => {
                 type="button"
                 disabled={updatingId === acceptModal._id}
                 onClick={() => {
-                  if (!candidateEmail || !candidateEmail.includes("@")) {
-                    toast.error("Please enter a valid candidate email address to send the invitation");
-                    return;
-                  }
                   if (!interviewDate) {
                     toast.error("Please select an interview date");
                     return;
@@ -1413,8 +1410,6 @@ const ViewApplications = () => {
                     return;
                   }
                   updateStatus(acceptModal._id, "Accepted", {
-                    candidateEmail: candidateEmail.trim(),
-                    candidateName: candidateName.trim(),
                     interviewDate,
                     interviewTime,
                     interviewType,
@@ -1489,14 +1484,15 @@ const ViewApplications = () => {
                 type="email"
                 required
                 value={candidateEmail}
-                onChange={(e) => setCandidateEmail(e.target.value)}
+                readOnly
+                aria-label="Registered candidate email"
                 placeholder="candidate@gmail.com"
                 className="w-full text-xs font-semibold bg-white border border-amber-300 rounded-lg px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-rose-500"
               />
             </div>
 
             <p className="text-xs text-slate-600 leading-relaxed">
-              A respectful, constructive email will be sent to the candidate with helpful tips for future applications, letting them know their resume remains in your active talent pool.
+              A professional application status email will be sent to the candidate's registered address.
             </p>
 
             <div>
@@ -1525,13 +1521,7 @@ const ViewApplications = () => {
                 type="button"
                 disabled={updatingId === rejectModal._id}
                 onClick={() => {
-                  if (!candidateEmail || !candidateEmail.includes("@")) {
-                    toast.error("Please enter a valid candidate email address");
-                    return;
-                  }
                   updateStatus(rejectModal._id, "Rejected", {
-                    candidateEmail: candidateEmail.trim(),
-                    candidateName: candidateName.trim(),
                     rejectionReason,
                   });
                 }}

@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "server": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test tests/*.test.js",
+    "email:verify": "node scripts/verify-email.js"
   },
   "keywords": [],
   "author": "",

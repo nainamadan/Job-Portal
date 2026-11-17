@@ -1,0 +1,2936 @@
+                           Hire Path AI
+
+A Project Report (Project-II) submitted in partial fulfillment of the requirements
+                                   for the award of degree of
+
+                                       BACHELOR OF TECHNOLOGY
+                                                           IN
+
+                                 COMPUTER SCIENCE & ENGINEERING
+
+Supervised to                   Submitted by
+Ms. Ginni Chawla                Naina(2823168)
+(Assitant Professor,Dept. CSE)   Gudiya(2823157)
+
+                                         VIIth sem
+
+          DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING
+PANIPAT INSTITUTE OF ENGINEERING ANDTECHNOLOGY SAMALKHA,
+
+                                         PANIPAT-132103
+(Approved by AICTE and Affiliated to the Kurukshetra University, Kurukshetra)
+                                              Hire Path AI
+
+                                     DECLARATION
+
+We certify that
+   i. The work presented in this project report is an authentic record of our own work under
+         the guidance of our supervisor. It has not been submitted to any other Institute for the
+         award of any other degree or diploma.
+  ii. Whenever we have used information (text, data, figure, photograph, chart, analysis,
+         inference, etc.) from other sources, we have given due credit by citing it in the text of the
+         report and providing its details in the references.
+
+ iii. We have followed the guidelines provided by the department for preparing the report.
+
+Naina Madan(2823168)
+Gudiya (2823157)
+Project report title: Hire Path AI
+Semester: VII th
+Date:
+
+                                                      i
+                                              Hire Path AI
+
+                      APPROVAL FROM SUPERVISOR
+
+This is to certify that the project report entitled "Hire Path AI " presented by " Naina
+Madan(2823168), Gudiya (2823157) " under my supervision is an authentic work. To the best of
+my knowledge, the content of this report has not been submitted for the award of any previous
+degree to anyone else.
+It is recommended that the report be accepted as fulfilling this part of the requirements for the
+award of the degree.
+________________________
+Name: Ms. Ginni Chawla
+Designation: (Assistant Proffessor)
+Department of Computer Science & Engineering
+Date:
+
+________________________
+(Counter Signed by)
+Dr. S.C. Gupta
+(Prof. &Head, Department of CSE)
+
+                                                     ii
+                                              Hire Path AI
+
+                                   CERTIFICATE
+
+This is to certify that the work embodied in this report, entitled "Hire Path AI" carried out by "
+Naina Madan(2823168), Gudiya Mehta(2823157) " is approved for the degree of "Bachelor of
+Technology (B.Tech.) in CSE" at the department of "Computer Science & Engineering", Panipat
+Institute of Engineering and Technology, Samalkha.
+________________________
+Internal Examiner
+________________________
+External Examiner
+Date:
+Place: PIET
+
+                                                     iii
+                                              Hire Path AI
+
+                               ACKNOWLEDGEMENTS
+
+It gives us a great sense of pleasure to present the report of the Project undertaken during B. Tech.
+CSE Final Year.
+We would like to express my deepest gratitude to Ms. Ginni Chawla(Assistant Proffessor),
+Department of Computer Science & Engineering, PIET, Samalkha for her exceptional dedication
+and major contributions that have played a pivotal role in the realization of this project .Her
+sincerity, thoroughness and perseverance have been a constant source of inspiration for us. It is
+only her cognizant efforts that our endeavors have seen light of the day.
+We would like to extend our sincere thanks to Dr. S.C. Gupta, Head Department of Computer
+Science & Engineering, PIET, Samalkha for his full support and assistance during the
+development of the project.
+We are thankful to all faculty members of the department for their kind assistance, guidance, and
+cooperation during the development of our project.
+Lastly, we would like to acknowledge our friends for their contribution in the completion of the
+project.
+
+Naina Madan(2823168)
+Gudiya (2823157)
+
+Date
+
+                                                     iv
+                                              Hire Path AI
+
+                                     ABSTRACT
+
+HirePathAI is an AI-powered job portal designed to make the job search and recruitment
+process easier, faster, and more efficient for students, freshers, and job seekers. In today's
+competitive world, finding a suitable job according to educational qualifications, skills,
+experience, and career interests is a major challenge. Many candidates are unable to identify the
+skills required for their desired jobs or prepare a professional resume. HirePathAI aims to solve
+these problems by providing a smart and user-friendly platform that connects job seekers with
+suitable career opportunities.
+The main objective of this project is to help candidates find relevant jobs, analyze their resumes,
+identify missing skills, and improve their professional profiles. The system provides various
+features to support users throughout their job search journey.
+
+Key Features of HirePathAI:
+    1. User Registration and Login: Allows users to create an account, log in, and manage
+         their personal profiles.
+    2. Job Search and Apply: Helps users explore available job opportunities and apply for
+         jobs according to their interests and qualifications.
+    3. Resume Analysis: Analyzes uploaded resumes and checks the skills and information
+         mentioned in them.
+    4. Missing Skill Detection: Identifies the skills that are missing from a candidate's profile
+         according to the selected job requirements.
+    5. YouTube Learning Links: Provides useful YouTube learning resources to help
+         candidates learn missing skills and improve their knowledge.
+    6. Resume Builder: Helps users create or improve their resumes in a professional format.
+
+HirePathAI aims to reduce the time and effort required for job searching by providing multiple
+career-related services on a single platform. It helps candidates understand their skill gaps,
+improve their resumes, develop new skills, and find suitable employment opportunities.
+Overall, HirePathAI provides a smart and organized approach to job searching and career
+development by using Artificial Intelligence to improve the job-seeking experience and help
+candidates move towards better career opportunities.
+
+                                                     v
+                                              Hire Path AI
+
+                                 TABLE OF CONTENTS
+
+DECLARATION ......................................................................................................................... i
+APPROVAL FROM SUPERVISOR ......................................................................................... ii
+CERTIFICATE .......................................................................................................................... iii
+ACKNOWLEDGEMENTS ....................................................................................................... iv
+ABSTRACT ................................................................................................................................ v
+CHAPTER 1: INTRODUCTION ............................................................................................... 1
+
+   1.1 Topic of the System .......................................................................................................... 1
+   1.2 Project Overview .............................................................................................................. 1
+   1.3 Objectives ......................................................................................................................... 2
+   1.4 Target Users ...................................................................................................................... 3
+   1.5 Problem Statement ............................................................................................................ 3
+
+      Proposed Solution: ............................................................................................................. 4
+   1.6 Scope of the Project .......................................................................................................... 4
+   1.7 Technologies Used ........................................................................................................... 5
+   1.8 Conclusion ........................................................................................................................ 6
+CHAPTER 2: LITERATURE REVIEW .................................................................................... 7
+   2.1 Introduction to Job Portals ................................................................................................ 7
+   2.2 Analysis of Existing Job Portals ....................................................................................... 7
+   2.3 Role of Artificial Intelligence in Recruitment .................................................................. 8
+   2.4 Resume Analysis and Job Matching Systems .................................................................. 9
+   2.5 Identified Gaps and Opportunities .................................................................................. 10
+   2.6 Research Findings .......................................................................................................... 11
+CHAPTER 3: SYSTEM ANALYSIS ....................................................................................... 13
+   3.1 Feasibility Study ............................................................................................................. 13
+
+      3.1.1 Technical Feasibility ............................................................................................... 13
+      3.1.2 Operational Feasibility ............................................................................................ 13
+      3.1.3 Economic Feasibility ............................................................................................... 13
+   3.2 Existing System .............................................................................................................. 14
+   3.3 Limitations of Existing System ...................................................................................... 14
+   3.4 Proposed System ............................................................................................................ 14
+      Main Features of HirePathAI ........................................................................................... 14
+      Proposed System Flowchart ............................................................................................. 15
+   3.5 Advantages of Proposed System .................................................................................... 15
+   3.6 Functional Requirements ................................................................................................ 16
+
+                                                     vi
+                                              Hire Path AI
+
+                        TABLE OF CONTENTS (CONTINUED)
+
+   3.7 NonFunctional Requirements ........................................................................................ 16
+      Difference Between Existing and Proposed System ........................................................ 16
+
+   3.8 Conclusion ...................................................................................................................... 17
+CHAPTER 4 SYSTEM DESIGN ............................................................................................. 18
+
+   4.1 System Architecture ....................................................................................................... 18
+      Main Layers of System Architecture ............................................................................... 18
+
+   4.2 Data Flow Diagram (DFD) ............................................................................................. 19
+      4.2.1 Context Level DFD (Level 0) ................................................................................. 19
+      4.2.2 Level 1 DFD ............................................................................................................ 20
+      Explanation of DFD Processes: ....................................................................................... 21
+
+   4.3 Use Case Diagram .......................................................................................................... 22
+      Main Actor ....................................................................................................................... 22
+      Main Use Cases ................................................................................................................ 22
+
+   4.4 Activity Diagram ............................................................................................................ 23
+      Main Activities ................................................................................................................. 23
+
+   4.5 Database Design ............................................................................................................. 25
+      4.5.1 User Collection ........................................................................................................ 25
+      4.5.2 Resume Collection .................................................................................................. 25
+      4.5.3 Job Collection .......................................................................................................... 26
+      4.5.4 Skills Collection ...................................................................................................... 26
+      4.5.5 Application Collection ............................................................................................ 26
+
+   4.6 Module Design ............................................................................................................... 27
+      4.6.1 User Registration and Login Module ...................................................................... 27
+      4.6.2 User Profile Module ................................................................................................ 28
+      4.6.3 Job Selection Module .............................................................................................. 28
+      4.6.4 Resume Upload Module .......................................................................................... 28
+      4.6.5 Resume Analysis Module ....................................................................................... 28
+      4.6.6 Missing Skills Detection Module ............................................................................ 28
+      4.6.7 Job Recommendation Module ................................................................................. 28
+      4.6.8 Learning Resources Module ................................................................................... 29
+      4.6.9 Resume Builder Module ......................................................................................... 29
+      4.6.10 Search and Apply Module ..................................................................................... 29
+
+   4.7 System Workflow ........................................................................................................... 29
+      Steps of System Workflow ............................................................................................... 30
+
+                                                     vii
+                                              Hire Path AI
+
+                        TABLE OF CONTENTS (CONTINUED)
+
+      Conclusion ........................................................................................................................ 31
+CHAPTER 5 SYSTEM IMPLEMENTATION ........................................................................ 33
+
+   5.1 Introduction to Implementation ...................................................................................... 33
+      Objectives of System Implementation ............................................................................. 33
+      Implementation Environment ........................................................................................... 34
+
+   5.2 User Registration and Login ........................................................................................... 34
+      5.2.1 User Registration ..................................................................................................... 34
+      Main functions of registration: ......................................................................................... 34
+      5.2.2 User Login ............................................................................................................... 35
+
+   5.3 User Profile Management ............................................................................................... 36
+      Main Features of User Profile Management .................................................................... 36
+      Working of User Profile Management ............................................................................. 37
+
+   5.4 Job Search and Apply ..................................................................................................... 37
+      Main Features ................................................................................................................... 38
+      Working of Job Search and Apply ................................................................................... 38
+
+   5.5 Resume Upload and Analysis ......................................................................................... 39
+      5.5.1 Resume Upload ....................................................................................................... 39
+      5.5.2 Resume Analysis ..................................................................................................... 40
+
+   5.6 Missing Skill Detection .................................................................................................. 41
+      Working of Missing Skill Detection ................................................................................ 41
+      Example of Missing Skill Detection ................................................................................ 42
+      Basic Skill Comparison Logic ......................................................................................... 42
+      Illustrative Output: ........................................................................................................... 43
+
+   5.7 Job Recommendation and Matching Score .................................................................... 43
+      5.7.1 Job Recommendation .............................................................................................. 44
+      5.7.2 Matching Score ....................................................................................................... 44
+      Example of Matching Score ............................................................................................. 45
+
+   5.8 YouTube Learning Resources ........................................................................................ 45
+      Main Features ................................................................................................................... 46
+      Example of Learning Resources ...................................................................................... 46
+
+   5.9 Resume Builder .............................................................................................................. 47
+      Main Features of Resume Builder .................................................................................... 47
+      Working of Resume Builder ............................................................................................ 48
+      Conclusion ........................................................................................................................ 49
+
+                                                    viii
+                                              Hire Path AI
+
+                        TABLE OF CONTENTS (CONTINUED)
+
+CHAPTER 6 SOFTWARE AND HARDWARE REQUIREMENTS ..................................... 51
+   6.1 Hardware Requirements ................................................................................................. 51
+      6.1.1 Minimum Hardware Requirements ......................................................................... 51
+      6.1.2 Recommended Hardware Requirements ................................................................. 51
+      Explanation of Hardware Components ............................................................................ 51
+   6.2 Software Requirements .................................................................................................. 52
+      6.2.1 Operating System .................................................................................................... 52
+      6.2.2 Web Browser ........................................................................................................... 52
+      6.2.3 Software Requirements Table ................................................................................. 52
+   6.3 Frontend Technologies ................................................................................................... 53
+      6.3.1 HTML (HyperText Markup Language) .................................................................. 53
+      6.3.2 CSS (Cascading Style Sheets) ................................................................................. 53
+      6.3.3 JavaScript ................................................................................................................ 54
+      6.3.4 React.js .................................................................................................................... 54
+      6.3.5 Vite .......................................................................................................................... 54
+      Role of Frontend Technologies in HirePathAI ................................................................ 55
+   6.4 Backend Technologies .................................................................................................... 55
+      6.4.1 Node.js .................................................................................................................... 55
+      6.4.2 Express.js ................................................................................................................ 55
+      6.4.3 REST API ................................................................................................................ 56
+      6.4.4 Backend Working Process ...................................................................................... 56
+   6.5 Database Technologies ................................................................................................... 57
+      6.5.1 MongoDB ................................................................................................................ 57
+      6.5.2 Collections in MongoDB ........................................................................................ 58
+      6.5.3 Advantages of MongoDB ....................................................................................... 58
+   6.6 Development Tools and Platforms ................................................................................. 58
+      6.6.1 Visual Studio Code ................................................................................................. 59
+      6.6.2 Node Package Manager (npm) ................................................................................ 59
+      6.6.3 Git and GitHub ........................................................................................................ 59
+      6.6.4 Postman ................................................................................................................... 59
+      6.6.5 Cloudinary ............................................................................................................... 59
+      6.6.6 Web Browser ........................................................................................................... 60
+      6.6.7 Local Development Server ...................................................................................... 60
+
+CHAPTER 7: TESTING AND RESULTS .............................................................................. 61
+
+                                                     ix
+                                              Hire Path AI
+
+                        TABLE OF CONTENTS (CONTINUED)
+
+   7.1 Introduction to Testing ................................................................................................... 61
+   7.2 Types of Testing ............................................................................................................. 61
+   7.3 Test Cases ....................................................................................................................... 62
+   7.4 Testing Results ............................................................................................................... 63
+   7.5 Screenshots of the Project .............................................................................................. 63
+   7.6 Result Analysis ............................................................................................................... 64
+CHAPTER 8: CONCLUSION AND FUTURE SCOPE .......................................................... 65
+   8.1 Conclusion ...................................................................................................................... 65
+   8.2 Limitations of the Project ............................................................................................... 65
+   8.3 Future Scope ................................................................................................................... 66
+APPENDIX 1: ALGORITHMS AND LOGIC FLOW ............................................................ 67
+   1.1 User Registration and Login Algorithm ......................................................................... 67
+   1.2 Resume Upload Algorithm ............................................................................................. 68
+   1.3 Resume Analysis Algorithm ........................................................................................... 68
+   1.4 Skill Extraction and Missing Skill Detection ................................................................. 68
+   1.5 Job Matching and Recommendation Algorithm ............................................................. 69
+   1.8 Overall System Workflow .............................................................................................. 69
+APPENDIX 2: SCREENSHOTS AND CODE SNIPPET ....................................................... 70
+   2.1 Home Page Screenshot ................................................................................................... 70
+   2.2 User Registration Page ................................................................................................... 70
+   2.3 Login Page ...................................................................................................................... 70
+   2.4 User Dashboard .............................................................................................................. 71
+   2.5 Job Search and Job Details Page .................................................................................... 71
+   2.6 Missing Skills Detection Page ........................................................................................ 71
+   Important Code Snippets ...................................................................................................... 72
+REFERENCES ......................................................................................................................... 73
+   1. Books and Study Materials ............................................................................................... 74
+   2. Research Papers and Journals ........................................................................................... 74
+   3. Official Technology Documentation ................................................................................ 74
+   4. Online Tutorials and Learning Resources ........................................................................ 74
+   5. GitHub Repository ­ HirePathAI Job Portal .................................................................... 74
+
+                                                     x
+                                        Hire Path AI
+
+                       CHAPTER 1: INTRODUCTION
+
+1.1 Topic of the System
+Project Title: HirePathAI ­ AI-Powered Job Portal
+HirePathAI is a web-based job portal developed to help students, freshers, and job seekers
+find suitable employment opportunities. The idea behind this project is to make the job
+searching process easier by bringing different career-related facilities together on one
+platform.
+Finding a suitable job is not always easy, especially for candidates who are starting their
+careers. Many students complete their education but are not fully aware of the technical
+skills required by companies. Some candidates also face problems while preparing their
+resumes or selecting jobs according to their abilities.
+HirePathAI provides a platform where users can explore job opportunities, select their
+desired job roles, upload resumes, and check whether their skills match the selected job
+requirements. It also helps candidates find the skills they need to improve and provides
+YouTube learning links for further learning.
+The system focuses on connecting a candidate's existing skills with the requirements of
+available jobs. Its main purpose is to help users make better career decisions and prepare
+themselves for employment opportunities.
+
+1.2 Project Overview
+HirePathAI is designed as an online platform that supports candidates during different
+stages of their job search. It provides facilities for account creation, job exploration, resume
+checking, skill improvement, and job applications.
+A user first registers or logs in to the portal. After entering the platform, the user can
+explore different companies and available job positions. Once a suitable job is selected, the
+
+                                               1
+                                         Hire Path AI
+
+candidate can upload a resume for analysis.
+The resume analysis facility examines the skills present in the uploaded resume and
+compares them with the requirements of the selected job. If some required skills are not
+found, the system identifies them as missing skills. This gives candidates a clearer idea of
+what they should learn before applying for a particular position.
+The portal also provides YouTube learning links related to missing skills. Users can follow
+these resources to improve their technical knowledge. In addition, the resume builder
+facility helps candidates prepare or improve their resumes.
+The main facilities provided by HirePathAI are:
+1. Registration and Login: Users can create accounts and access the job portal through
+
+    their login details.
+2. Job Search: Candidates can explore available jobs and select positions according to
+
+    their career interests.
+3. Job Application: Users can apply for suitable job opportunities through the platform.
+4. Resume Analysis: The system checks the uploaded resume and identifies the skills
+
+    mentioned in it.
+5. Missing Skill Detection: It finds the skills that are required for a selected job but are
+
+    not present in the candidate's resume.
+6. YouTube Learning Links: It provides learning resources that help users develop the
+
+    skills they are missing.
+7. Job Matching: The system helps candidates understand the suitability of their profiles
+
+    for selected jobs through matching scores and recommendations.
+8. Resume Builder: Users can create or improve their resumes to present their
+
+    qualifications and skills in a better way.
+By combining these facilities, HirePathAI aims to make the job search process more
+organized and useful for candidates.
+
+1.3 Objectives
+The main objective of HirePathAI is to develop a job portal that helps candidates search for
+suitable jobs and understand the skills required to achieve their career goals.
+The specific objectives of the project are:
+1. To develop a simple and user-friendly online job portal for students, freshers, and job
+
+    seekers.
+2. To provide registration and login facilities for accessing the system.
+3. To allow users to explore available companies and job opportunities.
+4. To provide an option for uploading resumes and checking their contents.
+5. To compare the skills available in a resume with the requirements of a selected job.
+
+                                                2
+                                         Hire Path AI
+
+6. To identify missing skills so that candidates can understand their areas of improvement.
+7. To provide useful YouTube learning links for developing the required skills.
+8. To suggest relevant job opportunities according to the candidate's profile and skills.
+9. To display a job matching score that helps users understand how closely their skills
+
+    match a selected position.
+10. To help candidates prepare better resumes through the resume builder facility.
+11. To reduce the time spent on searching for jobs and understanding job requirements.
+The overall aim is to provide candidates with useful information and facilities that can
+support them in preparing for employment.
+
+1.4 Target Users
+HirePathAI is mainly intended for people who are searching for employment or preparing
+themselves for future career opportunities. Different types of users can benefit from the
+facilities provided by the system.
+1. Students:
+Students who are pursuing graduation or other professional courses can use the portal to
+explore job opportunities. They can also understand which technical skills are useful for the
+career they want to choose.
+2. Freshers:
+Freshers who have recently completed their education can use HirePathAI to search for
+entry-level positions. The resume analysis and missing skill detection facilities can help
+them understand the requirements of different job roles.
+3. Job Seekers:
+People who are looking for new employment opportunities can explore available jobs and
+compare their existing skills with the requirements of selected positions.
+4. Candidates Improving Their Skills:
+Users who want to learn new technologies or improve their existing knowledge can use the
+YouTube learning links provided by the portal. These resources can help them work on the
+skills required for their desired jobs.
+5. Career Beginners:
+People who are unsure about which job role is suitable for their qualifications can explore
+different opportunities and understand the skills expected for those positions.
+Therefore, HirePathAI is useful for candidates at different stages of their education and
+professional journey.
+
+1.5 Problem Statement
+Searching for a suitable job is a difficult process for many students, freshers, and job
+
+                                                3
+                                         Hire Path AI
+
+seekers. Although several online job portals are available, candidates may still struggle to
+understand which opportunities are suitable for their current skills and qualifications.
+One common problem is that candidates often apply for jobs without checking all the skills
+mentioned in the job description. They may have some of the required skills but lack others
+that are important for the selected position. Without proper guidance, it becomes difficult
+for them to identify these gaps.
+Resume preparation is another challenge. Many freshers do not have enough experience in
+creating a well-organized resume. They may also be unaware of how to improve their
+resumes according to different job requirements.
+Candidates also spend time searching for learning materials when they discover that they
+need additional technical skills. Finding useful resources for the right topic can become
+another part of the job preparation process.
+The major problems are:
+ Difficulty in finding jobs according to personal skills and qualifications.
+ Lack of understanding of job-specific skill requirements.
+ Difficulty in identifying missing skills.
+ Problems in preparing and improving resumes.
+ Lack of proper learning guidance for required skills.
+ Time spent searching for suitable job opportunities and learning resources.
+Proposed Solution:
+HirePathAI is developed to address these difficulties through a single online platform. It
+allows users to explore jobs, upload resumes, check their skills, and identify the
+requirements they still need to fulfil. The portal also provides YouTube learning links and
+resume-building facilities to support candidates in improving their job readiness.
+The system aims to make the job searching and preparation process more convenient by
+providing these facilities in one place.
+
+1.6 Scope of the Project
+The scope of HirePathAI covers job searching, resume checking, skill identification, and
+career preparation. The project is designed to provide useful facilities to candidates who
+want to find employment opportunities and improve their professional profiles.
+The major areas covered by this project are described below:
+1. User Account Management
+The portal provides registration and login facilities through which users can access the
+system and use its available features.
+2. Job Search and Application
+Users can explore available job positions, check job-related information, select suitable
+
+                                                4
+                                        Hire Path AI
+
+opportunities, and apply for jobs according to their interests.
+3. Resume Upload and Analysis
+Candidates can upload their resumes so that the system can examine the information and
+skills included in them.
+4. Missing Skill Identification
+The system compares the candidate's skills with the requirements of the selected job. It
+highlights the skills that are not available in the resume but are required for that position.
+5. Learning Support
+The portal provides YouTube learning links related to the missing skills. Candidates can
+use these resources to improve their knowledge and learn new technologies.
+6. Job Recommendations and Matching
+The system helps users explore relevant job opportunities and understand the level of
+similarity between their skills and the requirements of a selected job.
+7. Resume Building
+The resume builder facility supports candidates in preparing a resume or improving their
+existing resume in a professional format.
+8. Future Development
+In the future, the portal can be extended with additional facilities such as interview
+preparation, advanced career guidance, more detailed job recommendations, and additional
+recruiter-related features.
+The project mainly focuses on making job searching and skill improvement easier through
+a common online platform.
+
+1.7 Technologies Used
+Different web development technologies are used to build HirePathAI. Each technology
+has a particular role in developing the interface, managing application components, and
+running the web application.
+The main technologies and tools used in the project are:
+1. Next.js
+Next.js is a web development framework based on React. It is used to develop the
+application structure, create pages, and manage different parts of the web application.
+2. React.js
+React.js is used to create the user interface. It allows the application to be divided into
+smaller reusable components, making the development process easier to manage.
+3. TypeScript
+TypeScript is used to write structured code with additional type-checking features. It helps
+developers manage data types and identify certain coding errors during development.
+
+                                               5
+                                        Hire Path AI
+
+4. HTML
+HTML (HyperText Markup Language) provides the basic structure of web pages. It is used
+for organizing content such as headings, forms, buttons, and other elements.
+5. CSS
+CSS (Cascading Style Sheets) is used to control the appearance of the application. It helps
+manage colours, layouts, fonts, spacing, and page design.
+6. JavaScript
+JavaScript is used to implement interactive behaviour and application functionality.
+7. Visual Studio Code
+Visual Studio Code is a source-code editor used for writing, editing, and managing the
+project's code files.
+8. GitHub
+GitHub is used to store and manage the project's source code. It also helps developers
+maintain project files and track code changes.
+These technologies provide the development environment required to build and maintain
+the HirePathAI web application.
+
+1.8 Conclusion
+This chapter introduced HirePathAI, its main purpose, objectives, target users, and the
+problems it aims to address. The project is developed to support students, freshers, and job
+seekers who face difficulties while searching for suitable employment opportunities.
+The portal brings several useful facilities together, including job search, job application,
+resume analysis, missing skill detection, YouTube learning resources, job
+recommendations, matching scores, and resume building.
+One of the important aspects of the system is that it does not only help candidates explore
+jobs but also gives them an idea of the skills they need to improve for their selected job
+roles. This can help users prepare better before applying for employment opportunities.
+Overall, HirePathAI aims to provide a convenient platform for job searching and career
+preparation. The following chapters explain the background, analysis, design,
+implementation, and testing of the proposed system
+
+                                               6
+                                         Hire Path AI
+
+                CHAPTER 2: LITERATURE REVIEW
+
+2.1 Introduction to Job Portals
+A job portal is an online platform that helps people search for employment opportunities
+and allows companies to share information about vacant positions. It provides a common
+place where job seekers can explore different career options without visiting companies
+individually.
+In earlier times, people mainly depended on newspapers, personal contacts, advertisements,
+and direct visits to companies to find jobs. With the growth of internet technology, the
+process of searching and applying for jobs has become more convenient. Candidates can
+now explore job openings, read job descriptions, and submit their resumes through online
+platforms.
+Job portals are useful for both candidates and employers. Candidates can search for jobs
+according to their qualifications, experience, and interests, while employers can publish
+vacancies and receive applications from interested people.
+The common facilities available on job portals include:
+1. User Registration: Allows candidates to create their accounts and provide personal
+
+    information.
+2. Job Search: Helps users find available vacancies according to different job roles and
+
+    requirements.
+3. Resume Upload: Allows candidates to upload their resumes for job applications.
+4. Job Application: Provides an option to apply for available positions online.
+5. Company Information: Displays details about companies and their available
+
+    opportunities.
+6. Job Notifications: Helps users stay informed about new job openings.
+7. Profile Management: Allows candidates to update their educational details, skills, and
+
+    other information.
+HirePathAI is developed with the same basic purpose of providing job-related services.
+However, it also focuses on resume analysis and missing skill identification to help
+candidates understand their preparation level for a selected job.
+2.2 Analysis of Existing Job Portals
+Several online job portals are available today that help candidates find employment
+opportunities. These platforms provide facilities such as job searching, resume uploading,
+company information, and online applications.
+Some commonly known job portals are:
+1. LinkedIn
+
+                                                7
+                         Hire Path AI
+
+LinkedIn is a professional networking platform where users can create professional
+
+profiles, connect with other people, search for jobs, and interact with companies. It also
+
+helps candidates build professional connections and explore career opportunities.
+
+2. Indeed
+
+Indeed is an online job-search platform where candidates can explore job vacancies from
+
+different employers. Users can search for positions using job titles, keywords, and
+
+locations.
+
+3. Naukri.com
+
+Naukri.com is a popular Indian job portal that allows candidates to create profiles, upload
+
+resumes, search for vacancies, and apply for suitable positions.
+
+4. Glassdoor
+
+Glassdoor provides job-search facilities along with company reviews, salary information,
+
+and workplace-related details. It helps candidates learn more about organizations before
+
+applying.
+
+Comparison of Existing Job Portals with HirePathAI
+
+Features                 Existing Job Portals       HirePathAI
+
+User Registration        Available                  Available
+
+Job Search               Available                  Available
+
+Resume Upload            Available                  Available
+
+Resume Analysis          Varies by platform         Project feature
+
+Missing Skill Detection  Not a common feature       Project feature
+                         across all platforms
+
+YouTube Learning Links Not a standard feature       Project feature
+
+Existing job portals provide useful services for finding employment. However, HirePathAI
+focuses on bringing job searching together with skill-gap identification and learning
+support. This gives candidates additional guidance while preparing for their desired job
+roles.
+
+2.3 Role of Artificial Intelligence in Recruitment
+Artificial Intelligence (AI) is a technology that enables computer systems to perform tasks
+that normally require human intelligence, such as understanding information, identifying
+patterns, and making predictions.
+In recruitment, AI can help process candidate information and support different activities
+involved in finding suitable employees. It can be used to examine resumes, identify
+relevant skills, compare candidate profiles with job descriptions, and suggest suitable job
+opportunities.
+
+                                               8
+                                        Hire Path AI
+
+Some important uses of AI in recruitment are explained below:
+1. Resume Screening
+AI-based tools can examine information present in resumes and identify details such as
+education, experience, technical skills, and qualifications. This can help organize candidate
+information.
+2. Skill Identification
+AI-based techniques can help identify skills mentioned in a resume and compare them with
+the skills required for a particular job position.
+3. Job Recommendations
+Recommendation systems can suggest job opportunities by comparing candidate
+information with job requirements.
+4. Matching Score
+A matching system can calculate a score based on the skills or other criteria shared
+between a candidate's profile and a job description.
+5. Recruitment Support
+AI tools can help organize applications and reduce repetitive work during the initial stages
+of recruitment.
+6. Learning and Skill Improvement
+AI-supported platforms can identify areas where candidates need improvement and suggest
+relevant learning resources.
+Research on AI recruitment also highlights the importance of accuracy, transparency, and
+fairness. AI systems should be designed carefully because incorrect or biased data can
+affect their recommendations.
+Springer+2
+In HirePathAI, AI-related features are focused on resume analysis, skill comparison,
+missing skill detection, and job recommendations. These facilities aim to help candidates
+understand how their current skills relate to their desired job roles.
+2.4 Resume Analysis and Job Matching Systems
+A resume contains important information about a candidate, such as educational
+qualifications, technical skills, projects, certifications, and work experience. Employers use
+this information to understand whether a candidate is suitable for a particular position.
+Resume analysis is the process of examining the information provided in a resume and
+identifying details that are relevant to a job requirement.
+Job matching is the process of comparing a candidate's qualifications and skills with the
+requirements of a job. It helps identify how closely a candidate's profile matches a
+particular position.
+The main steps involved in resume analysis and job matching are:
+
+                                               9
+                                        Hire Path AI
+
+1. Resume Upload
+The candidate uploads a resume to the platform. The resume acts as the source of
+information for checking the candidate's skills and qualifications.
+2. Information Extraction
+The system examines the uploaded resume to identify relevant information, such as
+technical skills, education, and experience.
+3. Job Requirement Identification
+The required skills and qualifications are identified from the selected job description.
+4. Skill Comparison
+The candidate's available skills are compared with the skills required for the selected job.
+5. Missing Skill Identification
+Skills that are required for the job but are not found in the resume are identified as missing
+skills.
+6. Matching Score
+A matching score can be used to represent how closely the candidate's available skills
+match the selected job requirements.
+7. Learning Recommendations
+Learning resources can be provided to help candidates improve the skills they need for
+their desired position.
+In HirePathAI, these steps help users understand their current skill level in relation to a
+selected job. Instead of only searching for vacancies, candidates can also identify the areas
+where they need improvement.
+Studies of job recommendation systems discuss different approaches to representing job
+requirements and candidate skills. They also highlight the need for understandable and fair
+recommendations.
+ScienceDirect+1
+
+2.5 Identified Gaps and Opportunities
+After studying the general working of existing job portals and AI-based recruitment
+systems, some areas were identified where additional facilities can make job searching
+more helpful for candidates.
+Many job portals concentrate mainly on displaying job vacancies and allowing candidates
+to submit applications. However, candidates may still need additional guidance to
+understand whether their existing skills are suitable for their desired positions.
+The following gaps and opportunities were considered while developing HirePathAI:
+1. Difficulty in Understanding Job Requirements
+Candidates sometimes find it difficult to understand all the technical skills mentioned in a
+
+                                               10
+                                         Hire Path AI
+
+job description. HirePathAI aims to make these requirements easier to compare with the
+skills available in a resume.
+2. Lack of Skill Gap Awareness
+A candidate may not know which important skills are missing from their profile. The
+missing skill detection feature helps identify these areas.
+3. Need for Learning Resources
+After identifying missing skills, candidates may need help finding suitable learning
+materials. HirePathAI provides relevant YouTube learning links for this purpose.
+4. Resume Improvement
+Freshers may have difficulty preparing a professional resume. The resume builder facility
+aims to support them in creating or improving their resumes.
+5. Better Job Matching
+Searching through many vacancies can take time. Job recommendations and matching
+scores can help users understand which opportunities are more closely related to their
+skills.
+6. Multiple Career Facilities on One Platform
+Candidates may use different websites for job searching, resume preparation, and learning
+new skills. HirePathAI aims to bring these facilities together in one place.
+These identified areas provided the direction for designing the main features of
+HirePathAI. The project focuses on making the job-search process more informative and
+supporting candidates in improving their skills.
+2.6 Research Findings
+The study of online job portals, resume analysis methods, and AI-based recruitment
+systems helped in understanding the requirements of an effective job-search platform.
+The review indicates that online job portals have made it easier for candidates to explore
+employment opportunities and communicate with employers. At the same time, AI-based
+techniques offer additional possibilities for examining resumes, comparing skills, and
+recommending suitable jobs.
+The major findings from this study are:
+1. Online job portals provide a convenient way to search for employment opportunities.
+2. Resume information plays an important role in understanding a candidate's
+
+    qualifications and abilities.
+3. Comparing resume skills with job requirements can help candidates identify areas that
+
+    need improvement.
+4. Job recommendation systems can make it easier to discover relevant opportunities.
+5. Learning resources can support candidates in developing skills required by employers.
+6. Resume-building facilities can be helpful, especially for students and freshers.
+
+                                                11
+                                         Hire Path AI
+7. AI-based recruitment tools should provide understandable results and be checked for
+
+    accuracy and fairness.
+Based on these findings, HirePathAI was planned as a platform that combines job
+searching with resume analysis and skill improvement facilities.
+The project aims to provide a useful experience by allowing candidates to search for jobs,
+check their skills, identify missing requirements, access learning links, and improve their
+resumes. Thus, the literature review provides the background for the system analysis and
+design explained in the next chapter.
+
+                                                12
+                                              Hire Path AI
+
+                        CHAPTER 3: SYSTEM ANALYSIS
+
+3.1 Feasibility Study
+A feasibility study is performed to determine whether a project can be developed and used
+successfully. It helps to understand the technical, operational, and economic requirements of the
+system.
+The feasibility of the HirePathAI Job Portal is explained below.
+3.1.1 Technical Feasibility
+Technical feasibility checks whether the required technology, software, and hardware are
+available to develop the project.
+HirePathAI is designed as a web-based job portal. It uses web development technologies to
+provide features such as user registration, job searching, resume uploading, resume analysis,
+and job recommendations.
+The project can be developed and tested using commonly available development tools and a
+computer system with internet access.
+Therefore, the project is technically feasible.
+3.1.2 Operational Feasibility
+Operational feasibility checks whether users can understand and operate the system easily.
+HirePathAI provides a simple process for job seekers:
+
+    1. Users register or log in.
+    2. They explore available jobs or companies.
+    3. They upload their resumes.
+    4. The system analyses the resume and identifies missing skills.
+    5. Users can access YouTube learning links to improve their skills.
+    6. Users can explore suitable job opportunities and apply.
+The system is planned to make the job-search process easier for students, freshers, and job
+seekers.
+Therefore, it is operationally feasible.
+3.1.3 Economic Feasibility
+Economic feasibility determines whether the project can be developed within an affordable
+budget.
+HirePathAI is an academic project. Its development can be carried out using commonly
+available software tools and existing computer resources. Open-source development tools can
+also help reduce the overall cost.
+The main possible expenses are internet access, computer resources, and future hosting or
+maintenance.
+
+                                                     13
+                                              Hire Path AI
+
+Therefore, the project is economically feasible for academic development.
+3.2 Existing System
+In the traditional job-search system, candidates search for vacancies through different job
+websites, company career pages, newspapers, or personal references.
+Candidates generally create resumes separately and apply for jobs according to the information
+provided by employers. They may need to compare job requirements with their own skills
+manually.
+Most traditional job portals mainly focus on displaying vacancies and accepting applications.
+Candidates may have to use separate platforms to identify skill gaps and find learning resources.
+3.3 Limitations of Existing System
+Some common limitations of traditional job-search systems are:
+
+    1. Manual Job Searching: Candidates may spend a lot of time searching for suitable
+         vacancies.
+
+    2. Difficulty in Skill Identification: Users may not easily understand which skills are
+         missing from their resumes.
+
+    3. Separate Learning Platforms: Candidates need to search for learning materials on
+         other websites.
+
+    4. Resume Improvement: Users may find it difficult to identify weaknesses in their
+         resumes.
+
+    5. Job Matching: Finding jobs that match a candidate's qualifications and skills can be
+         challenging.
+
+    6. Time Consumption: Searching for jobs and comparing requirements manually can
+         take considerable time.
+
+3.4 Proposed System
+HirePathAI is a web-based job portal designed to make job searching and career preparation
+easier. It combines job-related features with resume analysis and skill improvement support.
+The proposed system allows users to create an account, explore job opportunities, upload their
+resumes, and receive information about missing skills.
+It also provides YouTube learning links so users can find learning material related to the
+identified skill gaps. Resume-building support and job recommendations are also part of the
+planned project features.
+Main Features of HirePathAI
+
+     User Registration and Login
+     User Profile Management
+     Job Search and Apply
+     Resume Upload and Analysis
+     Missing Skill Detection
+
+                                                     14
+                                              Hire Path AI
+     Job Recommendation and Matching Score
+     YouTube Learning Resources
+     Resume Builder
+Proposed System Flowchart
+
+Figure 3.1: Proposed workflow of HirePathAI Job Portal
+3.5 Advantages of Proposed System
+The proposed HirePathAI system provides the following advantages:
+
+    1. Easy Access: Users can explore job opportunities through a single platform.
+    2. Resume Analysis: It helps users understand their resume information.
+    3. Skill Gap Identification: It identifies skills that may be missing according to job
+
+         requirements.
+    4. Learning Support: YouTube links help users find relevant learning resources.
+    5. Job Recommendations: It aims to suggest suitable job opportunities based on user
+
+                                                     15
+                                   Hire Path AI
+
+         information.
+    6. Time Saving: It brings several job-search and preparation features together.
+    7. Career Improvement: It encourages candidates to improve their skills before applying
+
+         for jobs.
+3.6 Functional Requirements
+Functional requirements describe the main activities that the system is expected to perform.
+The functional requirements of HirePathAI are:
+
+No. Requirement    Description
+
+1 Registration     New users can create an account.
+
+2 Login            Registered users can access their accounts.
+
+3 Profile Management Users can manage their profile information.
+
+4 Job Search       Users can explore available jobs.
+
+5 Job Application Users can apply for suitable jobs.
+
+6 Resume Upload Users can upload their resumes.
+
+7 Resume Analysis The system analyses resume information.
+
+8 Skill Detection  The system identifies missing skills.
+
+9 Learning Links   Users can access relevant YouTube links.
+
+10 Job Recommendation The system aims to suggest matching jobs.
+
+11 Matching Score  A matching score can help users understand job suitability.
+
+12 Resume Builder Users can get support in creating or improving a resume.
+
+3.7 Non-Functional Requirements
+Non-functional requirements describe the quality and performance expected from the system.
+
+    1. Usability: The interface should be simple and easy to understand.
+    2. Performance: The system should respond to user actions within a reasonable time.
+    3. Security: User accounts and personal information should be protected.
+    4. Reliability: The system should work consistently during normal use.
+    5. Availability: Users should be able to access the web portal when it is available.
+    6. Maintainability: The project should be easy to update and improve.
+    7. Compatibility: The website should work with commonly used modern web browsers.
+    8. Scalability: The system should allow additional features in the future.
+Difference Between Existing and Proposed System
+
+Existing System                    Proposed HirePathAI
+
+Job searching is the main focus.   Job searching and career support are combined.
+
+Skill gaps may need to be checked  Missing-skill detection is provided as a feature.
+
+                                   16
+                                              Hire Path AI
+manually.
+Learning resources are searched separately. YouTube learning links are provided.
+Resume improvement may require separate
+
+                                                      Resume-building support is included.
+tools.
+
+                                                      Job recommendations and matching scores are
+Job suitability may be difficult to compare.
+
+                                                      included.
+3.8 Conclusion
+This chapter explained the system analysis of the HirePathAI Job Portal. It covered the
+feasibility study, existing system, its limitations, and the proposed system. It also described the
+functional and non-functional requirements.
+HirePathAI aims to provide a common platform for job searching, resume analysis, missing-
+skill identification, and learning support. The next chapter explains the system design and its
+major diagrams and modules.
+
+                                                     17
+                                              Hire Path AI
+
+                        CHAPTER 4 SYSTEM DESIGN
+
+4.1 System Architecture
+System architecture describes the overall structure of a software application and explains how
+its different components communicate with each other. It provides a basic understanding of how
+the system works and how information moves between different layers.
+The HirePathAI Job Portal is designed as an AI-powered job searching and career assistance
+platform. It provides facilities such as user registration, login, job selection, resume uploading,
+resume analysis, missing-skill detection, job recommendations, and learning resources.
+The architecture of HirePathAI follows a layered structure in which each layer performs a
+specific task. These layers work together to provide a smooth experience to job seekers.
+The main objective of the architecture is to make the application easy to use, maintain, and
+expand in the future.
+Main Layers of System Architecture
+1. Presentation Layer
+The presentation layer is the front-end part of the application. It provides an interface through
+which users interact with the job portal.
+Its main functions are:
+
+     User registration and login.
+     Displaying the user dashboard.
+     Selecting companies and job positions.
+     Uploading resumes.
+     Displaying resume analysis results.
+     Showing missing skills and learning links.
+     Searching and applying for jobs.
+2. Application Layer
+The application layer handles the main processing activities of the system. It receives requests
+from the user interface and performs the required operations.
+Its functions include:
+     User authentication.
+     User profile management.
+     Resume processing.
+     Skill extraction and comparison.
+     Job recommendation.
+     Resume-related operations.
+     Job application management.
+3. Database Layer
+
+                                                     18
+                                              Hire Path AI
+
+The database layer stores and manages information required by the application.
+It may maintain:
+
+     User details.
+     Login information.
+     Resume information.
+     Job details.
+     Required skills.
+     Application records.
+     Candidate profile information.
+4. External Learning Resource Layer
+This layer provides learning resources to candidates. When missing skills are identified, the
+system can provide relevant YouTube learning links so that candidates can improve their
+knowledge.
+Figure 4.1: System Architecture of HirePathAI
+Explanation:
+The user interacts with the presentation layer to access different facilities. The application layer
+processes the user's requests and communicates with the database to retrieve or store
+information.
+When a candidate uploads a resume, the application processes its information and performs
+resume analysis. After comparing candidate skills with job requirements, the system displays
+the results and relevant learning resources.
+Thus, all the layers work together to provide an integrated job-searching and career assistance
+platform.
+4.2 Data Flow Diagram (DFD)
+A Data Flow Diagram (DFD) is a graphical representation of how information moves through a
+system. It explains how data is received, processed, stored, and transferred between different
+components.
+DFD helps developers understand the internal working of an application without focusing on
+programming details.
+In HirePathAI, the Data Flow Diagram represents the movement of information from the
+candidate to the different modules of the job portal.
+4.2.1 Context Level DFD (Level 0)
+The context-level DFD represents the complete HirePathAI application as a single process. It
+shows the relationship between the external user and the system.
+The candidate provides registration details, login information, job preferences, and resume files.
+The system processes this information and returns the required results.
+Figure 4.2: Context Level DFD
+
+                                                     19
+                  Hire Path AI
+
+                      JOB SEEKAR
+
+PRESENTATION                       EXTERNAL
+ LAYER (Login                      LEARNING
+ Registration)                  LAYER (youtube
+
+                                       links
+
+ APPLICATION              DATABASE
+      LAYER           LAYER (user data
+
+(Authentication)          , job data)
+
+Explanation:
+    1. The user registers or logs into the application.
+    2. The user selects a desired company or job position.
+    3. The user uploads a resume.
+    4. The system processes the resume information.
+    5. The system compares candidate skills with job requirements.
+    6. The system displays missing skills and job recommendations.
+    7. The user receives learning resources and can search for suitable jobs.
+
+4.2.2 Level 1 DFD
+Level 1 DFD provides a detailed view of the internal processes of HirePathAI. It divides the
+main application into smaller processes.
+The major processes include user authentication, job selection, resume uploading, resume
+analysis, skill comparison, job recommendation, and job application.
+Figure 4.3: Level 1 DFD
+
+                  20
+                                              Hire Path AI
+
+Explanation of DFD Processes:
+     Process 1.0 ­ User Authentication: Verifies the registration and login information of
+         the user.
+     Process 2.0 ­ Job Selection: Allows candidates to select their preferred company or
+         job position.
+     Process 3.0 ­ Resume Upload: Accepts the resume uploaded by the candidate.
+     Process 4.0 ­ Resume Analysis: Processes the resume and identifies relevant
+         information.
+     Process 5.0 ­ Missing Skill Detection: Compares candidate skills with required job
+         skills.
+                                                     21
+                                              Hire Path AI
+
+     Process 6.0 ­ Job Recommendation: Suggests suitable job opportunities.
+     Process 7.0 ­ Learning Resources: Provides relevant YouTube learning links for
+
+         missing skills.
+     Process 8.0 ­ Search and Apply: Allows users to search and apply for suitable jobs.
+The DFD explains how different processes are connected and how information moves
+throughout the application.
+4.3 Use Case Diagram
+A Use Case Diagram is used to represent the interaction between users and the functionalities of
+a software system. It describes what a user can perform using the application.
+In HirePathAI, the main actor is the Job Seeker. The job seeker interacts with different functions
+of the system to search for employment opportunities and improve their career profile.
+Main Actor
+Job Seeker: A person who uses the HirePathAI platform to find suitable job opportunities,
+analyse resumes, identify missing skills, and access learning resources.
+Main Use Cases
+    1. Register Account ­ New users can create an account.
+    2. Login ­ Registered users can access their accounts.
+    3. Manage Profile ­ Users can maintain their personal and professional details.
+    4. Select Job/Company ­ Users can select their preferred company or job.
+    5. Upload Resume ­ Users can upload their resumes.
+    6. Analyse Resume ­ The system analyses resume information.
+    7. Detect Missing Skills ­ The system identifies skills that are not found in the resume but
+
+         are required for the selected job.
+    8. View Job Recommendations ­ Users can explore relevant job suggestions.
+    9. Access YouTube Links ­ Users can access learning resources.
+    10. Build Resume ­ Users can prepare or improve their resumes.
+    11. Search Jobs ­ Users can explore job opportunities.
+    12. Apply for Jobs ­ Users can submit job applications.
+Figure 4.4: Use Case Diagram
+
+                                                     22
+                                              Hire Path AI
+
+Explanation:
+The Job Seeker is the primary actor of the system. The user first registers or logs into the
+platform. After successful login, the user can access the dashboard and select the desired job or
+company.
+The user can upload a resume, view the analysis results, identify missing skills, and access
+learning resources. The user can also search and apply for suitable job opportunities.
+The Use Case Diagram provides a clear overview of the functionalities available to candidates.
+4.4 Activity Diagram
+An Activity Diagram is a type of UML (Unified Modeling Language) diagram that represents
+the flow of activities performed in a system.
+It explains the sequence of operations from the beginning to the completion of a particular task.
+It also represents decisions and alternative paths during the execution of a process.
+In HirePathAI, the Activity Diagram describes how a candidate uses the job portal, starting
+from registration or login and continuing to resume analysis and job application.
+Main Activities
+
+    1. Start the application.
+                                                     23
+                                              Hire Path AI
+    2. Register or log into the system.
+    3. Validate login information.
+    4. Open the dashboard.
+    5. Select a company or job.
+    6. Upload the resume.
+    7. Process and analyse the resume.
+    8. Identify available and missing skills.
+    9. Display job recommendations.
+    10. Provide learning links.
+    11. Search and apply for jobs.
+    12. Complete the process.
+Figure 4.5: Activity Diagram of HirePathAI
+
+Explanation:
+The activity begins when the candidate opens the application and registers or logs into the
+system. The system verifies the user's login information.
+If the information is incorrect, the user is asked to try again. If the information is valid, the
+
+                                                     24
+                                  Hire Path AI
+
+dashboard is displayed.
+The candidate then selects a job or company and uploads a resume. The system analyses the
+resume and compares the available skills with the required skills.
+If missing skills are identified, the system displays them and provides relevant learning
+resources. Finally, job recommendations are displayed, and the candidate can search and apply
+for suitable opportunities.
+The Activity Diagram explains the complete working process and decision-making activities of
+the HirePathAI system.
+4.5 Database Design
+Database design describes how information is stored, organized, and managed in a software
+application.
+The HirePathAI Job Portal requires different types of information related to candidates,
+resumes, job opportunities, skills, and applications.
+The database is designed to maintain this information in an organized manner so that the
+application can retrieve and process data whenever required.
+A properly designed database helps improve data management, reduce unnecessary duplication,
+and maintain consistency.
+4.5.1 User Collection
+The User Collection stores the basic information of registered candidates.
+
+Field Name Description
+
+user_id Unique user identification
+
+name    Candidate name
+
+email   Registered email address
+
+password Securely stored password
+
+education Educational qualification
+
+skills  Candidate skills
+
+experience Work experience
+
+4.5.2 Resume Collection
+The Resume Collection maintains information related to uploaded resumes.
+
+Field Name Description
+
+resume_id Unique resume identification
+
+user_id Related user identification
+
+file_name Uploaded resume file name
+
+education Extracted education details
+
+                                        25
+                                 Hire Path AI
+
+skills     Extracted candidate skills
+
+experience Experience details
+
+upload_date Resume upload date
+
+4.5.3 Job Collection
+The Job Collection stores information about available job opportunities.
+
+Field Name Description
+
+job_id     Unique job identification
+
+company_name Company name
+
+job_title  Job position
+
+description Job description
+
+required_skills Required skills
+
+experience Required experience
+
+4.5.4 Skills Collection
+The Skills Collection maintains information about different skills required for job positions.
+
+Field Name Description
+
+skill_id   Unique skill identification
+
+skill_name Name of the skill
+
+job_id     Related job identification
+
+learning_link Related learning resource
+
+4.5.5 Application Collection
+The Application Collection stores information about job applications submitted by candidates.
+
+Field Name Description
+
+application_id Unique application identification
+
+user_id    Candidate identification
+
+job_id     Selected job identification
+
+resume_id  Related resume identification
+
+application_date Application submission date
+
+status     Application status
+
+Figure 4.6: Database Relationship Diagram
+
+                                         26
+                                              Hire Path AI
+
+Explanation:
+     The Users Collection stores information about registered candidates.
+     The Resumes Collection stores information related to uploaded resumes.
+     The Jobs Collection stores available job information.
+     The Skills Collection maintains the skills required for different job positions.
+     The Applications Collection stores job application records.
+
+The user identification connects candidate information with resume and application records. Job
+identification connects applications and job requirements.
+The diagram represents the logical database structure. The actual implementation may use
+MongoDB collections and document references according to the project's database design.
+4.6 Module Design
+Module design explains how the HirePathAI application is divided into different functional
+parts. Each module performs a particular operation and contributes to the overall working of the
+system.
+The modular approach makes the application easier to develop, maintain, test, and improve.
+The major modules of HirePathAI are described below.
+4.6.1 User Registration and Login Module
+This module provides authentication facilities to users.
+New candidates can register by entering the required details. Existing users can log in using
+their registered credentials.
+Main functions:
+
+     User registration.
+
+                                                     27
+                                              Hire Path AI
+
+     User login.
+     Authentication.
+     Dashboard access.
+     Account management.
+4.6.2 User Profile Module
+This module maintains the candidate's personal and professional information.
+It may include the candidate's name, email, educational qualification, skills, and experience.
+The information helps the system understand the candidate's background.
+4.6.3 Job Selection Module
+This module allows candidates to select their preferred company or job position.
+For example, a candidate interested in web development can select a Frontend Developer or
+React Developer position.
+The selected job requirements are used during the resume analysis and skill comparison process.
+4.6.4 Resume Upload Module
+This module allows users to upload their resumes through the application.
+The uploaded resume contains important details such as education, technical skills, projects, and
+experience.
+The resume is submitted for further processing and analysis.
+4.6.5 Resume Analysis Module
+This module analyses the information available in the candidate's resume.
+It identifies relevant details, including educational qualifications, technical skills, and work
+experience.
+The extracted information helps the system compare the candidate's profile with the
+requirements of a selected job.
+4.6.6 Missing Skills Detection Module
+This module identifies the skills that are required for a selected job but are not found in the
+candidate's resume.
+For example, if a job requires HTML, CSS, JavaScript, React, and Node.js, but the resume
+contains only HTML, CSS, and JavaScript, React and Node.js can be identified as missing
+skills.
+This information helps candidates understand which technical skills they need to improve.
+4.6.7 Job Recommendation Module
+This module provides suitable job suggestions according to the candidate's available
+information.
+It considers the candidate's skills, education, experience, and job preferences.
+The system can also display a matching score to show how closely the candidate's profile
+matches a job's requirements.
+
+                                                     28
+                                              Hire Path AI
+
+4.6.8 Learning Resources Module
+This module provides YouTube learning links related to missing skills.
+For example, if React is identified as a missing skill, the candidate can access relevant React
+tutorials.
+This feature helps candidates improve their technical knowledge and prepare for future
+opportunities.
+4.6.9 Resume Builder Module
+This module helps candidates create or improve their resumes.
+A properly structured resume presents the candidate's education, skills, projects, and experience
+in an organized manner.
+It is useful for candidates who need assistance preparing a professional resume.
+4.6.10 Search and Apply Module
+This module allows candidates to search for available job opportunities and apply for suitable
+positions.
+Users can explore jobs according to their interests and select appropriate opportunities.
+It completes the main job-searching process of the application.
+Figure 4.7: Module Structure of HirePathAI
+
+Explanation:
+The module structure shows that HirePathAI contains different functional modules. User
+management handles account-related activities, resume management handles resume-related
+operations, and job management handles job searching and applications.
+The learning resources module helps candidates improve missing skills. All modules work
+together to provide the main services of the HirePathAI Job Portal.
+4.7 System Workflow
+System workflow explains the complete sequence of operations performed by the application
+from the user's first interaction to the final result.
+HirePathAI follows a simple and organized workflow to help candidates search for jobs and
+
+                                                     29
+                                              Hire Path AI
+
+understand their skill requirements.
+The workflow begins when a candidate opens the application and registers or logs into the
+system.
+After successful login, the user enters the dashboard and selects the desired company or job
+position. The candidate then uploads a resume for analysis.
+The system processes the uploaded resume and identifies the available skills. These skills are
+compared with the requirements of the selected job.
+If some required skills are missing, the system displays those skills and provides relevant
+YouTube learning links. The candidate can use these resources to improve their knowledge.
+The system also provides job recommendations based on the available candidate information.
+Finally, the candidate can search for suitable job opportunities and apply for them.
+Steps of System Workflow
+Step 1: User Registration/Login
+The candidate creates a new account or logs into an existing account.
+Step 2: Dashboard Access
+After successful authentication, the user accesses the main dashboard.
+Step 3: Job or Company Selection
+The candidate selects the desired company or job position according to their interests.
+Step 4: Resume Upload
+The candidate uploads their resume through the application.
+Step 5: Resume Analysis
+The system processes the resume and identifies available candidate information.
+Step 6: Missing Skill Detection
+The system compares the candidate's skills with the selected job's requirements and identifies
+missing skills.
+Step 7: Learning Resources
+The system provides relevant YouTube learning links for skills that need improvement.
+Step 8: Resume Improvement
+If required, the candidate can use the resume builder facility to prepare or improve their resume.
+Step 9: Job Recommendation
+The system displays relevant job suggestions according to candidate information and job
+requirements.
+Step 10: Search and Apply
+The candidate searches for suitable job opportunities and submits applications.
+Figure 4.8: Complete System Workflow
+
+                                                     30
+                                              Hire Path AI
+
+Explanation:
+The system workflow demonstrates how a candidate uses HirePathAI to search for suitable job
+opportunities and improve their professional profile.
+The application combines different functionalities into a single platform. Resume analysis helps
+candidates understand their current skills, missing-skill detection identifies areas for
+improvement, and learning resources help them develop the required knowledge.
+The job recommendation and search facilities make it easier for candidates to explore suitable
+employment opportunities.
+Conclusion
+This chapter explained the complete system design of the HirePathAI Job Portal. It covered
+system architecture, Data Flow Diagrams, Use Case Diagram, Activity Diagram, Database
+Design, Module Design, and System Workflow.
+The proposed design provides a structured approach to developing an intelligent job portal.
+Different modules work together to provide facilities such as user authentication, resume
+uploading, resume analysis, missing-skill detection, job recommendations, learning resources,
+
+                                                     31
+                                              Hire Path AI
+and job applications.
+The system is designed to make the job-searching process easier and help candidates understand
+and improve their skills according to job requirements.
+The system design also provides a foundation for the implementation and testing phases of the
+HirePathAI project.
+
+                                                     32
+                                              Hire Path AI
+
+               CHAPTER 5 SYSTEM IMPLEMENTATION
+
+5.1 Introduction to Implementation
+System implementation is an important phase of software development in which the designed
+system is converted into a working software application. It involves developing different
+modules, integrating their functionalities, connecting the database, and providing an interface
+through which users can interact with the system.
+The implementation of the HirePathAI Job Portal focuses on developing an intelligent platform
+that helps candidates search for suitable employment opportunities and improve their
+professional profiles.
+The system provides different facilities, including user registration, login, profile management,
+job searching, resume uploading, resume analysis, missing-skill detection, job
+recommendations, learning resources, and resume building.
+The application follows a structured approach in which users first create an account or log into
+the existing account. After successful authentication, users can select their preferred company or
+job position and upload their resumes.
+The system analyses the uploaded resume and compares the available skills with the
+requirements of the selected job. Based on this comparison, the system identifies missing skills
+and provides relevant learning resources.
+The platform also provides job recommendations and matching information to help candidates
+understand how closely their profiles match available job opportunities.
+The main objective of implementation is to develop a functional and user-friendly job portal
+that reduces the effort required for job searching and supports candidates in improving their
+career opportunities.
+Objectives of System Implementation
+The main objectives of implementing HirePathAI are:
+
+    1. To provide a simple and user-friendly job portal.
+    2. To allow users to register and log into the application.
+    3. To maintain candidate profile information.
+    4. To provide job searching and application facilities.
+    5. To allow candidates to upload their resumes.
+    6. To analyse resumes according to job requirements.
+    7. To identify missing skills in candidate profiles.
+    8. To recommend suitable job opportunities.
+    9. To provide YouTube learning links for missing skills.
+    10. To help candidates create or improve their resumes.
+
+                                                     33
+                    Hire Path AI
+
+Implementation Environment
+The implementation environment consists of the software and tools required to develop and run
+the application.
+The project uses a web-based development approach. The frontend provides the user interface,
+the backend manages application operations, and the database maintains the required
+information.
+The following table presents the general implementation environment.
+
+Component           Description
+
+Application Type    Web-Based Application
+
+Frontend            User Interface
+
+Backend             Server-Side Processing
+
+Database            Data Storage and Management
+
+Resume Processing   Resume Information Analysis
+
+Learning Resources  YouTube Learning Links
+
+Development Environment Local Development Server
+
+The exact technologies and libraries should be mentioned according to the actual
+implementation of the HirePathAI project.
+5.2 User Registration and Login
+User registration and login are important features of the HirePathAI Job Portal. These
+functionalities allow users to create accounts and access personalized facilities.
+The registration module is designed for new users who want to use the application for the first
+time. The login module is designed for users who already have an account.
+The authentication process helps the system identify registered users and provide access to their
+respective profiles.
+5.2.1 User Registration
+The registration process allows a new candidate to create an account by providing the required
+information.
+The user enters details such as name, email address, and password. After submitting the
+registration form, the system processes the information and creates a user account if the details
+are valid.
+The registration process provides the foundation for accessing the different features of the job
+portal.
+Main functions of registration:
+
+     Accept user information.
+     Validate the submitted information.
+
+                                    34
+                                              Hire Path AI
+     Create a new user account.
+     Store the required user information.
+     Provide access to the login facility.
+5.2.2 User Login
+The login module allows registered users to access the application.
+The candidate enters the registered email address and password. The system verifies the
+submitted credentials.
+If the credentials are valid, the user is redirected to the dashboard. If the credentials are
+incorrect, an appropriate error message is displayed.
+The login facility helps maintain separate user accounts and provides a personalized experience.
+Figure 5.1: Registration and Login Process
+
+Explanation:
+The user starts by opening the application and selecting the registration or login option.
+During registration, the system accepts the required details and creates a new account. During
+login, the system verifies the credentials of an existing user.
+After successful authentication, the user can access the dashboard and use the different
+
+                                                     35
+                                              Hire Path AI
+
+functionalities of HirePathAI.
+Figure 5.2: User Registration Page
+[Insert actual screenshot of the Registration Page here]
+The registration page provides fields for entering the required user details. It allows new
+candidates to create an account and access the services of the HirePathAI Job Portal.
+Figure 5.3: User Login Page
+[Insert actual screenshot of the Login Page here]
+The login page provides an interface for registered candidates to access their accounts. It acts as
+the entry point for the different facilities available in the application.
+5.3 User Profile Management
+User Profile Management is an important module of HirePathAI. It maintains information
+related to the candidate's personal and professional background.
+The profile information helps the system understand the candidate's qualifications, skills,
+experience, and career preferences.
+A candidate's profile may contain information such as name, email address, educational
+qualification, technical skills, projects, and experience.
+The information stored in the profile can be used during resume analysis and job
+recommendation.
+Main Features of User Profile Management
+1. Profile Creation
+The system allows users to create their profiles by providing the required personal and
+professional information.
+2. Profile Information
+The profile may include:
+
+     Candidate name.
+     Email address.
+     Educational qualification.
+     Technical skills.
+     Work experience.
+     Projects.
+     Job preferences.
+3. Profile Update
+Users can update their information whenever required. This helps maintain accurate and
+updated candidate information.
+4. Profile Utilization
+The profile information can be used by the system to understand candidate requirements and
+provide relevant job suggestions.
+
+                                                     36
+                                              Hire Path AI
+Working of User Profile Management
+The user first logs into the application and accesses the profile section.
+The candidate enters or updates the required information. The system processes the submitted
+information and maintains the profile data.
+When the candidate searches for jobs or uploads a resume, the profile information can help
+provide a more personalized experience.
+Figure 5.4: User Profile Management Process
+
+Explanation:
+The profile management process allows candidates to maintain their information in an
+organized manner.
+The system uses the available information to support resume analysis and job searching.
+Maintaining an updated profile helps candidates present their qualifications more effectively.
+Figure 5.5: User Profile Page
+[Insert actual screenshot of the User Profile or Dashboard Page here]
+The profile interface provides access to candidate information and different functionalities of
+the job portal.
+5.4 Job Search and Apply
+
+                                                     37
+                                              Hire Path AI
+
+The Job Search and Apply module allows candidates to explore available employment
+opportunities and submit applications for suitable positions.
+Job searching is one of the primary purposes of a job portal. HirePathAI provides a platform
+through which users can search for jobs according to their interests and career goals.
+The user can select a desired company or job position and explore the available opportunities.
+The job-related information may include job title, company name, required skills, job
+description, and other relevant details.
+Main Features
+1. Job Searching
+Candidates can search for jobs according to their preferences.
+2. Job Selection
+Users can select a desired company or job position.
+3. Job Details
+The system displays relevant information about the selected job.
+4. Job Application
+Candidates can apply for suitable opportunities through the available application facility.
+5. Job Recommendations
+The system can provide relevant job suggestions based on the candidate's available information.
+Working of Job Search and Apply
+The candidate logs into the application and accesses the job search section.
+The user selects a company or job position according to their interests. The system displays the
+available job information.
+After reviewing the requirements, the candidate can select a suitable opportunity and proceed
+with the application process.
+Figure 5.6: Job Search and Apply Process
+
+                                                     38
+                                              Hire Path AI
+
+Explanation:
+The job searching process begins when the candidate selects the job search facility.
+The user explores available opportunities and reviews the job requirements. If the selected job is
+suitable, the candidate can apply for the position.
+This module helps candidates find employment opportunities in an organized manner.
+Figure 5.7: Job Search Page
+[Insert actual screenshot of the Job Search Page here]
+The job search interface allows candidates to explore available opportunities and select suitable
+job positions.
+Figure 5.8: Job Details Page
+[Insert actual screenshot of the Job Details or Company Details Page here]
+The job details interface provides information about the selected job and allows candidates to
+understand its requirements before applying.
+5.5 Resume Upload and Analysis
+Resume Upload and Analysis is one of the important features of the HirePathAI Job Portal.
+A resume contains information about a candidate's educational qualifications, technical skills,
+projects, and professional experience.
+The purpose of this module is to process the candidate's resume and identify relevant
+information that can be used during job matching and skill comparison.
+The candidate first selects a desired company or job position and then uploads the resume. The
+system processes the uploaded information and prepares it for analysis.
+The analysis helps the candidate understand whether the resume contains relevant information
+for the selected job.
+5.5.1 Resume Upload
+
+                                                     39
+                                              Hire Path AI
+
+The resume upload module allows users to submit their resumes through the application
+interface.
+The resume may contain details such as:
+
+     Personal information.
+     Educational qualifications.
+     Technical skills.
+     Projects.
+     Work experience.
+     Certifications.
+The uploaded resume is processed according to the capabilities of the implemented system.
+5.5.2 Resume Analysis
+Resume analysis examines the available information in the candidate's resume.
+The system identifies relevant skills and compares them with the requirements of the selected
+job.
+For example, if a candidate applies for a React Developer position, the system can examine
+whether React and other relevant skills are mentioned in the resume.
+The results of resume analysis are used by the missing-skill detection module.
+Figure 5.9: Resume Upload and Analysis Process
+
+Explanation:
+The candidate uploads a resume after selecting a desired job position.
+The system processes the resume and identifies the available information. The extracted skills
+are then compared with the job requirements.
+
+                                                     40
+                                              Hire Path AI
+
+The result helps candidates understand their existing qualifications and identify areas that
+require improvement.
+Figure 5.10: Resume Upload Interface
+[Insert actual screenshot of the Resume Upload Page here]
+The resume upload interface allows candidates to submit their resumes for analysis.
+Figure 5.11: Resume Analysis Result
+[Insert actual screenshot of the Resume Analysis Result Page here]
+The resume analysis interface displays the available information and the results generated by the
+system.
+5.6 Missing Skill Detection
+Missing Skill Detection is an important feature of HirePathAI. It helps candidates identify the
+skills that are required for a selected job but are not found in their resumes.
+The module compares the candidate's available skills with the required skills of the selected job
+position.
+The purpose of this process is to help candidates understand their skill gaps and improve their
+professional knowledge.
+For example, a Frontend Developer position may require HTML, CSS, JavaScript, React, and
+Bootstrap.
+If the candidate's resume contains HTML, CSS, JavaScript, and Bootstrap, but React is not
+identified, the system can display React as a missing skill.
+Working of Missing Skill Detection
+The process follows these steps:
+
+    1. The candidate selects a job position.
+    2. The system obtains the required skills.
+    3. The candidate uploads a resume.
+    4. The system identifies the skills available in the resume.
+    5. The system compares both skill lists.
+    6. The system identifies the missing skills.
+    7. The results are displayed to the candidate.
+Figure 5.12: Missing Skill Detection Process
+
+                                                     41
+                        Hire Path AI
+
+Example of Missing Skill Detection
+Consider a candidate applying for a Frontend Developer position.
+
+Required Skills Candidate Skills Result
+
+HTML        HTML        Available
+
+CSS         CSS         Available
+
+JavaScript  JavaScript  Available
+
+React       Not Found   Missing
+
+Bootstrap   Bootstrap   Available
+
+The system identifies React as a missing skill.
+This information helps the candidate understand which skill needs improvement.
+Basic Skill Comparison Logic
+The following code represents a simple example of comparing candidate skills with job
+requirements.
+
+                                         42
+                                              Hire Path AI
+
+function detectMissingSkills(
+   candidateSkills,
+   requiredSkills
+
+){
+   const missingSkills = requiredSkills.filter(
+      skill => !candidateSkills.includes(skill)
+   );
+
+   return missingSkills;
+}
+
+const candidateSkills = [
+   "HTML",
+   "CSS",
+   "JavaScript"
+
+];
+
+const requiredSkills = [
+   "HTML",
+   "CSS",
+   "JavaScript",
+   "React",
+   "Node.js"
+
+];
+
+const result = detectMissingSkills(
+   candidateSkills,
+   requiredSkills
+
+);
+
+console.log(result);
+Illustrative Output:
+["React", "Node.js"]
+This example demonstrates the basic logic of missing-skill detection. The actual implementation
+may use additional processing to identify skills from resume content.
+5.7 Job Recommendation and Matching Score
+The Job Recommendation and Matching Score module helps candidates identify job
+
+                                                     43
+                                              Hire Path AI
+
+opportunities that are relevant to their qualifications and skills.
+The system compares the available candidate information with the requirements of different job
+positions.
+The recommendation process may consider:
+
+     Candidate skills.
+     Educational qualifications.
+     Work experience.
+     Job preferences.
+     Required job skills.
+     Resume information.
+Based on the comparison, the system can identify suitable job opportunities.
+5.7.1 Job Recommendation
+Job recommendation is designed to reduce the effort required by candidates to search for
+suitable employment opportunities.
+The system uses available candidate information to identify jobs that match their professional
+profile.
+For example, a candidate with knowledge of HTML, CSS, JavaScript, and React may receive
+recommendations for Frontend Developer or React Developer positions.
+The recommendation process helps candidates explore opportunities according to their skills
+and interests.
+5.7.2 Matching Score
+A matching score represents the similarity between the candidate's available skills and the
+required skills of a selected job.
+A basic skill-based matching score can be calculated using the following formula:
+Matching Score = (Matched Skills / Total Required Skills) × 100
+For example:
+Total required skills = 5
+Matched skills = 4
+Matching Score = (4 / 5) × 100
+Matching Score = 80%
+This means that 4 out of the 5 required skills were identified in the candidate's profile.
+The score is an illustrative example. A complete recommendation system may also consider
+education, experience, and other factors.
+Figure 5.13: Job Recommendation Process
+
+                                                     44
+                              Hire Path AI
+
+Explanation:
+The system collects candidate information and available job requirements.
+The candidate's skills are compared with the required skills of different jobs. Based on the
+comparison, matching information is generated.
+The system then displays suitable job recommendations to help candidates explore relevant
+employment opportunities.
+Example of Matching Score
+
+Job Position  Matching Score
+
+Frontend Developer 80%
+
+React Developer 75%
+
+Backend Developer 60%
+
+Note: These scores are hypothetical examples for explaining the concept. They are not actual
+measured results of HirePathAI.
+5.8 YouTube Learning Resources
+The YouTube Learning Resources module helps candidates improve their skills by providing
+learning links related to the skills identified as missing during resume analysis.
+
+                              45
+                                 Hire Path AI
+
+One of the main objectives of HirePathAI is to help candidates understand their skill gaps and
+provide support for improving their knowledge.
+
+After missing skills are identified, the system can provide relevant YouTube learning resources.
+For example, if React is identified as a missing skill, the candidate can access React tutorials to
+learn the required concepts.
+Main Features
+1. Missing Skill Identification
+The system identifies skills that are not found in the candidate's resume but are required for the
+selected job.
+2. Learning Resource Selection
+Relevant learning resources are associated with the identified missing skills.
+3. YouTube Links
+The system provides YouTube links that candidates can use to access learning material.
+4. Skill Improvement
+Candidates can use the available resources to improve their technical knowledge.
+Example of Learning Resources
+
+Missing Skill Learning Resource
+
+React    React Tutorial
+
+Node.js  Node.js Tutorial
+
+Python   Python Programming Tutorial
+
+SQL      SQL Tutorial
+
+JavaScript JavaScript Tutorial
+
+Figure 5.14: Learning Resource Recommendation Process
+
+                                 46
+                                              Hire Path AI
+
+Explanation:
+The system first identifies missing skills from the resume analysis results.
+After identifying the skills, the system provides relevant YouTube learning links. Candidates
+can use these links to improve their knowledge and prepare for suitable job opportunities.
+This feature makes HirePathAI more useful than a basic job portal because it also supports skill
+development.
+Figure 5.15: YouTube Learning Resources Page
+[Insert actual screenshot of the YouTube Learning Resources Page here]
+The learning resources interface displays relevant YouTube links associated with the skills that
+candidates need to improve.
+5.9 Resume Builder
+The Resume Builder module helps candidates create or improve their resumes.
+A resume is an important document used during the job application process. It presents
+information about a candidate's education, technical skills, projects, and experience.
+Candidates who do not have a properly structured resume may face difficulties while applying
+for jobs.
+The resume builder facility of HirePathAI is designed to assist such candidates by helping them
+prepare or improve their resumes.
+Main Features of Resume Builder
+
+                                                     47
+                                              Hire Path AI
+1. Resume Information
+The candidate provides the required personal and professional information.
+2. Educational Details
+The system allows candidates to include their educational qualifications.
+3. Technical Skills
+Candidates can include their technical and professional skills.
+4. Project Information
+The candidate can add project details to highlight practical knowledge.
+5. Experience Details
+Candidates can include their work experience, internships, or other relevant professional
+information.
+6. Resume Improvement
+The resume builder helps candidates organize their information into a structured format.
+Working of Resume Builder
+The candidate accesses the resume builder facility through the application.
+The user enters the required details, including personal information, education, skills, projects,
+and experience.
+The system uses the available information to prepare or improve the resume structure.
+The candidate can then use the prepared resume while applying for suitable job opportunities.
+Figure 5.16: Resume Builder Process
+
+                                                     48
+                                              Hire Path AI
+
+Explanation:
+The resume builder allows candidates to organize their professional information in a structured
+manner.
+The candidate enters the required details, and the system prepares or improves the resume
+according to the available functionality.
+This feature is useful for students and freshers who need assistance preparing a professional
+resume.
+Figure 5.17: Resume Builder Interface
+[Insert actual screenshot of the Resume Builder Page here]
+The resume builder interface provides facilities for entering candidate information and
+preparing a structured resume.
+Conclusion
+This chapter explained the implementation of the HirePathAI Job Portal and its major functional
+modules.
+The system provides facilities for user registration, login, profile management, job searching,
+resume uploading, resume analysis, missing-skill detection, job recommendation, learning
+
+                                                     49
+                                              Hire Path AI
+resources, and resume building.
+The registration and login modules provide access to the application, while profile management
+maintains candidate information. The job search module helps candidates explore employment
+opportunities.
+Resume analysis and missing-skill detection help candidates understand their existing skills and
+identify areas that require improvement. Job recommendation provides relevant employment
+opportunities, while YouTube learning resources support skill development.
+The resume builder facility helps candidates prepare or improve their resumes.
+Overall, the implementation of HirePathAI aims to provide a user-friendly and integrated
+platform that supports candidates throughout the job-searching process and helps them improve
+their career opportunities.
+
+                                                     50
+                       Hire Path AI
+
+CHAPTER 6 SOFTWARE AND HARDWARE REQUIREMENTS
+
+6.1 Hardware Requirements
+Hardware requirements describe the physical components needed to develop, run, and use a
+software application. These components provide the necessary computing resources for
+executing the application and processing information.
+The HirePathAI Job Portal is a web-based application that can be accessed through a computer
+or laptop using a web browser. It requires basic hardware resources for running the frontend,
+backend server, database, and resume-processing operations.
+The hardware requirements depend on the size of the application, the number of users, and the
+amount of data being processed.
+6.1.1 Minimum Hardware Requirements
+The following hardware configuration is suitable for basic development and testing of the
+HirePathAI application.
+
+6.1.2 Recommended Hardware Requirements
+For better performance during development and testing, the following configuration is
+recommended.
+Hardware Component Recommended Requirement
+
+Processor  Intel Core i5 or equivalent
+
+RAM        8 GB or above
+
+Storage    512 GB SSD
+
+Display    Full HD Display
+
+Internet   High-Speed Internet Connection
+
+Explanation of Hardware Components
+1. Processor (CPU)
+The processor performs the instructions required to run the application. It handles different
+development activities, including executing the frontend, backend, and database services.
+
+                            51
+                                              Hire Path AI
+
+2. RAM (Random Access Memory)
+RAM provides temporary memory for running applications. Sufficient RAM helps developers
+run code editors, browsers, development servers, and database tools smoothly.
+3. Hard Disk or SSD
+Storage is used to save project files, source code, uploaded documents, software packages, and
+other application-related data.
+4. Monitor
+A monitor displays the application interface and allows developers to check the appearance and
+functionality of different pages.
+5. Keyboard and Mouse
+These devices are used to enter information, write source code, navigate the application, and
+perform different development activities.
+6. Internet Connection
+An internet connection is required to access online learning resources, download software
+packages, install dependencies, and use external services such as YouTube.
+6.2 Software Requirements
+Software requirements describe the programs, operating systems, frameworks, and supporting
+applications needed to develop and execute the HirePathAI Job Portal.
+Since HirePathAI is a web-based application, it requires a suitable operating system, web
+browser, programming environment, and other development software.
+The software environment helps developers write code, manage application data, test different
+functionalities, and run the application.
+6.2.1 Operating System
+An operating system manages the computer's hardware and software resources.
+The application can be developed and executed on commonly used operating systems such as:
+
+     Windows 10 or Windows 11.
+     Linux distributions.
+     macOS.
+6.2.2 Web Browser
+A web browser is required to access and use the HirePathAI application.
+Supported browsers may include:
+     Google Chrome.
+     Microsoft Edge.
+     Mozilla Firefox.
+The browser displays the frontend interface and allows users to interact with the different
+facilities of the job portal.
+6.2.3 Software Requirements Table
+
+                                                     52
+                   Hire Path AI
+
+Software  Purpose
+
+Windows 10/11 Operating System
+
+Google Chrome Running and testing the application
+
+Node.js   JavaScript runtime environment
+
+npm       Package and dependency management
+
+Visual Studio Code Writing and editing source code
+
+MongoDB   Database management, if used
+
+React     Frontend development, if used
+
+Vite      Frontend development server, if used
+
+The software environment provides the necessary support for application development,
+execution, and testing.
+6.3 Frontend Technologies
+Frontend technologies are used to develop the visual and interactive part of a web application.
+The frontend is the section of the application that users can directly see and interact with.
+In HirePathAI, the frontend provides different pages and interfaces through which candidates
+can register, log in, manage their profiles, search for jobs, upload resumes, and view analysis
+results.
+The main purpose of frontend development is to provide a simple, attractive, responsive, and
+user-friendly interface.
+6.3.1 HTML (HyperText Markup Language)
+HTML is the standard markup language used to create the basic structure of web pages.
+It defines different elements such as headings, paragraphs, forms, buttons, tables, and input
+fields.
+In HirePathAI, HTML provides the structural foundation for different application pages,
+including:
+
+     Registration page.
+     Login page.
+     User dashboard.
+     Resume upload page.
+     Job search page.
+     Profile page.
+HTML helps organize the information displayed on the website.
+6.3.2 CSS (Cascading Style Sheets)
+CSS is used to control the visual appearance and layout of web pages.
+
+                                53
+                                              Hire Path AI
+
+It helps developers apply colors, fonts, spacing, borders, backgrounds, and other styling
+properties.
+In HirePathAI, CSS can be used to:
+
+     Design attractive application pages.
+     Improve the appearance of buttons and forms.
+     Organize page layouts.
+     Maintain consistent colors and fonts.
+     Make the interface responsive.
+CSS improves the overall presentation and usability of the application.
+6.3.3 JavaScript
+JavaScript is a programming language used to add interactive functionality to web applications.
+It allows developers to perform operations such as handling user actions, validating forms,
+updating page content, and communicating with backend services.
+In HirePathAI, JavaScript supports different application activities, including:
+     Handling registration and login forms.
+     Processing user interactions.
+     Managing resume upload actions.
+     Communicating with backend APIs.
+     Displaying dynamic information.
+JavaScript helps make the application interactive and responsive.
+6.3.4 React.js
+React.js is a JavaScript library used for developing user interfaces. It allows developers to
+divide an application into reusable components.
+These components make frontend development more organized and easier to maintain.
+In HirePathAI, React can be used to create different interface components such as:
+     Navigation bar.
+     Login and registration forms.
+     Dashboard.
+     Job cards.
+     Resume upload section.
+     Skill analysis results.
+     Recommendation sections.
+React supports the development of dynamic user interfaces and helps improve code reusability.
+6.3.5 Vite
+Vite is a frontend development tool used to provide a fast development environment for modern
+web applications.
+It supports quick pr-oject startup and provides features such as fast development server updates.
+
+                                                     54
+                                      Hire Path AI
+
+In HirePathAI, Vite can be used to start the frontend development server and support the
+development process.
+It helps developers test changes in the application during development.
+Role of Frontend Technologies in HirePathAI
+
+Technology Main Purpose
+
+HTML Structure of web pages
+
+CSS   Styling and page layout
+
+JavaScript Interactive functionality
+
+React.js Component-based user interface
+
+Vite  Frontend development environment
+
+These technologies work together to create the user-facing part of the HirePathAI Job Portal.
+6.4 Backend Technologies
+Backend technologies are used to manage the server-side operations of a web application. The
+backend works behind the user interface and handles the processing of requests received from
+users.
+In HirePathAI, the backend is responsible for managing application operations such as user
+authentication, profile information, resume-related requests, job information, and
+communication with the database.
+It acts as a connection between the frontend interface and the database.
+6.4.1 Node.js
+Node.js is a JavaScript runtime environment that allows JavaScript code to execute outside a
+web browser.
+It is commonly used for developing server-side applications and handling requests from
+frontend applications.
+In HirePathAI, Node.js can be used to:
+
+     Run the backend server.
+     Process incoming user requests.
+     Handle authentication operations.
+     Manage resume upload requests.
+     Communicate with the database.
+     Provide data to the frontend.
+Node.js provides the environment required for executing backend JavaScript code.
+6.4.2 Express.js
+Express.js is a web application framework for Node.js. It helps developers create server-side
+applications and manage HTTP requests.
+It provides a structured way to define routes and handle communication between the frontend
+
+                                      55
+                                              Hire Path AI
+
+and backend.
+In HirePathAI, Express.js can be used for:
+
+     Creating API routes.
+     Handling registration and login requests.
+     Managing user profile operations.
+     Processing job-related requests.
+     Handling resume upload endpoints.
+     Communicating with the database.
+Express.js simplifies backend development and makes request handling easier.
+6.4.3 REST API
+A REST API allows different parts of an application to communicate through HTTP requests.
+It provides a standard method for transferring information between the frontend and backend.
+In HirePathAI, API communication can be used when a candidate submits a registration form,
+uploads a resume, searches for jobs, or requests analysis results.
+Common HTTP methods include:
+Method Purpose
+GET Retrieve information
+POST Submit or create information
+PUT Update existing information
+DELETE Remove information
+These methods help organize communication between different application components.
+6.4.4 Backend Working Process
+The backend receives requests from the frontend and performs the required operations.
+For example, when a candidate submits a login form, the backend receives the entered
+information, verifies the credentials, and returns an appropriate response.
+Similarly, when a resume is uploaded, the backend can process the file and pass the relevant
+information to the resume analysis functionality.
+Figure 6.1: Backend Communication Process
+
+                                                     56
+                                              Hire Path AI
+
+Explanation:
+The frontend sends requests to the backend through APIs. The backend processes these requests
+and performs the required database operations.
+After processing the request, the backend sends a response to the frontend, where the result is
+displayed to the user.
+6.5 Database Technologies
+A database is used to store, organize, retrieve, and manage application information.
+The HirePathAI Job Portal requires a database to maintain information related to registered
+users, candidate profiles, resumes, jobs, skills, and applications.
+The database helps maintain information in an organized manner and makes it available
+whenever required by the application.
+6.5.1 MongoDB
+MongoDB is a NoSQL database management system that stores information in flexible
+document-based structures.
+Unlike traditional relational databases, MongoDB stores data in BSON documents organized
+
+                                                     57
+                                              Hire Path AI
+
+into collections.
+Its flexible structure allows applications to maintain different types of information according to
+their requirements.
+In HirePathAI, MongoDB can be used to store:
+
+     User registration details.
+     Candidate profile information.
+     Resume-related information.
+     Job details.
+     Required skills.
+     Job application records.
+6.5.2 Collections in MongoDB
+MongoDB organizes related documents into collections.
+The following logical collections may be maintained for the HirePathAI application.
+1. Users Collection
+Stores registration and candidate account information.
+2. Resumes Collection
+Maintains information related to uploaded resumes.
+3. Jobs Collection
+Stores company details, job titles, descriptions, and required skills.
+4. Skills Collection
+Maintains information about different skills and their associated learning resources.
+5. Applications Collection
+Stores information about job applications submitted by candidates.
+6.5.3 Advantages of MongoDB
+    1. Flexible Structure: It supports documents with different fields and structures.
+    2. Scalability: It supports the growth of application data.
+    3. Document Storage: It stores information in a document-oriented format.
+    4. Easy Integration: It can be used with JavaScript-based backend applications.
+    5. Efficient Data Management: It provides operations for storing and retrieving
+
+         application information.
+
+Explanation:
+When a user performs an operation, the frontend sends the required information to the backend.
+The backend communicates with MongoDB to store new information or retrieve existing
+records.
+The required information is then returned to the frontend and displayed to the user.
+6.6 Development Tools and Platforms
+
+                                                     58
+                                              Hire Path AI
+
+Development tools and platforms are software applications and services that help developers
+write, manage, test, and execute a software project.
+The development of HirePathAI requires different tools for source code editing, application
+execution, package management, API testing, and file management.
+These tools make the development process easier and help developers identify and correct
+errors.
+6.6.1 Visual Studio Code
+Visual Studio Code is a source code editor used for writing and managing application code.
+It supports different programming languages and provides features such as syntax highlighting,
+code completion, debugging, and extensions.
+In HirePathAI, Visual Studio Code can be used to:
+
+     Write frontend code.
+     Develop backend functionality.
+     Manage project files.
+     Identify programming errors.
+     Run development commands through the terminal.
+6.6.2 Node Package Manager (npm)
+npm is a package management tool used with Node.js.
+It allows developers to install, update, and manage the packages required by an application.
+In HirePathAI, npm can be used to install project dependencies and manage libraries needed for
+frontend and backend development.
+6.6.3 Git and GitHub
+Git is a version control system used to track changes in source code.
+GitHub is an online platform that allows developers to store and manage Git repositories.
+These tools can help developers:
+     Maintain project source code.
+     Track code changes.
+     Manage different versions.
+     Collaborate with team members.
+     Keep project files organized.
+6.6.4 Postman
+Postman is an API development and testing tool.
+It allows developers to send HTTP requests to backend endpoints and examine the responses.
+In HirePathAI, Postman can be used to test API operations such as registration, login, profile
+management, and job-related requests, if API testing is part of the development process.
+6.6.5 Cloudinary
+Cloudinary is a cloud-based media management platform that provides services for uploading,
+
+                                                     59
+                    Hire Path AI
+
+storing, and managing media files.
+If integrated into HirePathAI, it can be used to manage uploaded files or other supported media
+resources.
+Its use should be included in the final technology list only if the project actually uses
+Cloudinary.
+6.6.6 Web Browser
+A web browser is used to run and test the HirePathAI application.
+Google Chrome can be used to check page layouts, test user interactions, and identify frontend
+errors through its developer tools.
+6.6.7 Local Development Server
+During development, the application can be executed using a local development server.
+The frontend and backend may run on separate local ports.
+For example, the frontend development address may be:
+http://localhost:5173/
+The backend may run on another local port depending on its configuration.
+Table 6.1: Development Tools and Their Uses
+
+Tool / Platform     Purpose
+Visual Studio Code  Source code editing
+Node.js             JavaScript runtime
+npm                 Package management
+Git                 Version control
+GitHub              Source code editing
+Postman             JavaScript runtime
+
+This chapter described the hardware and software requirements needed for developing and
+running the HirePathAI Job Portal.
+The hardware requirements explain the basic computing resources required for application
+development and execution. The software requirements describe the operating system, browser,
+and supporting development environment.
+The frontend technologies provide the user interface, while backend technologies handle
+application processing and communication between different components. Database
+technologies help maintain candidate, resume, job, and application information.
+Development tools such as Visual Studio Code, npm, Git, GitHub, and Postman support the
+development and testing process.
+
+                    60
+                                              Hire Path AI
+
+                   CHAPTER 7: TESTING AND RESULTS
+
+7.1 Introduction to Testing
+Software testing is an important stage of software development. It is performed to check
+whether the developed system works correctly and meets the required objectives. Testing helps
+identify errors, improve system performance, and ensure that users can operate the application
+easily.
+The HirePathAI Job Portal is designed to help job seekers search for suitable jobs, upload
+resumes, identify missing skills, and receive job-related recommendations. Testing is required
+to check the working of these modules and verify that the system provides the expected output.
+The main purpose of testing in HirePathAI is to:
+
+     Check whether users can register and log in successfully.
+     Verify that user profile information is handled correctly.
+     Check whether users can search for available jobs.
+     Verify resume upload and resume analysis functionality.
+     Check whether missing skills are identified correctly.
+     Verify job recommendations and matching scores.
+     Check whether learning resources are displayed properly.
+     Identify errors and improve the reliability of the application.
+Testing is performed using different inputs and conditions to examine the behaviour of the
+system.
+7.2 Types of Testing
+Different types of testing can be used to evaluate the HirePathAI Job Portal.
+1. Unit Testing
+Unit testing checks individual parts or modules of the application separately. Each module is
+tested to make sure that it performs its assigned task correctly.
+In HirePathAI, unit testing can be performed on the registration module, login module, resume
+upload module, job search module, and resume analysis module.
+2. Integration Testing
+Integration testing checks whether different modules work correctly when connected with one
+another. It helps identify problems in communication between the frontend, backend, and
+database.
+For example, when a user uploads a resume, the system should process the file and display the
+analysis results correctly.
+3. Functional Testing
+Functional testing verifies whether the features of the application work according to their
+
+                                                     61
+                               Hire Path AI
+
+requirements.
+In HirePathAI, it includes checking user registration, login, job searching, resume uploading,
+skill detection, and job recommendations.
+4. System Testing
+System testing checks the complete application as a single system. It verifies whether all the
+connected modules work together properly.
+The complete HirePathAI workflow can be tested, starting from user login and continuing
+through job selection, resume upload, resume analysis, and job application.
+5. Usability Testing
+Usability testing checks whether the application is easy to understand and operate. It focuses on
+the user interface, navigation, readability, and ease of use.
+The HirePathAI interface should allow students and job seekers to access important features
+without difficulty.
+6. Validation Testing
+Validation testing checks whether the system meets the requirements defined for the project. It
+ensures that the application provides the expected functions to users.
+For example, the resume analysis module should display relevant information based on the
+uploaded resume, according to the implemented functionality.
+7.3 Test Cases
+Test cases are prepared to verify the working of different modules. Each test case contains an
+input or action and the expected output.
+The following table provides sample test cases for the HirePathAI Job Portal. The actual result
+and status should be filled in after performing the tests.
+
+Test Case                      Expected Result
+                Test Scenario
+
+ID
+
+TC01  Register with valid details User account should be created successfully.
+
+TC02  Login with correct       User should be redirected to the appropriate page.
+      credentials
+
+TC03  Login with incorrect     An error message should be displayed.
+      password
+
+TC04  Update user profile      Updated profile information should be saved.
+
+TC05  Search for a job         Relevant job listings should be displayed.
+
+TC06  Upload a valid resume    Resume should be uploaded successfully.
+
+TC07                                      The system should show an appropriate error
+      Upload an unsupported file
+
+                                          message.
+
+                               62
+                                              Hire Path AI
+
+Note: These are suggested test cases. Include only the test cases relevant to the features
+available in your current project.
+7.4 Testing Results
+Testing results show the actual behaviour of the application after executing the test cases. They
+help determine whether the system is working according to the expected requirements.
+The following table can be used to record the testing results of HirePathAI.
+7.5 Screenshots of the Project
+Screenshots provide visual evidence of the working interface of the HirePathAI Job Portal.
+They help readers understand the appearance and functionality of different modules.
+The following screenshots can be included in this section, depending on the features available in
+the project:
+Figure 7.1: Login Page
+[Insert actual screenshot of the login page here.]
+This page allows registered users to enter their login details and access the application.
+Figure 7.2: Registration Page
+[Insert actual screenshot of the registration page here.]
+This page allows new users to create an account by entering the required information.
+Figure 7.3: User Dashboard
+[Insert actual screenshot of the dashboard here.]
+The dashboard provides access to the main features of the job portal.
+Figure 7.4: Job Search Page
+[Insert actual screenshot of the job search page here.]
+This page allows users to search for jobs according to their interests and requirements.
+Figure 7.5: Resume Upload Page
+[Insert actual screenshot of the resume upload page here.]
+This page allows users to upload their resumes for further processing.
+Figure 7.6: Resume Analysis and Missing Skills
+[Insert actual screenshot of the resume analysis result here.]
+This section displays the resume analysis and identifies skills that may be missing according to
+the selected job requirements.
+Figure 7.7: YouTube Learning Resources
+[Insert actual screenshot of the learning resources page here.]
+This section provides learning links that can help users improve their skills.
+Figure 7.8: Job Recommendation Page
+[Insert actual screenshot of the job recommendation page here.]
+This page displays suitable job recommendations if the recommendation feature is available in
+the implemented version.
+
+                                                     63
+                                              Hire Path AI
+
+Each screenshot should be clear, properly labelled, and taken from the actual running project.
+7.6 Result Analysis
+The result analysis section explains the observations made during the testing of the HirePathAI
+Job Portal.
+The project aims to provide a simple platform where job seekers can explore employment
+opportunities and improve their resumes according to job requirements. The application brings
+together different job-search and resume-related functions.
+The following points describe the expected outcomes of the system:
+
+    1. User Access: The registration and login modules are intended to provide users with
+         access to their accounts.
+
+    2. Job Search: Users can explore job opportunities based on their interests and
+         requirements.
+
+    3. Resume Analysis: The system is designed to examine uploaded resume information.
+    4. Missing Skill Detection: The system aims to identify skills that are not present in the
+
+         resume but are required for a selected job.
+    5. Learning Support: YouTube learning links can guide users towards resources for
+
+         improving missing skills.
+    6. Job Recommendations: The recommendation module is intended to help users find
+
+         jobs that match their profiles.
+The actual success of these functions should be determined from the test results recorded in
+Section 7.4. If a module is incomplete or not tested, it should be mentioned as pending rather
+than described as fully successful.
+Overall, testing helps evaluate the reliability, usability, and correctness of the HirePathAI Job
+Portal and provides a basis for future improvements.
+
+                                                     64
+                                              Hire Path AI
+
+          CHAPTER 8: CONCLUSION AND FUTURE SCOPE
+
+8.1 Conclusion
+The HirePathAI Job Portal is designed to provide a useful platform for students, freshers, and
+job seekers who are searching for suitable employment opportunities. The main aim of the
+project is to make the job-search process easier and help users understand how their skills and
+resumes relate to job requirements.
+The system brings together important functions such as user registration, login, profile
+management, job search, resume uploading, and resume analysis. It is also designed to identify
+missing skills according to job requirements and provide YouTube learning resources so that
+users can improve their knowledge.
+The project focuses on reducing the effort involved in searching for jobs and preparing resumes.
+It aims to help users understand the skills required for a particular job and work towards
+improving their profiles.
+During the development process, different software technologies and development tools are
+used to build the application. The system is organised into separate modules so that its features
+can be developed, tested, and improved.
+In conclusion, HirePathAI provides a useful approach to connecting job searching with resume
+improvement and skill development. It can be further enhanced by adding more intelligent
+features and improving its existing modules.
+8.2 Limitations of the Project
+Although HirePathAI aims to simplify the job-search process, the project may have some
+limitations.
+
+    1. Resume Format: Resume analysis may depend on the format and quality of the
+         uploaded file.
+
+    2. Skill Detection Accuracy: The accuracy of missing-skill detection depends on the
+         information extracted from the resume and the selected job requirements.
+
+    3. Job Data Availability: The usefulness of job recommendations depends on the
+         availability and quality of job information in the system.
+
+    4. Internet Dependency: Features such as accessing YouTube learning links and online
+         job information require an internet connection.
+
+    5. Limited Job Categories: The available job categories may be limited according to the
+         data provided in the application.
+
+                                                     65
+                                              Hire Path AI
+
+    6. Recommendation Accuracy: Job recommendations may not always match the exact
+         expectations of every user.
+
+    7. Further Testing Required: Additional testing with different users, resumes, and job
+         requirements may be needed to improve the reliability of the system.
+
+These limitations provide opportunities for further development and improvement.
+8.3 Future Scope
+In the future, the HirePathAI Job Portal can be improved by adding advanced features and
+making the system more useful for job seekers and recruiters.
+The following improvements can be considered:
+1. Advanced AI-Based Resume Analysis
+More advanced AI techniques can be used to understand resume content, identify skills, and
+provide better suggestions for improvement.
+2. Improved Job Recommendation System
+The recommendation system can be enhanced to suggest jobs according to a user's education,
+skills, interests, experience, and career goals.
+3. Recruiter Dashboard
+A separate recruiter dashboard can be introduced to allow companies to post job openings,
+manage applications, and find suitable candidates.
+4. Interview Preparation
+An interview preparation module can be added to provide common interview questions, practice
+tests, and preparation resources.
+5. Skill Development Courses
+The system can provide organised learning resources and course recommendations to help users
+improve their technical and professional skills.
+6. Job Application Tracking
+A tracking feature can be developed to help users view the status of their submitted job
+applications.
+7. Notifications and Alerts
+Email or in-app notifications can be added to inform users about new job opportunities,
+application updates, and recommended learning resources.
+8. Mobile Application
+A mobile version of HirePathAI can be developed so that users can access job-search and
+resume-related features through their smartphones.
+9. Improved Security
+Additional security measures can be introduced to protect user accounts, personal information,
+and uploaded resumes.
+10. Multiple Language Support
+
+                                                     66
+                                              Hire Path AI
+
+The platform can support additional languages to make it easier for users from different
+backgrounds to use the application.
+
+           APPENDIX 1: ALGORITHMS AND LOGIC FLOW
+
+1.1 User Registration and Login Algorithm
+The registration and login module allows users to create an account and securely access the
+HirePathAI Job Portal. Users can register by entering their basic details and later log in using
+their registered credentials.
+Algorithm:
+
+    1. Start the application.
+    2. Open the registration or login page.
+    3. If the user is new, select the Sign Up option.
+    4. Enter name, email, password and other required details.
+    5. Validate the entered information.
+    6. Store the registration details in the database.
+    7. If the user already has an account, select Login.
+    8. Enter email and password.
+    9. Verify the login credentials.
+    10. If credentials are correct, open the user dashboard.
+    11. Otherwise, display an error message.
+    12. Stop.
+Logic Flow:
+
+                                                     67
+                                              Hire Path AI
+
+1.2 Resume Upload Algorithm
+The resume upload module allows users to upload their existing resumes in the supported file
+format. The uploaded resume is used for further analysis and job matching.
+Algorithm:
+
+    1. Start.
+    2. Open the resume upload page.
+    3. Select the resume file from the device.
+    4. Check the file format and size.
+    5. Validate the selected file.
+    6. Upload the resume to the system.
+    7. Store the file or its reference in the appropriate storage.
+    8. Display the upload confirmation.
+    9. Make the resume available for analysis.
+    10. Stop.
+1.3 Resume Analysis Algorithm
+Resume analysis is an important feature of HirePathAI. It examines the uploaded resume and
+identifies important information such as educational qualifications, technical skills and work
+experience.
+Algorithm:
+    1. Start.
+    2. Receive the uploaded resume.
+    3. Extract readable text from the resume.
+    4. Process the extracted information.
+    5. Identify education, skills and experience.
+    6. Organize the extracted information.
+    7. Compare the information with the selected job requirements.
+    8. Generate the resume analysis result.
+    9. Display the result to the user.
+    10. Stop.
+1.4 Skill Extraction and Missing Skill Detection
+This module identifies the skills mentioned in the user's resume and compares them with the
+skills required for the selected job.
+Algorithm:
+    1. Start.
+    2. Read the extracted resume information.
+    3. Identify the skills available in the resume.
+
+                                                     68
+                Hire Path AI
+
+4. Retrieve the required skills for the selected job.
+5. Compare both skill sets.
+
+    6. Identify the skills already available.
+    7. Identify the missing skills.
+    8. Generate a list of missing skills.
+    9. Display the results to the user.
+    10. Stop.
+Example:
+
+Required job skills Resume skills Result
+
+Python  Python  Available
+
+Java    Java    Available
+
+React   Not Found Missing
+
+1.5 Job Matching and Recommendation Algorithm
+The job matching module recommends suitable job opportunities based on the user's skills,
+qualifications and selected job preferences.
+Algorithm:
+
+    1. Start.
+    2. Retrieve the user's profile information.
+    3. Retrieve the extracted resume skills.
+    4. Get available job information from the database.
+    5. Read the required skills for each job.
+    6. Compare user skills with job requirements.
+    7. Calculate the matching percentage.
+    8. Arrange jobs according to their matching scores.
+    9. Display the most relevant job recommendations.
+    10. Allow the user to view details and apply.
+    11. Stop.
+1.8 Overall System Workflow
+The overall workflow describes how a user interacts with different modules of HirePathAI,
+starting from registration and ending with job recommendations and applications.
+System Workflow Diagram:
+Start
+User Registration / Login
+Open User Dashboard
+Select Desired Job / Company
+Upload Resume
+
+                                          69
+                                              Hire Path AI
+Resume Analysis
+Skill Extraction
+
+         APPENDIX 2: SCREENSHOTS AND CODE SNIPPET
+
+This appendix contains screenshots of the different modules of the HirePathAI Job Portal. These
+screenshots provide visual evidence of the implemented system and explain how users interact
+with the application.
+Insert your actual project screenshots below the respective headings.
+2.1 Home Page Screenshot
+2.2 User Registration Page
+
+2.3 Login Page
+
+                                                     70
+                                     Hire Path AI
+
+2.4 User Dashboard
+
+2.5 Job Search and Job Details Page
+
+2.6 Missing Skills Detection Page
+                                                     71
+                                              Hire Path AI
+
+Important Code Snippets
+The following pseudocode examples explain the basic logic of important HirePathAI modules.
+They are illustrative examples and should be replaced with actual source code from the project
+wherever possible.
+A. Login Validation Logic
+function login(email, password) {
+
+   if (!email || !password) {
+      return "Please enter all details";
+
+   }
+   // Verify user credentials
+   // using the authentication system
+   return "Login successful";
+}
+B. Missing Skill Detection Logic
+function findMissingSkills(
+   requiredSkills,
+   userSkills
+){
+   const missingSkills = requiredSkills.filter(
+
+      skill => !userSkills.includes(skill)
+   );
+
+                                                     72
+                                              Hire Path AI
+
+   return missingSkills;
+}
+C. Matching Score Calculation
+function calculateMatch(
+
+   requiredSkills,
+   userSkills
+){
+   if (requiredSkills.length === 0) {
+
+      return 0;
+   }
+   const matchedSkills = requiredSkills.filter(
+
+      skill => userSkills.includes(skill)
+   );
+   const score =
+
+      (matchedSkills.length /
+      requiredSkills.length) * 100;
+   return score;
+}
+
+                                                REFERENCES
+The following references provide supporting information about job portals, artificial
+intelligence, resume analysis, recommendation systems and the technologies used in web
+application development.
+
+                                                     73
+                                              Hire Path AI
+
+1. Books and Study Materials
+    1. Stuart Russell and Peter Norvig, Artificial Intelligence: A Modern Approach, 4th
+         Edition, Pearson Education.
+    2. Ethem Alpaydin, Introduction to Machine Learning, 4th Edition, MIT Press, 2020.
+    3. Ian Goodfellow, Yoshua Bengio and Aaron Courville, Deep Learning, MIT Press,
+         2016.
+    4. Charu C. Aggarwal, Recommender Systems: The Textbook, Springer, 2016.
+
+2. Research Papers and Journals
+    1. F. Ricci, L. Rokach and B. Shapira, "Introduction to Recommender Systems
+         Handbook," Recommender Systems Handbook, Springer, 2011.
+    2. R. Burke, "Hybrid Recommender Systems: Survey and Experiments," User Modeling
+         and User-Adapted Interaction, vol. 12, pp. 331­370, 2002.
+    3. Y. Koren, R. Bell and C. Volinsky, "Matrix Factorization Techniques for Recommender
+         Systems," Computer, vol. 42, no. 8, pp. 30­37, 2009.
+
+3. Official Technology Documentation
+The following official documentation websites can be referred to for understanding web
+development technologies. Include only the technologies actually used in your project.
+
+    1. React Documentation ­ https://react.dev/
+    2. Node.js Documentation ­ https://nodejs.org/docs/latest/api/
+    3. Express.js Documentation ­ https://expressjs.com/
+    4. MongoDB Documentation ­ https://www.mongodb.com/docs/
+    5. JavaScript Documentation ­ https://developer.mozilla.org/en-US/docs/Web/JavaScript
+    6. Cloudinary Documentation ­ https://cloudinary.com/documentation
+4. Online Tutorials and Learning Resources
+    1. YouTube ­ https://www.youtube.com/
+    2. W3Schools ­ https://www.w3schools.com/
+    3. GeeksforGeeks ­ https://www.geeksforgeeks.org/
+    4. MDN Web Docs ­ https://developer.mozilla.org/
+    5. freeCodeCamp ­ https://www.freecodecamp.org/
+5. GitHub Repository ­ HirePathAI Job Portal
+Project Name: HirePathAI Job Portal
+Repository: Insert your actual GitHub repository URL here.
+Description: The HirePathAI Job Portal project repository contains the source code and related
+project files used for developing the application. It includes the implementation of the user
+interface, backend functionality, resume-related modules and other available features.
+
+                                                     74
+

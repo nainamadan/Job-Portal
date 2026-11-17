@@ -1,14 +1,19 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { FaSearch, FaMapMarkerAlt } from "react-icons/fa";
 import { assets } from "../assets/assets.js";
 import { AppContext } from "../context/AppContext";
 
 const Hero = () => {
-  const { setSearchFilter, setIsSearched } =
+  const { searchFilter, setSearchFilter, setIsSearched } =
     useContext(AppContext);
 const listingRef = useRef(null);
   const titleRef = useRef(null);
   const locRef = useRef(null);
+
+  useEffect(() => {
+    if (!searchFilter.title && titleRef.current) titleRef.current.value = "";
+    if (!searchFilter.location && locRef.current) locRef.current.value = "";
+  }, [searchFilter]);
 
   const onSearch = () => {
     const searchData = {

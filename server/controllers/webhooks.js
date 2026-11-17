@@ -5,7 +5,7 @@ const clerkWebhooks = async (req, res) => {
   try {
     const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
 
-    const payload = JSON.stringify(req.body);
+    const payload = Buffer.isBuffer(req.body) ? req.body.toString("utf8") : JSON.stringify(req.body);
 
     const headers = {
       "svix-id": req.headers["svix-id"],
@@ -19,27 +19,23 @@ const clerkWebhooks = async (req, res) => {
 
     switch (type) {
       case "user.created":
-        await User.create({
-          _id: data.id,
-          name: data.first_name+" "+data.last_name,
-          
-          email: data.email_addresses[0].email_address,
-          image: data.image_url,
-          resume:''
-        });
-        break;
-
-      case "user.updated":
+      case "user.updated": {
+        const primaryEmail = data.email_addresses?.find((email) => email.id === data.primary_email_address_id);
+        if (!primaryEmail?.email_address) throw new Error("Primary account email is missing.");
         await User.findOneAndUpdate(
           { _id: data.id },
           {
-              name: data.first_name+" "+data.last_name,
-          
-            email: data.email_addresses[0].email_address,
-            image: data.image_url,
-          }
+            $set: {
+              name: [data.first_name, data.last_name].filter(Boolean).join(" ") || data.username || "Applicant",
+              email: primaryEmail.email_address,
+              image: data.image_url || "",
+            },
+            $setOnInsert: { resume: "", savedJobs: [] },
+          },
+          { upsert: true, new: true, runValidators: true }
         );
         break;
+      }
 
       case "user.deleted":
         await User.findOneAndDelete({

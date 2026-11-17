@@ -22,6 +22,8 @@ await connectDB();
 await connectCloudinary();
 // Middlewares
 app.use(cors());
+// Svix verifies the exact original bytes, before JSON parsing changes whitespace.
+app.post('/webhooks', express.raw({ type: 'application/json' }), clerkWebhooks);
 app.use(express.json({ limit: "25mb" }));
 app.use(clerkMiddleware());
 app.use(express.urlencoded({ limit: "25mb", extended: true }));
@@ -76,7 +78,6 @@ app.get("/debug-sentry", (req, res) => {
 // app.get("/debug-sentry", () => {
 //   throw new Error("My first Sentry error!");
 // });
-app.post('/webhooks',clerkWebhooks);
 app.use('/api/company', companyRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/users', userRoutes);

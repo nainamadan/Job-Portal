@@ -1,11 +1,18 @@
 import mongoose from "mongoose";
 import Job from "../models/Job.js";
 import { analyzeJobMatch, analyzeResumeATS } from "../utils/skillMatcher.js";
+import { buildJobFilter } from "../utils/jobFilters.js";
 
 // get all jobs
 export const getJobs = async (req, res) => {
+  let filter;
   try {
-    const jobs = await Job.find({ visible: true })
+    filter = buildJobFilter(req.query);
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error.message });
+  }
+  try {
+    const jobs = await Job.find(filter)
       .populate({
         path: "companyId",
         select: "-password",

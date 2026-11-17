@@ -996,7 +996,8 @@ const AddJob = () => {
               value={jobData.salary}
               onChange={handleChange}
               placeholder="10"
-              min="1"
+              min="0.1"
+              step="0.1"
               required
               className="w-full border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
             />

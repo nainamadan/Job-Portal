@@ -24,6 +24,22 @@ const jobApplicationSchema = new mongoose.Schema({
     default: "pending",
   },
 
+  // Revision guards prevent an older mail attempt from overwriting a newer result.
+  statusRevision: { type: Number, default: 0 },
+  interviewDetails: {
+    date: String,
+    time: String,
+    type: String,
+    link: String,
+    location: String,
+    notes: String,
+  },
+  feedback: String,
+  statusNotification: {
+    state: { type: String, enum: ["sending", "sent", "failed", "not_required"] },
+    updatedAt: Date,
+  },
+
   date: {
     type: Date,
     default: Date.now,

@@ -1,0 +1,273 @@
+0|This report presents the project we completed during the final year of our B.Tech. programme in Computer Science and Engineering.
+1|We thank Ms. Ginni Chawla, Assistant Professor in the Department of Computer Science and Engineering at PIET, Samalkha, for supervising this project. Her guidance, careful feedback and consistent support helped us develop our ideas and complete the work. We are grateful for the time and attention she gave to the project.
+2|We also thank Dr. S.C. Gupta, Head of the Department of Computer Science and Engineering at PIET, for his support and assistance throughout the project.
+3|We appreciate the guidance and cooperation of the department's faculty members during the development of HirePathAI.
+4|Finally, we thank our friends for their help and encouragement in completing this project.
+5|HirePathAI brings job searching, resume review and skill development into one web portal. It is intended for students, recent graduates and other job seekers who need help relating their qualifications to the requirements of a particular role. Finding a vacancy is only one part of this process: candidates also need to understand the skills an employer expects and present their experience clearly. The project addresses these needs through job search and application facilities, resume analysis, skill-gap identification, learning links and resume-building support. Its aim is to help candidates make informed choices about suitable opportunities and the preparation those opportunities require.
+6|By connecting these services, HirePathAI gives candidates a clearer path from reviewing a job description to improving their resumes and preparing an application. Skill comparisons highlight areas to investigate, while learning resources and resume-building support help users act on the results. The project therefore combines employment search with practical career preparation.
+7|HirePathAI is a web portal for students, freshers and other job seekers. It brings job discovery and career preparation together so that candidates can review opportunities and assess their readiness in the same place. This is particularly useful at the start of a career, when a qualification may not make the skills expected by employers clear. Candidates may also need help choosing an appropriate role or describing their abilities in a resume. Through the portal, users can explore vacancies, select a role and compare the skills in their resumes with that role's requirements. The results highlight skills that were not found in the resume and provide related YouTube learning links. The purpose is to help candidates understand their options and decide what to improve before applying.
+8|The portal supports account creation, job discovery, resume review, skill development and applications. After registering or signing in, candidates can explore companies and available roles. Selecting a job provides the context for the resume analysis described on the next page.
+9|Candidates can upload a resume for comparison with a selected job. The analysis identifies skills mentioned in the document and checks them against the role's requirements. Required skills that are not detected are shown as gaps for the candidate to review. Related YouTube links provide a starting point for learning, and the resume builder helps users organise or improve their resumes. The main facilities are listed below:
+10|Bringing these facilities together gives candidates a more organised way to prepare and submit job applications.
+11|HirePathAI aims to help candidates find suitable vacancies and understand the preparation needed for their chosen roles. The project has the following specific objectives:
+12|Together, these objectives support candidates as they prepare for employment and make decisions about their careers.
+13|The portal is intended for people seeking work or preparing for future opportunities. Its main user groups are described below.
+14|Students can explore possible careers while studying and identify the technical skills associated with the roles that interest them.
+15|Recent graduates can look for entry-level roles and use resume comparisons to understand the skills those positions require.
+16|People seeking a new job can review vacancies and compare their current skills with the requirements of each role.
+17|Users who want to improve their knowledge can follow learning links for relevant technologies and work on the skills required by their preferred jobs.
+18|People unsure about their career direction can explore roles and learn what each expects. The portal therefore supports users at several stages of education and employment.
+19|Many students, freshers and other candidates find it difficult to identify suitable work.
+20|Having access to job websites does not always make it clear which roles fit a candidate's qualifications. Applicants may recognise some skills in a job description but overlook others or be unsure how to assess the gaps. Resume preparation presents a further difficulty, especially for freshers who have little experience presenting their work. Once a gap is identified, candidates must also find appropriate learning material. These separate tasks can make preparation time-consuming and confusing. The main problems addressed by the project are summarised below:
+21|HirePathAI combines vacancy searches, resume review and preparation support in one portal. Users can examine jobs, submit a resume and identify requirements that are not reflected in the document. Learning links and resume-building facilities then help candidates respond to those findings. This approach makes the connection between job requirements and preparation easier to follow.
+22|The project covers job searches, resume review, skill identification and career preparation. It supports candidates who want to assess employment opportunities and improve how they present their qualifications. Its main areas are outlined below:
+23|Registration and login give users access to their accounts and the portal's available facilities.
+24|Candidates can review vacancies and job details, choose suitable
+25|Users submit resumes so that the system can examine the information and skills they contain.
+26|The portal compares resume skills with the selected role and highlights required skills that were not detected in the document.
+27|YouTube links give candidates learning material related to the identified gaps, helping them explore unfamiliar topics and technologies.
+28|Recommendations and matching information help candidates judge how closely their skills relate to the opportunities they are considering.
+29|The resume builder helps users create a professional document or improve the structure of an existing resume.
+30|Possible extensions include interview preparation, career guidance, more detailed recommendations and additional recruiter tools. The present scope centres on bringing job searches and skill development together.
+31|The technologies below support the application's pages, reusable interface components, styling and development workflow. Each contributes a different part of the web development process.
+32|Built on React, Next.js provides tools for organising application pages and the structure of a web project.
+33|React divides the interface into reusable components, helping developers manage and maintain the application's screens.
+34|TypeScript adds type checking to JavaScript, making some coding errors easier to identify while developing the project.
+35|HTML defines page structure, including headings, forms, buttons and the other elements through which users access the application.
+36|CSS controls the layout and appearance of pages, including colours, typefaces, spacing and the arrangement of content.
+37|Visual Studio Code provides an editor for creating, updating and organising the project's source files.
+38|GitHub hosts the source repository and helps track changes to the project. Together, these tools support the development and maintenance of the web application.
+39|This chapter established the purpose of HirePathAI, the users it serves and the problems it addresses. The project connects job searches and applications with resume analysis, skill comparisons, recommendations, learning links and resume-building support. Its central idea is to help candidates understand what a chosen role requires and decide how to prepare for it. The following chapters examine the background to this approach and explain the system's analysis, design, implementation and testing.
+40|A job portal brings vacancies and applications together online. Employers can advertise positions, while candidates can review requirements and submit their resumes without visiting each organisation. This provides an alternative to relying solely on newspapers, personal contacts or direct enquiries. Candidates can narrow their search by qualifications, experience and interests, and employers receive applications through a common channel. Typical job portals provide the following facilities:
+41|HirePathAI shares this job-search purpose and adds resume comparisons and skill-gap information to help candidates assess their preparation for a selected role.
+42|Established job platforms commonly support vacancy searches, resumes, company information and applications. The following examples illustrate different ways these services are organised:
+43|LinkedIn combines professional profiles, networking and job searches. Candidates can build connections, follow organisations and explore employment opportunities.
+44|Indeed provides vacancy searches across employers, using criteria such as job titles, keywords and location.
+45|Naukri.com serves the Indian job market through candidate profiles, resume uploads, vacancy searches and online applications.
+46|Glassdoor combines job listings with company reviews, salary information and workplace details. These resources help candidates assess employers before applying. Comparison of Existing Job Portals with HirePathAI
+47|These platforms support job discovery in different ways. HirePathAI's proposed emphasis is the connection between finding a role, reviewing relevant skills and locating learning support.
+48|Artificial intelligence can support tasks such as extracting information, identifying patterns and making predictions. In recruitment, these capabilities can help organise resume details, recognise relevant skills and compare candidates with role requirements. They may also support job recommendations and reduce repetitive screening work.
+49|Resume-screening tools extract details such as education, experience and skills, making candidate information easier to organise and review.
+50|Skill-identification tools recognise skills in a resume and compare them with those requested in a job description.
+51|Recommendation tools compare a candidate's information with vacancies to suggest relevant opportunities.
+52|A match score summarises the overlap between a profile and a job, based on selected skills or other criteria.
+53|Recruitment tools can organise applications and reduce repeated administrative work during initial screening.
+54|Skill-gap information can also guide candidates towards relevant learning material. Accuracy, transparency and fairness remain important because errors or biased information can produce misleading recommendations. [The original research citation needs complete source details.] HirePathAI applies this general approach to resume review, skill comparisons and job recommendations, helping candidates understand their preparation for a preferred role.
+55|A resume brings together education, skills, projects, certifications and work experience. Resume analysis extracts the details relevant to a job, while job matching compares those details with the employer's requirements. Used together, they help candidates understand where their profiles align with a role and where further preparation may be needed. The process follows these stages:
+56|The uploaded resume supplies the information used to assess the candidate's qualifications and skills.
+57|The system identifies relevant details in the document, including skills, education and experience.
+58|The selected job description supplies the skills and qualifications to check.
+59|The extracted candidate skills are checked against the role's requirements.
+60|Required skills that are not detected in the resume are listed for review.
+61|The matching score summarises how closely the detected skills fit the job's requirements.
+62|Learning resources help candidates act on gaps found during the comparison. The process links vacancy searches with preparation by showing which requirements need attention. Research on recommendations also considers how candidate skills and job requirements are represented, and whether results are understandable and fair. [The original research citation needs complete source details.]
+63|The review identified opportunities to make job searching more informative for candidates. Vacancy listings and application facilities remain useful, but applicants may need further help interpreting requirements and judging their readiness. The following concerns guided the design of HirePathAI:
+64|Candidates may find technical requirements difficult to interpret.
+65|HirePathAI helps users compare the requirements of a role with the skills listed in their resumes.
+66|Skill-gap information makes requirements that are absent from the candidate's profile easier to identify.
+67|Related YouTube links give candidates a starting point for studying the skills they need to develop.
+68|Resume-building support helps freshers organise their qualifications and improve the presentation of their documents.
+69|Recommendations and match scores help candidates focus on opportunities that relate more closely to their skills.
+70|Combining job searches, resume preparation and learning support reduces the need to move between separate services. These needs shaped the project's main features and its focus on informed career preparation.
+71|The review suggests that job portals simplify access to vacancies, while resume analysis and recommendation methods can add useful preparation support. It informed the project's requirements by connecting job discovery with skill comparisons and learning resources. The main findings are summarised below:
+72|These findings shaped HirePathAI as a portal that connects job searches with resume review and skill development. Candidates can compare their skills with a role, review gaps, access learning material and improve their resumes. This provides the basis for the system analysis and design that follow.
+73|The feasibility study considers whether HirePathAI can be built and used with the available resources. It examines the project's technical requirements, usability and cost.
+74|The proposed portal can be developed with commonly available web technologies and tested on a computer with internet access. These tools support accounts, vacancy searches, resume uploads, analysis and recommendations. Their availability makes the project technically practical within an academic development setting.
+75|Operational feasibility concerns whether intended users can understand the portal and complete its tasks. The proposed user journey is:
+76|This workflow is intended to make the portal practical for students, freshers and other job seekers.
+77|As an academic project, HirePathAI can use existing computers and open-source development tools to limit costs. Internet access, computing resources and any future hosting or maintenance remain the main expenses to consider when assessing affordability.
+78|Candidates often search through job websites, company career pages, newspapers and personal contacts. They prepare resumes separately and compare their qualifications with employers' requirements themselves. Where a portal concentrates on vacancies and applications, users may need other services to assess skill gaps, improve resumes or locate learning material.
+79|The proposed HirePathAI portal connects job searches with preparation support. Candidates can create accounts, explore vacancies and upload resumes for comparison with job requirements. Skill-gap information points to areas for improvement, and related YouTube links provide learning material. Resume-building support and job recommendations complete the planned set of career services.
+80|Functional requirements define what the portal should allow users to do. The main requirements are listed below:
+81|Non-functional requirements define expected usability, quality and performance.
+82|The analysis considered feasibility, current job-search practices, their limitations and the proposed response. It also defined the functions and quality requirements that guide development. The next chapter turns these requirements into an architecture, diagrams and individual modules.
+83|The architecture explains how the portal's interface, processing components, data and external resources work together. HirePathAI separates these responsibilities into layers so that account access, vacancy selection, resume analysis and learning support can be developed and maintained systematically. Requests move from the interface to application logic, which retrieves or updates the necessary records and returns results. This structure supports future extensions without treating every feature as a separate system.
+84|The presentation layer contains the screens candidates use to interact with HirePathAI. It supports the following activities:
+85|The application layer receives interface requests and carries out the portal's processing. Its responsibilities include:
+86|The database layer maintains the records the application needs, including:
+87|External learning resources connect identified skill gaps with relevant YouTube material that candidates can use for further study.
+88|Candidates interact with the interface, while the application layer handles their requests and reads or updates the database. For a resume comparison, the application processes the document, checks its skills against the selected role and returns results with learning links. Each layer contributes to the same user workflow.
+89|A data flow diagram shows where information enters the system, how it is processed and stored, and what is returned to users. It explains these relationships without describing the program code. The HirePathAI diagrams trace information between the candidate and the portal's main processes.
+90|At the context level, HirePathAI is represented as one process interacting with the candidate. Registration details, credentials, job preferences and resume files form the inputs; the system returns the corresponding results.
+91|The Level 1 DFD separates the portal into authentication, job selection, resume upload and analysis, skill comparison, recommendations and applications. This gives a more detailed view of the information exchanged between processes.
+92|The DFD connects these processes and shows how information passes through the portal.
+93|The use case diagram describes the actions available to the Job Seeker, the main actor in this design. It links that user to the portal's account, vacancy, resume and learning functions, showing how the application supports both job searching and preparation.
+94|After registration or login, candidates use the dashboard to choose a role or company. They can upload a resume, review its analysis, investigate missing skills and open learning resources. Job searches and applications complete the workflow represented by the use case diagram.
+95|An activity diagram uses UML to show the order of actions and the decisions that lead to different paths. Here, it follows a candidate from account access through resume review and job application, including the checks required along the way.
+96|The candidate opens the portal and registers or signs in. The system checks the submitted information and asks the user to try again if it is invalid. Successful authentication opens the dashboard.
+97|From the dashboard, the candidate selects a role and uploads a resume. The system compares detected skills with the job requirements, displays any gaps and provides learning links. Recommendations then help the candidate explore and apply for relevant opportunities. The diagram connects these actions with their decision points.
+98|The database design organises records for candidates, resumes, jobs, skills and applications. It defines how information is stored and linked so that the portal can retrieve it when needed. A consistent design also limits unnecessary duplication and makes updates easier to manage.
+99|The Skills Collection records the skills associated with particular job requirements.
+100|The Application Collection maintains the records of applications submitted by candidates.
+101|User identifiers link candidate records to resumes and applications, while job identifiers connect applications with role requirements. This is a logical data model; the implementation may organise these relationships through MongoDB documents and references.
+102|The portal is divided into modules with specific responsibilities. This separation makes features easier to develop, test and maintain, while allowing them to contribute to a shared workflow. The main modules are described below.
+103|This module creates accounts for new candidates and authenticates existing users through their registered credentials. Its main functions are:
+104|The profile module maintains personal and professional details such as name, email, education, skills and experience. These records provide context for understanding the candidate's background.
+105|Candidates select the company or role they want to explore, such as Frontend Developer or React Developer. The selected role supplies the requirements used in later resume comparisons.
+106|The upload module accepts resumes containing education, skills, projects and experience. It passes the submitted document to the processing and analysis stages.
+107|The analysis module identifies relevant qualifications, skills and experience in a resume. This information supports comparison with the requirements of the selected role.
+108|This module reports required skills that were not detected in the resume. For example, a role may require HTML, CSS, JavaScript, React and Node.js. If the resume lists only the first three, the comparison identifies React and Node.js as gaps for the candidate to review and address.
+109|The recommendation module uses available profile information, including skills, education, experience and preferences, to suggest relevant roles. A matching score can summarise how closely a profile fits a job's requirements.
+110|The learning module links skill gaps to relevant YouTube tutorials. A candidate missing React, for example, can open React learning resources and use them to prepare for future opportunities.
+111|The resume builder helps candidates organise their education, skills, projects and experience into a professional document, or improve the structure of an existing resume.
+112|The search and application module lets candidates explore vacancies that interest them and apply for suitable positions. It completes the portal's main job-search workflow.
+113|The module structure separates account management, resume processing, job searches and applications. Learning resources provide a further route for addressing skill gaps. These modules cooperate to deliver the portal's services rather than operating as unrelated tools.
+114|The workflow follows a candidate from initial access to the results of a job search. It connects account access, resume review and learning support with the process of choosing a role.
+115|Candidates register or sign in, enter the dashboard and select a role or company. After a resume is uploaded, the system identifies its skills and compares them with the selected requirements. Any gaps are displayed with relevant YouTube learning links. Candidates can use these resources and the resume builder to prepare, review job recommendations and apply for suitable vacancies.
+116|The candidate registers a new account or signs in to an existing one.
+117|The candidate chooses a company or role that matches their interests.
+118|The portal compares detected resume skills with the selected role and reports gaps.
+119|Related YouTube links give candidates a starting point for learning missing skills.
+120|Candidates can use the resume builder to organise or improve their documents.
+121|Recommendations relate the candidate's information to available job requirements.
+122|The workflow connects the candidate's existing profile with preparation and job discovery. Resume review identifies relevant skills, the comparison highlights gaps, and learning resources provide ways to address them. Recommendations and search tools then support the choice of vacancies to pursue.
+123|This chapter described the architecture, data flows, use cases, activities, database structure, modules and workflow. Together, these elements organise authentication, resume analysis, skill comparisons, recommendations and learning support within one portal.
+124|Job applications complete this workflow. The design links job discovery with skill development and provides the structure needed for the implementation and testing stages.
+125|Implementation turns the design into working modules and connects them through an interface and database. For HirePathAI, this means organising account access, profile management, vacancy searches, resume processing, skill comparisons, recommendations, learning resources and resume building into a coherent application. Candidates begin by registering or signing in. They can then choose a role and submit a resume for analysis. Comparing detected skills with job requirements produces information about gaps and relevant learning material. Recommendations and matching information help candidates decide which opportunities to explore. The implementation aims to make these steps accessible through one interface and reduce the effort involved in job searching and preparation.
+126|The development environment supports three main responsibilities: the frontend presents the interface, the backend processes requests and the database maintains records. The table below outlines the tools and software involved in this web-based approach.
+127|The final technology list should reflect the tools and libraries used in the implemented project.
+128|Registration creates an account for a new user, while login provides access to an existing one. Authentication identifies the candidate so that the portal can present the appropriate profile and personalised facilities.
+129|New candidates enter the required registration details, such as name, email and password. The system checks the submission and creates an account when the information is valid. This account provides access to the portal's user facilities.
+130|Existing users submit their registered credentials. Valid details lead to the dashboard; an unsuccessful attempt returns an error message. This process keeps account access separate for each candidate.
+131|Users choose registration or login when opening the application. Registration creates an account from valid details, whereas login checks an existing account's credentials. Successful authentication provides access to the dashboard and its different
+132|The registration screen collects the details needed to create a candidate account and access the portal.
+133|The login screen lets registered candidates enter their accounts and use the application's facilities.
+134|Profile management maintains the candidate's personal and professional background. Information such as name, email, education, skills, projects and experience provides context for resume analysis and recommendations. Keeping these details current helps the portal relate candidate information to job requirements.
+135|Candidates create profiles by supplying the requested personal and professional details.
+136|Users can revise their profiles as their qualifications, skills or experience change.
+137|Profile details help relate a candidate's background and preferences to relevant opportunities.
+138|After signing in, candidates open the profile section and enter or update their details. The system processes and stores the changes. This information can then support more personalised resume review and job searches.
+139|Profile management keeps candidate information organised for use across the portal. Updated details support resume comparisons and help users present their qualifications clearly when looking for work.
+140|The profile screen provides access to candidate details and related portal functions.
+141|The search and application module helps candidates explore vacancies and submit applications. Users can review roles or companies that interest them and examine details such as the title, employer, description and required skills. This information supports the decision about whether to pursue a position.
+142|Candidates can submit an application through the facility provided for the selected vacancy.
+143|Available candidate information can also be used to suggest relevant job opportunities.
+144|The candidate opens the search section, explores a preferred role or company and reviews the available information. After checking the requirements, the user can select a vacancy and continue to its application process.
+145|Search begins with exploring available roles and reviewing their requirements. When a candidate finds a suitable vacancy, the application facility provides the next step. This keeps discovery and submission within an organised process.
+146|The search screen helps candidates browse vacancies and select roles for closer review.
+147|The details screen explains a selected job's requirements so candidates can review them before applying.
+148|Resume upload and analysis connect the candidate's document with a chosen role. Education, technical skills, projects and experience provide the information used in the comparison. After selecting a job or company, the candidate uploads a resume, which the system processes according to its supported capabilities. The resulting information helps identify how well the document addresses the selected requirements.
+149|Candidates submit their documents through the resume upload interface. A resume may contain the following information:
+150|Processing depends on the file types and analysis features supported by the implementation.
+151|The analysis stage identifies skills in the resume and checks them against the chosen job. For a React Developer role, for example, it looks for React and other relevant requirements. Its output is then used to identify skills that were not detected.
+152|After a role is selected, the uploaded resume is processed and its relevant information extracted. Detected skills are then compared with the job requirements.
+153|The comparison helps candidates review their qualifications and decide which areas need attention.
+154|The upload interface accepts the resume for subsequent analysis.
+155|The results screen presents the information identified in the resume and the system's analysis.
+156|Missing-skill detection compares a role's requirements with the skills found in a resume. The purpose is to help candidates decide what to review or learn. For example, a Frontend Developer role may require HTML, CSS, JavaScript, React and Bootstrap. If React is not detected but the other four are present, the results identify React as a gap. This gives the candidate a specific requirement to investigate rather than a general instruction to improve the resume.
+157|React is identified as the missing skill in this example, giving the candidate a clear area to review.
+158|The example below illustrates a basic comparison between resume skills and job requirements.
+159|This code illustrates the comparison logic; a full implementation may require further processing to extract and normalise skills.
+160|The recommendation and matching module relates candidate profiles to relevant roles.
+161|It compares available qualifications and skills with the requirements of different vacancies. The recommendation process may consider:
+162|The comparison provides a basis for identifying relevant job opportunities.
+163|Recommendations help candidates focus their searches on roles related to their backgrounds. A profile listing HTML, CSS, JavaScript and React, for instance, may be relevant to Frontend Developer or React Developer vacancies. The aim is to reduce the effort of reviewing unrelated opportunities.
+164|A basic skill-match score expresses the proportion of required skills found in a candidate's profile. Matching Score = (Matched Skills / Total Required Skills) × 100. With 4 matched skills out of 5 required skills, the calculation is (4 / 5) × 100 = 80%. This means that four requirements were detected, not that the candidate has an 80% probability of being hired. The example is illustrative; broader recommendations may also consider education, experience and other relevant factors.
+165|The system compares candidate information with the requirements of available jobs and produces matching information. It then presents relevant recommendations for the candidate to review.
+166|These scores illustrate the concept only; they are not measured HirePathAI test results.
+167|The learning module connects skills identified as missing with related YouTube resources.
+168|Once a skill gap is identified, candidates can use the related learning links to work on it. If React is missing, for example, React tutorials provide a place to begin. This links the analysis results to practical preparation.
+169|The comparison identifies required skills that were not detected in the resume.
+170|YouTube links provide access to learning material for the identified topics.
+171|Candidates can use these resources to develop their technical knowledge.
+172|The module takes the missing skills reported by the analysis and presents related YouTube links. Candidates can use these resources to improve their understanding before pursuing a role. In this way, the portal connects job discovery with skill development.
+173|The learning screen presents YouTube links for the skills identified as needing attention.
+174|The resume builder helps candidates present their education, technical skills, projects and experience clearly. This is useful for users who have difficulty organising a professional document. The facility supports both creating a resume and improving an existing one for use in job applications.
+175|Candidates can record employment, internships and other relevant professional experience.
+176|The builder arranges candidate information into a clear resume structure.
+177|Users open the resume builder and provide personal details, education, skills, projects and experience. The available functionality organises or improves the document, which candidates can then use when applying for work.
+178|The builder turns the details supplied by a candidate into a more organised professional document. It supports students and freshers who need help presenting their background, within the capabilities of the implemented feature.
+179|The builder interface collects candidate details and supports a structured resume layout.
+180|This chapter described the portal's main implementation modules: accounts, profiles, vacancy searches, resume processing, skill comparisons, recommendations and preparation support.
+181|Learning resources and resume building complement the core job-search functions. Account access identifies the user, profiles maintain candidate details, and search tools expose relevant vacancies. Resume comparisons help users assess their preparation, while learning links and document-building facilities provide ways to improve it. Together, these modules are intended to support the candidate's journey from reviewing a role to preparing an application.
+182|Hardware requirements cover the computing resources needed to develop and run the portal. A browser provides user access, while development and testing also involve frontend tools, backend services, the database and resume processing. The resources required depend on the workload, including the volume of data and number of users. The configurations below provide guidance for the project's development environment.
+183|The following configuration supports basic development and testing of the portal.
+184|The recommended configuration provides additional capacity for development and testing.
+185|The processor executes the instructions used by frontend tools, backend services and database operations.
+186|RAM provides working memory for the editor, browser, development servers and database tools running together.
+187|Storage holds source code, packages, uploaded documents and other project data.
+188|The monitor lets developers inspect page layouts and test the interface visually.
+189|The keyboard and mouse support data entry, coding, navigation and other development tasks.
+190|Internet access is needed for package downloads, dependencies, online learning material and external services such as YouTube.
+191|The software environment includes the operating system, browser, programming tools and supporting applications needed to build and run HirePathAI. These tools support coding, data management, testing and execution of the web portal.
+192|The operating system manages the computer's resources. Development can take place on suitable platforms such as:
+193|Users access the portal through a web browser. Potentially supported browsers include:
+194|The browser renders the interface and lets users interact with the portal's functions.
+195|Together, these tools support application development, execution and testing.
+196|The frontend is the part of the portal candidates see and use. Its pages support registration, login, profiles, job searches, resume uploads and analysis results. The design aims to keep these functions clear, responsive and accessible through a consistent interface.
+197|HTML defines the structure of headings, paragraphs, forms, tables, buttons and input fields. It provides the foundation for pages such as:
+198|CSS determines how the page structure is styled and arranged.
+199|Styles control colours, fonts, spacing, borders and backgrounds. In HirePathAI, CSS can support the following tasks:
+200|JavaScript handles interaction, including user actions, validation, content updates and requests to backend services. It supports application activities such as:
+201|React organises the interface into reusable components. This makes the frontend easier to maintain and supports components such as:
+202|Reusable React components help keep dynamic interfaces consistent and easier to maintain.
+203|Vite provides a development environment with quick startup and rapid updates when frontend code changes.
+204|The Vite development server lets developers run the frontend locally and inspect changes while working on the application.
+205|These technologies combine to form the portal's user-facing interface.
+206|The backend receives frontend requests and performs the corresponding server-side operations. Its responsibilities include account access, profile data, resumes, job information and database communication. It connects the visible interface with the processing and records needed to respond to users.
+207|Node.js runs JavaScript outside the browser and supports server-side request handling. In this project, it can be used to:
+208|Express provides routing and HTTP request handling for Node.js applications. It organises communication between the frontend
+209|The frontend and backend exchange information through HTTP requests to API endpoints. Requests can support registration, resume uploads, vacancy searches and analysis results. Common HTTP methods are summarised below:
+210|The backend processes each request and returns a response. A login request, for example, requires checking the submitted credentials. A resume request requires handling the file and passing relevant information to the analysis process.
+211|API requests carry information from the frontend to the backend. The backend performs the required processing and database operations, then returns results for the interface to display.
+212|The database maintains the records needed by the application, including users, profiles, resumes, jobs, skills and applications. Organised storage allows the backend to retrieve and update this information when a user performs an action.
+213|MongoDB is a NoSQL database that stores data as BSON documents. Related documents are organised
+214|into collections. This flexible document structure can represent different kinds of application information. Potential HirePathAI records include:
+215|The following collections describe the logical groups of related information in the portal.
+216|User actions produce frontend requests. The backend uses MongoDB to retrieve or update the relevant records and returns the information needed by the interface.
+217|Development tools support editing, execution, dependency management, API testing and file handling. They also help developers inspect problems and maintain the code as the project changes.
+218|Visual Studio Code provides editing, syntax highlighting, completion, debugging and extensions for application development. It can support the following tasks:
+219|npm manages the packages used by Node.js projects. It installs and updates the dependencies and libraries required for the portal's frontend and backend.
+220|Git records source-code changes, while GitHub hosts repositories and supports collaboration. Together, they help developers:
+221|Postman sends requests to API endpoints and displays their responses. It can be used to examine account, profile and job-related operations when testing the portal's backend.
+222|Cloudinary provides cloud services for uploading,
+223|storing and managing media. Where it is integrated, the portal can use it for supported uploads and related resources. It should appear in the final technology list only when it is part of the implementation.
+224|A browser is used to run the portal and test its interaction and layout. Developer tools, such as those in Chrome, help inspect frontend behaviour and errors.
+225|Local development servers let the frontend and backend run during implementation, often on different ports. A frontend address may be http://localhost:5173/; the backend address depends on its own configuration.
+226|This chapter outlined the hardware, operating environment and development tools needed for the project. Frontend technologies provide the interface, backend services process requests and the database maintains application records. Editors, package managers, version control and API-testing tools support the development and verification of these components.
+227|Testing checks whether an application behaves as intended and meets its requirements. It helps identify faults and assess whether users can complete the expected tasks reliably and clearly.
+228|resumes, identify skill gaps and receive recommendations. Tests are needed to establish whether these features return the expected results. The main testing objectives are:
+229|Different inputs and conditions are used to examine how the system responds.
+230|The following testing approaches can be used to evaluate the portal.
+231|Unit tests examine individual pieces of functionality in isolation. Candidate areas include account handling, resume uploads, searches and analysis logic, with each test checking a defined task.
+232|Integration tests examine communication between connected components, such as the interface, backend and database. A resume upload, for example, should pass through processing and return results that the interface can display correctly.
+233|Functional testing checks whether each feature meets its stated
+234|requirements. Relevant features include registration, login, job searches, resume uploads, skill detection and recommendations.
+235|System testing follows the complete application workflow, from login through role selection and resume analysis to application submission. It checks whether the connected components work together as intended.
+236|Usability testing examines navigation, readability and ease of interaction. Students and job seekers should be able to locate important functions and understand how to use them.
+237|Validation checks the application against the project's defined requirements. For instance, resume analysis should return information consistent with the submitted document and the feature's supported capabilities.
+238|Each test case specifies an action or input and the expected response. The table contains sample cases; actual outcomes and pass/fail status must be recorded after execution.
+239|Recorded results show what happened when each test was run. They can then be compared with the expected behaviour using the table below.
+240|Screenshots help document the interface and show how users interact with implemented features. The following examples can be included where the corresponding functionality is available:
+241|The login screen lets registered users enter their account credentials.
+242|The registration screen collects details from new candidates.
+243|The dashboard provides access to the portal's main functions.
+244|The search screen helps users find roles that match their interests.
+245|The upload screen accepts resumes for further processing.
+246|The results screen presents the analysis and any skills not detected for the selected role.
+247|Learning links give users resources for developing relevant skills.
+248|The recommendations screen shows suggested jobs where that feature is implemented.
+249|Use clear, labelled screenshots taken from the running application.
+250|Result analysis relates observations from testing to the project's objectives. HirePathAI aims to connect vacancy searches with resume review and preparation support. The following points describe the intended outcomes, which should be assessed against recorded evidence:
+251|Section 7.4 should provide the evidence for any claim that a feature works successfully. Untested or incomplete modules should remain marked as pending. This distinction makes the evaluation useful for assessing correctness, reliability and usability, and for planning improvements.
+252|job seekers looking for suitable employment. The project connects vacancy discovery with understanding how a resume and its skills relate to a role. Accounts, profiles, searches, uploads and resume analysis form the main workflow. Skill comparisons and YouTube learning resources are intended to help users identify and address gaps. Separate modules organise the application so that these features can be developed, tested and improved. The project's contribution is this connection between finding work and preparing for it. Further development can improve existing modules and add more advanced assistance, while keeping the candidate's needs central.
+253|The portal has limitations that should be considered when evaluating its usefulness.
+254|Future development can improve the experience for candidates and recruiters. Possible directions include:
+255|More advanced analysis could interpret resume content and produce more useful skill and improvement suggestions.
+256|Recommendations could consider education, interests, experience and career goals alongside skills.
+257|Recruiter facilities could support publishing vacancies, managing applications and identifying suitable candidates.
+258|Interview support could include practice questions, mock tests and preparation material.
+259|Structured courses and learning recommendations could help candidates develop relevant professional and technical skills.
+260|Application tracking could let users follow the progress of submitted applications.
+261|Email or in-app alerts could cover new vacancies, application updates and relevant learning material.
+262|A mobile application could make job searches and resume services easier to access on smartphones.
+263|Further security measures could strengthen protection for accounts, personal information and uploaded documents.
+264|Additional language options could make the portal accessible to a wider range of users.
+265|Registration creates a candidate account, while login checks registered credentials before granting access. The following algorithm outlines this process:
+266|The upload process accepts a resume in a supported format for later analysis and comparison. Its main steps are:
+267|The analysis process identifies relevant education, technical skills and experience in the submitted document. The algorithm is outlined below:
+268|The comparison checks detected resume skills against the selected job's requirements. The main steps are:
+269|The matching process relates a candidate's skills, qualifications and preferences to available roles. Its algorithm is:
+270|The overall workflow links account access with role selection, resume analysis, recommendations and applications. System Workflow Diagram: Start User Registration / Login Open User Dashboard Select Desired Job / Company Upload Resume
+271|This appendix provides places for screenshots of the portal's modules. Images from the implemented application should be added under the relevant headings to document how users interact with each feature.
+272|The examples below illustrate the main algorithms in pseudocode. Where appropriate, the final report should include the corresponding project code. A. Login Validation Logic

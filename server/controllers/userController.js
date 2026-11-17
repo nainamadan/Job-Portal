@@ -4,42 +4,10 @@ import Job from "../models/Job.js";
 import JobApplication from "../models/JobAppliaction.js";
 import { v2 as cloudinary } from "cloudinary";
 import { getAuth } from "@clerk/express";
+import { ensureCandidateProfile } from "../utils/candidateProfile.js";
 
 // Helper function to reliably find or provision user in MongoDB
-const findOrCreateUser = async ({ userId, name, email, image }) => {
-  let user = null;
-
-  if (userId) {
-    user = await User.findById(userId);
-  }
-
-  if (!user && email) {
-    user = await User.findOne({ email });
-    if (user && userId && user._id !== userId) {
-      user._id = userId;
-      await user.save();
-    }
-  }
-
-  if (!user && userId) {
-    const fallbackEmail = email || `${userId}@clerk.user`;
-    const existingByEmail = await User.findOne({ email: fallbackEmail });
-    if (existingByEmail) {
-      user = existingByEmail;
-    } else {
-      user = await User.create({
-        _id: userId,
-        name: name || "Applicant",
-        email: fallbackEmail,
-        image: image || "",
-        resume: "",
-        savedJobs: [],
-      });
-    }
-  }
-
-  return user;
-};
+const findOrCreateUser = ({ userId }) => ensureCandidateProfile(userId);
 
 
 // get user data
