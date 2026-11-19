@@ -36,6 +36,15 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
+    // What kind of jobs this person wants new-job emails about (see utils/jobAlertMatcher.js).
+    jobPreferences: {
+      emailAlerts: { type: Boolean, default: true },
+      roles: [{ type: String }], // categories or job titles, e.g. "Programming", "Frontend Developer"
+      skills: [{ type: String }],
+      locations: [{ type: String }],
+      levels: [{ type: String }],
+    },
+
 
     // role: {
     //   type: String,

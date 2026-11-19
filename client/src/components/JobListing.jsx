@@ -308,6 +308,7 @@ import { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import JobCard from "./JobCard";
+import { isJobOpen, useNow } from "../utils/jobDeadline";
 import { JobCategories, JobLocations } from "../assets/assets";
 
 const JobListing = () => {
@@ -334,6 +335,7 @@ const JobListing = () => {
   const [salaryError, setSalaryError] = useState("");
 
   const [filteredJobs, setFilteredJobs] = useState([]);
+  const now = useNow();
   const [loading, setLoading] = useState(true);
   const [searchError, setSearchError] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("");
@@ -393,11 +395,14 @@ const JobListing = () => {
     setShowFilters(false);
   };
 
+  // Hide jobs whose application deadline has passed (re-checked every minute while the page is open).
+  const openJobs = filteredJobs.filter((job) => isJobOpen(job, now));
+
   // Pagination
-  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+  const totalPages = Math.ceil(openJobs.length / jobsPerPage);
   const lastIndex = currentPage * jobsPerPage;
   const firstIndex = lastIndex - jobsPerPage;
-  const currentJobs = filteredJobs.slice(firstIndex, lastIndex);
+  const currentJobs = openJobs.slice(firstIndex, lastIndex);
 
   // Clear all filters
   const clearSearch = () => {
@@ -639,7 +644,7 @@ const JobListing = () => {
         </p>
 
         <p className="text-sm text-gray-500 mb-6">
-          {loading ? "Searching jobs..." : searchError ? "Search unavailable" : `Showing ${filteredJobs.length} matching jobs`}
+          {loading ? "Searching jobs..." : searchError ? "Search unavailable" : `Showing ${openJobs.length} matching jobs`}
         </p>
 
         {searchError && <p role="alert" className="text-red-600 mb-4">{searchError} <button className="underline" onClick={clearSearch}>Reset and retry</button></p>}

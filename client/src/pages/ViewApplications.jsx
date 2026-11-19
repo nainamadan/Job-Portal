@@ -817,6 +817,8 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
+import StageUpdateModal from "../components/StageUpdateModal";
+import { ALL_STAGES, MANUAL_STAGES, currentStage, stageBadgeClass, stageInfo } from "../utils/hiringStages";
 
 const SKILLS_LIST = [
   "React", "JavaScript", "TypeScript", "Next.js", "HTML", "CSS", "TailwindCSS", "Bootstrap",
@@ -946,6 +948,48 @@ const ViewApplications = () => {
     setRejectModal(app);
   };
 
+  // Hiring progress: Interview / Not Selected reuse Accept / Reject (they collect
+  // interview details or feedback); every other stage opens the stage pop-up.
+  const [stageModal, setStageModal] = useState(null); // { application, stage }
+
+  const handleStageSelect = (app, stage) => {
+    if (!stage) return;
+    if (stage === "interview") return handleOpenAccept(app);
+    if (stage === "rejected") return handleOpenReject(app);
+    if (MANUAL_STAGES.includes(stage)) setStageModal({ application: app, stage });
+  };
+
+  const updateStage = async ({ note, notifyCandidate }) => {
+    const { application, stage } = stageModal;
+    try {
+      setUpdatingId(application._id);
+      const token = companyToken || localStorage.getItem("companyToken");
+      const { data } = await axios.put(
+        `${backendUrl}/api/company/applications/${application._id}/stage`,
+        { stage, note, notifyCandidate },
+        { headers: { token } }
+      );
+      if (!data.success) throw new Error(data.message);
+      if (data.changed === false) toast.info(data.message);
+      else if (notifyCandidate && !data.emailSent) toast.warning(data.message);
+      else toast.success(data.message);
+      if (data.application) {
+        setApplications((prev) =>
+          prev.map((app) =>
+            app._id === application._id
+              ? { ...app, status: data.application.status, stage: data.application.stage, stageHistory: data.application.stageHistory }
+              : app
+          )
+        );
+      }
+      setStageModal(null);
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message || "Failed to update progress");
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
   const fetchCompanyApplicants = async () => {
     try {
       setLoading(true);
@@ -999,6 +1043,8 @@ const ViewApplications = () => {
               ? {
                   ...app,
                   status: data.application?.status || status,
+                  stage: data.application?.stage ?? app.stage,
+                  stageHistory: data.application?.stageHistory ?? app.stageHistory,
                   interviewDetails: extraData.interviewDate
                     ? {
                         date: extraData.interviewDate,
@@ -1072,7 +1118,7 @@ const ViewApplications = () => {
                 <th className="p-4">Applied Job</th>
                 <th className="p-4">AI Match Score</th>
                 <th className="p-4">Resume</th>
-                <th className="p-4 text-center">Status</th>
+                <th className="p-4 text-center">Hiring Stage</th>
                 <th className="p-4 text-center">Actions</th>
               </tr>
             </thead>
@@ -1166,19 +1212,34 @@ const ViewApplications = () => {
                     </td>
 
 
-                    {/* Status */}
+                    {/* Hiring stage */}
                     <td className="px-4 py-4 text-center">
-                      <span
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-extrabold ${
-                          status === "Accepted"
-                            ? "bg-emerald-100 text-emerald-800"
-                            : status === "Rejected"
-                            ? "bg-rose-100 text-rose-800"
-                            : "bg-amber-100 text-amber-800"
-                        }`}
-                      >
-                        {status}
-                      </span>
+                      {(() => {
+                        const stage = stageInfo(currentStage(application));
+                        return (
+                          <div className="flex flex-col items-center gap-1.5">
+                            <span className={`inline-block px-3 py-1 rounded-full text-xs font-extrabold whitespace-nowrap ${stageBadgeClass(stage.key)}`}>
+                              {stage.emoji} {stage.label}
+                            </span>
+                            <select
+                              value=""
+                              onChange={(e) => handleStageSelect(application, e.target.value)}
+                              disabled={updatingId === application._id}
+                              aria-label="Move to stage"
+                              className="text-xs border border-slate-200 rounded-lg px-2 py-1 bg-white text-slate-600 hover:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            >
+                              <option value="" disabled>
+                                Move to…
+                              </option>
+                              {ALL_STAGES.filter((s) => s.key !== stage.key).map((s) => (
+                                <option key={s.key} value={s.key}>
+                                  {s.emoji} {s.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        );
+                      })()}
                     </td>
 
                     {/* Actions */}
@@ -1220,6 +1281,17 @@ const ViewApplications = () => {
       )}
 
       {/* Accept & Schedule Interview Modal */}
+      {stageModal && (
+        <StageUpdateModal
+          key={`${stageModal.application._id}-${stageModal.stage}`}
+          application={stageModal.application}
+          stage={stageModal.stage}
+          saving={updatingId === stageModal.application._id}
+          onCancel={() => setStageModal(null)}
+          onConfirm={updateStage}
+        />
+      )}
+
       {acceptModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-7 space-y-5 shadow-2xl border border-slate-200 my-8">

@@ -1135,10 +1135,24 @@ The final answer must contain the actual rewritten resume.
     console.log("Original resume length:", resumeText.length);
 
     // Use the model name recommended by the API error.
-    const response = await ai.models.generateContent({
-      model: "gemini-3.8-flash",
-      contents: prompt,
-    });
+    // Low "thinking" made Gemini answer about 6x faster in testing (≈30s instead of ≈3 min).
+    // The website now builds the ATS resume instantly itself; this AI call is only the optional "polish" step.
+    const AI_RESUME_TIMEOUT_MS = 90000;
+    let aiTimer;
+    const response = await Promise.race([
+      ai.models.generateContent({
+        model: "gemini-3.8-flash",
+        contents: prompt,
+        config: { thinkingConfig: { thinkingLevel: "low" } },
+      }),
+      new Promise((_, reject) => {
+        aiTimer = setTimeout(() => {
+          const timeoutError = new Error("The AI is taking too long right now. Please use the instant resume or try again later.");
+          timeoutError.status = 504;
+          reject(timeoutError);
+        }, AI_RESUME_TIMEOUT_MS);
+      }),
+    ]).finally(() => clearTimeout(aiTimer));
 
     const improvedResume = (
       typeof response.text === "string" ? response.text : ""

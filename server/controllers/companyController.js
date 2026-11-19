@@ -8,7 +8,10 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import generateToken from "../utils/generateToken.js";
-import { sendApplicationStatusEmail, sendNewJobNotificationEmail } from "../utils/sendEmail.js";
+import { sendApplicationStatusEmail } from "../utils/sendEmail.js";
+import { sendStageUpdateEmail } from "../utils/statusEmail.js";
+import { MANUAL_STAGE_KEYS, MAX_STAGE_NOTE, stageLabel, stageToStatus, statusToStage } from "../utils/hiringStages.js";
+import { notifyMatchingUsers } from "../utils/jobAlerts.js";
 
 
 
@@ -395,35 +398,10 @@ applicationDeadline.setHours(23, 59, 59, 999);
 
     await newJob.save();
 
-    // Send email notifications to all registered users (background, non-blocking)
+    // Email only the job seekers whose profile fits this job (background, non-blocking).
+    // See utils/jobAlerts.js and utils/jobAlertMatcher.js for the matching rules.
     const company = await Company.findById(companyId).select("name");
-    const companyNameStr = company?.name || "Company";
-
-    User.find({}, "name email")
-      .then((users) => {
-        console.log(`📧 Sending new job notifications to ${users.length} users...`);
-        users.forEach((user) => {
-          if (user.email) {
-            sendNewJobNotificationEmail({
-              userEmail: user.email,
-              userName: user.name || "User",
-              jobTitle: title,
-              companyName: companyNameStr,
-              location,
-              salary: normalizedSalary,
-              level,
-              category,
-              applicationDeadline,
-              jobDescription: description,
-            }).catch((err) =>
-              console.error(`Failed to notify ${user.email}:`, err.message)
-            );
-          }
-        });
-      })
-      .catch((err) =>
-        console.error("Failed to fetch users for job notifications:", err.message)
-      );
+    notifyMatchingUsers(newJob.toObject(), company?.name || "Company");
 
     return res.status(201).json({
       success: true,
@@ -495,6 +473,93 @@ export const getJobApplicants = async (req, res) => {
 };
 export const getCompanyJobApplicants = getJobApplicants;
 
+// Short timeline note for Accept / Reject decisions.
+const stageNoteFor = (normalized, details) => {
+  if (normalized === "accepted" && details.interviewDetails?.date) {
+    const d = details.interviewDetails;
+    return [`Interview on ${d.date}${d.time ? ` at ${d.time}` : ""}`, d.type, d.link || d.location].filter(Boolean).join(" · ");
+  }
+  if (normalized === "rejected" && details.feedback) return details.feedback;
+  return "";
+};
+
+// Move an application to another hiring stage (not Interview / Not Selected, which use
+// changeJobApplicationStatus so their details and emails are collected).
+export const changeApplicationStage = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const stage = typeof req.body?.stage === "string" ? req.body.stage.trim() : "";
+    const note = req.body?.note === undefined ? "" : req.body.note;
+    const notifyCandidate = req.body?.notifyCandidate !== false;
+
+    if (!mongoose.isValidObjectId(applicationId)) {
+      return res.status(400).json({ success: false, message: "Invalid application." });
+    }
+    if (stage === "interview" || stage === "rejected") {
+      return res.status(400).json({
+        success: false,
+        message: "Use Accept (Interview) or Reject so the interview details or feedback are included.",
+      });
+    }
+    if (!MANUAL_STAGE_KEYS.includes(stage)) {
+      return res.status(400).json({ success: false, message: "Unknown hiring stage." });
+    }
+    if (typeof note !== "string" || note.length > MAX_STAGE_NOTE) {
+      return res.status(400).json({ success: false, message: `Note must be text up to ${MAX_STAGE_NOTE} characters.` });
+    }
+
+    const companyId = req.companyId;
+    const status = stageToStatus(stage);
+    // Only this company's application, and only if the stage really changes (no duplicate entries/emails).
+    const application = await JobApplication.findOneAndUpdate(
+      { _id: applicationId, companyId, stage: { $ne: stage } },
+      {
+        $set: { stage, status },
+        $push: { stageHistory: { stage, note: note.trim(), at: new Date() } },
+        $inc: { statusRevision: 1 },
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!application) {
+      const exists = await JobApplication.findOne({ _id: applicationId, companyId }).select("_id");
+      if (!exists) return res.status(404).json({ success: false, message: "Application not found." });
+      return res.status(200).json({ success: true, changed: false, emailSent: false, message: `Already at "${stageLabel(stage)}".` });
+    }
+
+    let emailSent = false;
+    if (notifyCandidate) {
+      try {
+        const [candidate, job, company] = await Promise.all([
+          ensureCandidateProfile(application.userId),
+          Job.findById(application.jobId).select("title"),
+          Company.findById(companyId).select("name email"),
+        ]);
+        if (!candidate?.email) throw new Error("Candidate's registered email is unavailable.");
+        await sendStageUpdateEmail({
+          candidateEmail: candidate.email, candidateName: candidate.name || "Candidate",
+          jobTitle: job?.title || "Position", companyName: company?.name || "Company",
+          companyEmail: company?.email, stageLabel: stageLabel(stage), note: note.trim(),
+        });
+        emailSent = true;
+      } catch (error) {
+        console.error("Stage update email failed:", error.code || error.message);
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      changed: true,
+      emailSent,
+      message: `Moved to "${stageLabel(stage)}".` + (notifyCandidate ? (emailSent ? " Candidate emailed." : " Email could not be sent; the stage was saved.") : ""),
+      application,
+    });
+  } catch (error) {
+    console.error("Change Application Stage Error:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // Change application status & notify candidate via email
 export const changeJobApplicationStatus = async (req, res) => {
   try {
@@ -547,7 +612,9 @@ export const changeJobApplicationStatus = async (req, res) => {
       _id: targetAppId, companyId,
       $expr: { $ne: [{ $toLower: { $ifNull: ["$status", "pending"] } }, normalized] },
     }, {
-      $set: { status, ...details, statusNotification: { state: notify ? "sending" : "not_required", updatedAt: new Date() } },
+      $set: { status, stage: statusToStage(status), ...details, statusNotification: { state: notify ? "sending" : "not_required", updatedAt: new Date() } },
+      // Timeline entry the candidate sees in their progress tracker.
+      $push: { stageHistory: { stage: statusToStage(status), note: stageNoteFor(normalized, details), at: new Date() } },
       $inc: { statusRevision: 1 },
     }, { new: true, runValidators: true });
     if (!application) {

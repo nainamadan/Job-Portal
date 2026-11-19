@@ -15,7 +15,7 @@ const Footer = () => {
           <img
             src={assets.logo}
             alt="InsiderJobs"
-            className="h-12 w-auto"
+            className="theme-logo h-12 w-auto"
           />
 
           <span className="text-gray-300 text-3xl hidden md:block">|</span>

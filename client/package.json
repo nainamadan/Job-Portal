@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "theme:dark": "node scripts/generate-dark-theme.cjs",
+    "test": "node --test \"tests/**/*.test.mjs\""
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.61.8",

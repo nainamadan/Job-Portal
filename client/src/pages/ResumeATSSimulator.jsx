@@ -4832,12 +4832,14 @@
 
 
 
-import React, { useState, useContext, useEffect, useMemo } from "react";
+import React, { useState, useContext, useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 import { analyzeResumeATS as localAnalyzeATS } from "../utils/clientSkillMatcher";
+import { readResume, FIELD_LABELS } from "../utils/resumeAutofill";
+import { buildAtsResume } from "../utils/atsResumeBuilder";
 
 // ==========================================
 // INITIAL MANUAL RESUME FORM
@@ -5270,6 +5272,8 @@ const ResumeATSSimulator = () => {
 
   const [resumeText, setResumeText] = useState("");
   const [resumeCreated, setResumeCreated] = useState(false);
+  const [autofilling, setAutofilling] = useState(false);
+  const autofillInputRef = useRef(null);
 
   // Loading
   const [loading, setLoading] = useState(false);
@@ -5280,12 +5284,19 @@ const ResumeATSSimulator = () => {
   const [atsResult, setAtsResult] = useState(null);
   const [optimizationResult, setOptimizationResult] = useState(null);
   const [improvedResume, setImprovedResume] = useState("");
+  // "instant" = built in the browser (keeps all the person's content); "ai" = written by the AI.
+  const [improvedSource, setImprovedSource] = useState("instant");
 
   const targetJob = jobs.find((job) => job._id === selectedJobId);
 
+  // The AI can drop details, so its version is merged with the original as a safety net.
+  // The instant version already contains everything, so it is shown exactly as built.
   const formattedResume = useMemo(
-    () => mergeResumeDetails(resumeText, improvedResume),
-    [resumeText, improvedResume]
+    () =>
+      improvedSource === "instant" && improvedResume
+        ? parseResume(improvedResume)
+        : mergeResumeDetails(resumeText, improvedResume),
+    [resumeText, improvedResume, improvedSource]
   );
 
   // ==========================================
@@ -5394,6 +5405,43 @@ const ResumeATSSimulator = () => {
   // ==========================================
   // LOAD SAMPLE DATA INTO MANUAL FORM
   // ==========================================
+  // Upload an existing resume: its details are read and entered into the form below.
+  const handleAutofillFile = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = ""; // allow choosing the same file again
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File must be under 5MB.");
+      return;
+    }
+    setAutofilling(true);
+    try {
+      const { details, filled } = await readResume(backendUrl, file);
+      if (!filled?.length) {
+        toast.warning("No details could be found in this resume. Please fill the form yourself.");
+        return;
+      }
+      // Resume values replace the form; anything the resume does not contain is kept.
+      const merged = { ...initialResumeDetails, ...resumeDetails };
+      for (const key of Object.keys(initialResumeDetails)) {
+        if (details[key]) merged[key] = details[key];
+      }
+      setResumeDetails(merged);
+      setResumeText(buildResumeText(merged));
+      setResumeCreated(true);
+      resetResults();
+      const missing = Object.keys(initialResumeDetails).filter((k) => !merged[k]);
+      toast.success(`✨ Filled ${filled.length} fields from your resume. Please review them.`);
+      if (missing.length) {
+        toast.info(`Not found in the resume: ${missing.map((k) => FIELD_LABELS[k] || k).join(", ")}.`);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setAutofilling(false);
+    }
+  };
+
   const loadSampleResume = () => {
     const sampleDetails = {
       name: "Rahul Sharma",
@@ -5629,7 +5677,35 @@ Technologies: MERN Stack
   // ==========================================
   // GENERATE IMPROVED RESUME
   // ==========================================
-  const handleGenerateResume = async () => {
+  // Instant: builds the ATS-friendly resume in the browser from the person's own details.
+  const handleGenerateResume = () => {
+    if (!atsResult || !resumeText.trim()) {
+      toast.error("Run the ATS scan before generating your new resume.");
+      return;
+    }
+    const { jobTitle } = getJobDetails();
+    try {
+      const built = buildAtsResume({
+        resumeText,
+        parse: parseResume,
+        jobTitle,
+        detectedSkills: atsResult.detectedSkills || [],
+      });
+      if (!built.trim()) throw new Error("Please add more details to your resume first.");
+      setImprovedSource("instant");
+      setImprovedResume(built);
+      toast.success("⚡ Your ATS-friendly resume is ready!");
+      const missing = atsResult.missingKeywords || [];
+      if (missing.length) {
+        toast.info(`Tip: add these only if you really have them: ${missing.slice(0, 6).join(", ")}`, { autoClose: 7000 });
+      }
+    } catch (error) {
+      toast.error(error.message || "Could not build the resume.");
+    }
+  };
+
+  // Optional, slower: asks the AI to rewrite the wording. Uses the instant version when there is one.
+  const handlePolishWithAI = async () => {
     if (!atsResult || !resumeText.trim()) {
       toast.error("Run the ATS scan before generating your new resume.");
       return;
@@ -5642,9 +5718,10 @@ Technologies: MERN Stack
       return;
     }
 
+    const sourceText = (improvedResume || resumeText).trim();
+
     try {
       setGeneratingResume(true);
-      setImprovedResume("");
 
       const { data } = await axios.post(
         `${backendUrl}/api/jobs/ats-generate-resume`,
@@ -5652,11 +5729,12 @@ Technologies: MERN Stack
           jobTitle,
           jobDescription,
 
-          resumeText: resumeText.trim().slice(0, 30000),
+          resumeText: sourceText.slice(0, 30000),
 
           candidateSkills: atsResult.detectedSkills || [],
           missingSkills: atsResult.missingKeywords || [],
-        }
+        },
+        { timeout: 100000 }
       );
 
       const generated =
@@ -5671,15 +5749,18 @@ Technologies: MERN Stack
         );
       }
 
+      setImprovedSource("ai");
       setImprovedResume(generated.trim());
-      toast.success("Your professional resume is ready!");
+      toast.success("✨ AI-polished resume is ready!");
     } catch (error) {
       console.error("Generate resume error:", error);
 
       toast.error(
-        error.response?.data?.message ||
-          error.message ||
-          "Could not generate the resume. Check the backend and try again."
+        error.code === "ECONNABORTED"
+          ? "The AI is taking too long right now. Your instant resume is still available."
+          : error.response?.data?.message ||
+            error.message ||
+            "Could not polish the resume with AI. Your instant resume is still available."
       );
     } finally {
       setGeneratingResume(false);
@@ -5865,13 +5946,31 @@ return (
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={loadSampleResume}
-                className="rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-xs font-bold text-indigo-700 transition hover:bg-indigo-100"
-              >
-                ✨ Load Sample Data
-              </button>
+              <div className="flex flex-wrap gap-2">
+                <input
+                  ref={autofillInputRef}
+                  type="file"
+                  accept=".pdf,.docx,.txt"
+                  onChange={handleAutofillFile}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => autofillInputRef.current?.click()}
+                  disabled={autofilling}
+                  title="Upload your resume (PDF, DOCX or TXT) and we'll fill in the form"
+                  className="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:from-indigo-700 hover:to-purple-700 disabled:opacity-60"
+                >
+                  {autofilling ? "🔍 Reading resume…" : "📄 Auto-fill from Resume"}
+                </button>
+                <button
+                  type="button"
+                  onClick={loadSampleResume}
+                  className="rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-xs font-bold text-indigo-700 transition hover:bg-indigo-100"
+                >
+                  ✨ Load Sample Data
+                </button>
+              </div>
             </div>
 
             <form onSubmit={handleCreateResume} className="space-y-7">
@@ -6672,10 +6771,21 @@ Duration: January 2026 - June 2026
                     disabled={generatingResume}
                     className="w-full rounded-xl bg-emerald-600 py-3.5 text-xs font-bold text-white shadow-md shadow-emerald-100 transition hover:bg-emerald-700 disabled:opacity-60"
                   >
-                    {generatingResume
-                      ? "Generating Your Resume..."
-                      : "✨ Generate Improved Resume"}
+                    ⚡ Generate ATS-Friendly Resume (instant)
                   </button>
+
+                  {improvedResume && (
+                    <button
+                      type="button"
+                      onClick={handlePolishWithAI}
+                      disabled={generatingResume}
+                      className="w-full rounded-xl border border-emerald-200 bg-emerald-50 py-3 text-xs font-bold text-emerald-800 transition hover:bg-emerald-100 disabled:opacity-60"
+                    >
+                      {generatingResume
+                        ? "✨ AI is polishing your wording… (up to ~1 min)"
+                        : "✨ Polish wording with AI (optional, slower)"}
+                    </button>
+                  )}
 
                   <p className="text-center text-[10px] leading-4 text-slate-400">
                     AI suggestions improve your genuine experience and

@@ -1040,6 +1040,7 @@
 
 
 import React, {
+  useCallback,
   useContext,
   useMemo,
   useState,
@@ -1047,10 +1048,12 @@ import React, {
 } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth, useUser } from "@clerk/clerk-react";
+import { useAuth, useClerk, useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
+import MessageRecruiterModal from "../components/MessageRecruiterModal";
+import { isJobOpen } from "../utils/jobDeadline";
 
 const JobDetails = () => {
   const { id } = useParams();
@@ -1060,8 +1063,39 @@ const JobDetails = () => {
 
   const { isSignedIn } = useUser();
   const { getToken } = useAuth();
+  const { openSignIn } = useClerk();
 
   const job = jobs.find((item) => item._id === id);
+
+  const [chatOpen, setChatOpen] = useState(false);
+  const closeChat = useCallback(() => setChatOpen(false), []);
+
+  // Expired jobs are not in the public list. If someone opens an old link,
+  // look the job up so we can say it has closed instead of "not found".
+  const [closedJob, setClosedJob] = useState(null);
+  useEffect(() => {
+    if (job || !id) return undefined;
+    let cancelled = false;
+    axios
+      .get(`${backendUrl}/api/jobs/${id}`)
+      .then(({ data }) => {
+        if (!cancelled && data?.success && data.job && !isJobOpen(data.job)) setClosedJob(data.job);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [job, id, backendUrl]);
+
+  // Job seekers must be logged in to message the recruiter.
+  const openRecruiterChat = () => {
+    if (!isSignedIn) {
+      toast.info("Please log in to message the recruiter.");
+      openSignIn();
+      return;
+    }
+    setChatOpen(true);
+  };
 
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -1193,6 +1227,28 @@ const JobDetails = () => {
       console.error(err);
     }
   };
+
+  if (!job && closedJob) {
+    return (
+      <div className="min-h-[70vh] flex justify-center items-center px-4">
+        <div className="max-w-md w-full bg-white border border-slate-200 rounded-2xl shadow-sm p-8 text-center">
+          <p className="text-5xl mb-3">⏰</p>
+          <h1 className="text-2xl font-bold text-slate-900">This job has closed</h1>
+          <p className="text-slate-600 mt-2">
+            Applications for <b>{closedJob.title}</b>
+            {closedJob.companyId?.name ? ` at ${closedJob.companyId.name}` : ""} ended on{" "}
+            {new Date(closedJob.applicationDeadline).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}.
+          </p>
+          <button
+            onClick={() => navigate("/")}
+            className="mt-6 px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
+          >
+            Browse open jobs
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!job) {
     return (
@@ -1767,7 +1823,20 @@ const JobDetails = () => {
 
             </div>
 
+            {/* MESSAGE RECRUITER */}
+            <button
+              onClick={openRecruiterChat}
+              className="mt-3 w-full flex items-center justify-center gap-2 border border-indigo-200 bg-indigo-50 text-indigo-700 py-3 rounded-lg text-base font-semibold hover:bg-indigo-100 transition"
+            >
+              💬 Message Recruiter
+            </button>
+            <p className="text-xs text-slate-400 mt-2 text-center">
+              Ask about this job, updates to the post, or your application.
+            </p>
+
           </div>
+
+          <MessageRecruiterModal job={job} open={chatOpen} onClose={closeChat} />
 
           {/* SIMILAR JOBS */}
           {relatedJobs.length > 0 && (

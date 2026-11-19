@@ -11,6 +11,8 @@ import companyRoutes from "./routes/companyRoutes.js";
 import connectCloudinary from "./config/cloudinary.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
+import resumeRoutes from "./routes/resumeRoutes.js";
 import {clerkMiddleware} from "@clerk/express";
 
 import path from "path";
@@ -81,6 +83,8 @@ app.get("/debug-sentry", (req, res) => {
 app.use('/api/company', companyRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/users', userRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/resume", resumeRoutes);
 
 // Sentry Error Handler (Keep this at the end)
 Sentry.setupExpressErrorHandler(app);

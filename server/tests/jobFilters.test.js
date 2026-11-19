@@ -55,3 +55,26 @@ test("invalid ranges and query objects cannot reach the database", () => {
     assert.throws(() => buildJobFilter(query));
   }
 });
+
+test("expired jobs are left out of the public job list", async () => {
+  const { openJobsOnly } = await import("../utils/jobFilters.js");
+  const now = new Date("2026-11-19T10:00:00Z");
+  const open = openJobsOnly({ visible: true }, now);
+  assert.deepEqual(open, {
+    visible: true,
+    $and: [{ $or: [{ applicationDeadline: { $gt: now } }, { applicationDeadline: null }] }],
+  });
+  // Existing search clauses are kept.
+  const withSearch = openJobsOnly(buildJobFilter({ categories: ["Programming"] }), now);
+  assert.equal(withSearch.$and.length, 2);
+  assert.deepEqual(withSearch.$and[0], { category: { $in: ["Programming"] } });
+
+  // Same rule checked against sample jobs.
+  const isOpen = (job) => job.applicationDeadline == null || job.applicationDeadline > now;
+  const jobs = [
+    { t: "tomorrow", applicationDeadline: new Date("2026-11-20T23:59:59Z") },
+    { t: "yesterday", applicationDeadline: new Date("2026-11-18T23:59:59Z") },
+    { t: "older job without deadline" },
+  ];
+  assert.deepEqual(jobs.filter(isOpen).map((j) => j.t), ["tomorrow", "older job without deadline"]);
+});

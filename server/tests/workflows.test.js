@@ -157,10 +157,16 @@ test("candidate search and recruiter status notification workflows", async (t) =
     const result = await fetch(`${base}/jobs?minSalary=10&maxSalary=20&title=React&levels=1-3+Years&skills=React&categories=Programming`);
     assert.equal(result.status, 200); assert.deepEqual((await result.json()).jobs, []);
     assert.deepEqual(lastFilter.salary, { $gte: 10, $lte: 20 });
-    assert.equal(lastFilter.$and.length, 3);
+    // 3 search clauses + the "deadline not passed" rule that hides expired jobs.
+    assert.equal(lastFilter.$and.length, 4);
+    const openRule = (f) => f.$and.at(-1).$or;
+    assert.ok(openRule(lastFilter)[0].applicationDeadline.$gt instanceof Date);
+    assert.deepEqual(openRule(lastFilter)[1], { applicationDeadline: null });
     const invalid = await fetch(`${base}/jobs?minSalary=20&maxSalary=10`);
     assert.equal(invalid.status, 400);
-    await fetch(`${base}/jobs`); assert.deepEqual(lastFilter, { visible: true });
+    await fetch(`${base}/jobs`);
+    assert.equal(lastFilter.visible, true);
+    assert.equal(lastFilter.$and.length, 1, "no search: only the open-deadline rule");
   });
   await t.test("missing email configuration fails explicitly instead of creating a test inbox", async () => {
     const names = ["SMTP_HOST", "SMTP_USER", "SMTP_PASS", "GMAIL_USER", "GMAIL_PASS"];

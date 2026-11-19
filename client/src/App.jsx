@@ -4,6 +4,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import HelpChatbot from "./components/HelpChatbot";
+import { useTheme } from "./utils/theme";
 import Home from './pages/Home';
 import Applyjob from './pages/Applyjob';
 import JobDetails from "./pages/JobDetails";
@@ -11,6 +13,8 @@ import AIMatcher from "./pages/AIMatcher";
 import ResumeATSSimulator from "./pages/ResumeATSSimulator";
 import ApplicationDashboard from "./pages/ApplicationDashboard";
 import SavedJobs from "./pages/SavedJobs";
+import Messages from "./pages/Messages";
+import RecruiterMessages from "./pages/RecruiterMessages";
 import Dashboard from "./pages/Dashboard";
 import AddJob from "./pages/AddJob";
 import ManageJobs from "./pages/ManageJobs";
@@ -19,6 +23,7 @@ import { AppContext } from "./context/AppContext";
 
 const App = () => {
   const location = useLocation();
+  const theme = useTheme();
   const { companyToken } = useContext(AppContext);
 
   const isDashboardRoute = location.pathname.startsWith("/dashboard");
@@ -26,7 +31,7 @@ const App = () => {
 
   return (
     <>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={3000} theme={theme} />
       {!isDashboardRoute && <Navbar />}
 
       <Routes>
@@ -37,6 +42,7 @@ const App = () => {
         <Route path="/ats-simulator" element={<ResumeATSSimulator />} />
         <Route path="/my-applications" element={<ApplicationDashboard />} />
         <Route path="/saved-jobs" element={<SavedJobs />} />
+        <Route path="/messages" element={<Messages />} />
 
 
 
@@ -48,10 +54,12 @@ const App = () => {
           <Route path="add-job" element={<AddJob />} />
           <Route path="manage-jobs" element={<ManageJobs />} />
           <Route path="view-applications" element={<ViewApplications />} />
+          <Route path="messages" element={<RecruiterMessages />} />
         </Route>
       </Routes>
 
       {!isDashboardRoute && <Footer />}
+      <HelpChatbot />
     </>
   );
 };

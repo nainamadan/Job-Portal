@@ -4,3 +4,21 @@ node_modules/
 !.env.example
 
 server/uploads/
+
+# Generated builds and local caches
+.next/
+dist/
+out/
+*.tsbuildinfo
+next-env.d.ts
+*.log
+
+# Local PDF editing workspace and review outputs
+/.pdf-editor/
+/121_updated.pdf
+/report-pages.json
+/report-text.txt
+/review-*.png
+/revisions.txt
+/rewrite-groups.json
+/rewrite-groups.txt

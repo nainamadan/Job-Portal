@@ -2,6 +2,9 @@ import nodemailer from "nodemailer";
 import { createTransporter, emailSender } from "./emailTransport.js";
 export { sendApplicationStatusEmail } from "./statusEmail.js";
 
+const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" })[c]);
+
 /**
  * Sends New Job Posted notification email to all registered users
  */
@@ -16,6 +19,7 @@ export const sendNewJobNotificationEmail = async ({
   category,
   applicationDeadline,
   jobDescription,
+  matchReasons = [],
 }) => {
   if (!userEmail) {
     console.warn("No user email provided for new job notification");
@@ -89,6 +93,7 @@ export const sendNewJobNotificationEmail = async ({
             Great news! A new job matching your interests has just been posted on <strong>InsiderJobs</strong>. 
             Check out the details below and apply before the deadline!
           </p>
+          ${matchReasons.length ? `<p class="message" style="background:#eef2ff;border-radius:8px;padding:10px 14px;font-size:13px;">🎯 <strong>Why you got this:</strong> it matches your profile (${matchReasons.slice(0, 5).map(escapeHtml).join(", ")}). You can change your job alert preferences in My Applications on InsiderJobs.</p>` : ""}
 
           <div class="job-card">
             <table>
@@ -172,5 +177,6 @@ export const sendNewJobNotificationEmail = async ({
     return info;
   } catch (error) {
     console.error(`Failed to send new job email to ${userEmail}:`, error.message);
+    throw error;
   }
 };

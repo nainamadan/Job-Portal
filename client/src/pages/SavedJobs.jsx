@@ -4,6 +4,7 @@ import { useUser, useAuth } from "@clerk/clerk-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
+import { isJobOpen } from "../utils/jobDeadline";
 
 const SavedJobs = () => {
   const { jobs: allJobs, backendUrl } = useContext(AppContext);
@@ -56,7 +57,8 @@ const SavedJobs = () => {
 
       const finalSavedList = combinedSavedIds
         .map((id) => fullMap.get(id?.toString()))
-        .filter(Boolean);
+        .filter(Boolean)
+        .filter((job) => isJobOpen(job)); // closed jobs disappear from Saved Jobs too
 
       setSavedJobsList(finalSavedList);
     } catch (error) {

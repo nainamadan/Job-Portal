@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
+import { isJobOpen } from "../utils/jobDeadline";
 
 const ManageJobs = () => {
   const navigate = useNavigate();
@@ -108,7 +109,17 @@ const ManageJobs = () => {
                 >
                   <td className="px-5 py-4">{index + 1}</td>
 
-                  <td className="px-5 py-4 font-medium">{job.title}</td>
+                  <td className="px-5 py-4 font-medium">
+                    {job.title}
+                    {!isJobOpen(job) && (
+                      <span
+                        title="The application deadline has passed, so job seekers no longer see this job."
+                        className="ml-2 inline-block align-middle px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-700"
+                      >
+                        ⏰ Expired · hidden
+                      </span>
+                    )}
+                  </td>
 
                   <td className="px-5 py-4">
                     {job.date

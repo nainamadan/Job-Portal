@@ -118,12 +118,12 @@ setTimeout(() => {
 
             <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
 
-              <img src={assets.microsoft_logo} className="h-6 sm:h-8" />
-              <img src={assets.walmart_logo} className="h-6 sm:h-8" />
-              <img src={assets.accenture_logo} className="h-6 sm:h-8" />
-              <img src={assets.amazon_logo} className="h-6 sm:h-8" />
-              <img src={assets.samsung_logo} className="h-6 sm:h-8" />
-              <img src={assets.adobe_logo} className="h-6 sm:h-8" />
+              <img src={assets.microsoft_logo} alt="Microsoft" className="theme-chip h-6 sm:h-8" />
+              <img src={assets.walmart_logo} alt="Walmart" className="theme-chip h-6 sm:h-8" />
+              <img src={assets.accenture_logo} alt="Accenture" className="theme-chip h-6 sm:h-8" />
+              <img src={assets.amazon_logo} alt="Amazon" className="theme-chip h-6 sm:h-8" />
+              <img src={assets.samsung_logo} alt="Samsung" className="theme-chip h-6 sm:h-8" />
+              <img src={assets.adobe_logo} alt="Adobe" className="theme-chip h-6 sm:h-8" />
 
             </div>
 

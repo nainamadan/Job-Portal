@@ -7,6 +7,8 @@ import {
   updateUserResume,
   toggleSaveJob,
   getSavedJobs,
+  getJobPreferences,
+  updateJobPreferences,
 } from "../controllers/userController.js";
 import upload from "../middleware/multer.js";
 
@@ -25,5 +27,9 @@ router.post("/update-resume", upload.single('resume'), updateUserResume);
 // toggle save job & get saved jobs
 router.post("/toggle-save", toggleSaveJob);
 router.get("/saved-jobs", getSavedJobs);
+
+// job alert preferences (which new-job emails the user gets)
+router.get("/job-preferences", getJobPreferences);
+router.put("/job-preferences", updateJobPreferences);
 
 export default router;

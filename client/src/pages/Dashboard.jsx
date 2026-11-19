@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
+import ThemeToggle from "../components/ThemeToggle";
 
 const Dashboard = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -26,11 +27,13 @@ const Dashboard = () => {
 
         <img
           src={assets.logo}
-          className="h-10 cursor-pointer"
+          className="theme-logo h-10 cursor-pointer"
           alt="Logo"
           onClick={() => navigate("/")}
         />
 
+        <div className="flex items-center gap-4">
+        <ThemeToggle />
         <div className="relative">
 
           <button
@@ -69,6 +72,7 @@ const Dashboard = () => {
             </div>
           )}
 
+        </div>
         </div>
 
       </div>
@@ -136,6 +140,21 @@ const Dashboard = () => {
             />
 
             <span>Applications</span>
+          </NavLink>
+
+          <NavLink
+            to="/dashboard/messages"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-6 py-4 border-l-4 ${
+                isActive
+                  ? "border-blue-600 bg-blue-50 text-blue-600"
+                  : "border-transparent"
+              }`
+            }
+          >
+            <span className="w-5 text-center" aria-hidden="true">💬</span>
+
+            <span>Messages</span>
           </NavLink>
 
         </div>

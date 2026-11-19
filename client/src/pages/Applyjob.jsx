@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
+import { readResume, toTenDigitPhone } from "../utils/resumeAutofill";
 
 const Applyjob = () => {
   const { id } = useParams();
@@ -38,6 +39,7 @@ const Applyjob = () => {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [autofill, setAutofill] = useState({ state: "idle", filled: [] }); // reading the resume
   const fileInputRef = useRef(null);
 
   if (!job) {
@@ -71,6 +73,31 @@ const Applyjob = () => {
     }
     setResume(file);
     setErrors((prev) => ({ ...prev, resume: "" }));
+    autofillFromResume(file);
+  };
+
+  // Read the chosen resume and fill in any empty fields (name, email, phone).
+  const autofillFromResume = async (file) => {
+    setAutofill({ state: "reading", filled: [] });
+    try {
+      const { details } = await readResume(backendUrl, file);
+      const found = { name: details.name, email: details.email, phone: toTenDigitPhone(details.phone) };
+      const filled = [];
+      setForm((prev) => {
+        const next = { ...prev };
+        for (const [key, value] of Object.entries(found)) {
+          if (value && !String(prev[key] || "").trim()) {
+            next[key] = value;
+            filled.push(key);
+          }
+        }
+        return next;
+      });
+      setErrors((prev) => ({ ...prev, name: "", email: "", phone: "" }));
+      setAutofill({ state: "done", filled });
+    } catch (error) {
+      setAutofill({ state: "error", filled: [], message: error.message });
+    }
   };
 
   const handleFileChange = (e) => acceptFile(e.target.files[0]);
@@ -358,6 +385,26 @@ const Applyjob = () => {
                   </div>
                   {errors.resume && (
                     <p className="text-red-500 text-xs mt-1">{errors.resume}</p>
+                  )}
+
+                  {/* Auto-fill from resume status */}
+                  {autofill.state === "idle" && !resume && (
+                    <p className="text-xs text-indigo-600 mt-1.5">✨ Upload your resume and we'll fill in your details for you.</p>
+                  )}
+                  {autofill.state === "reading" && (
+                    <p className="text-xs text-indigo-600 mt-1.5 animate-pulse" aria-live="polite">🔍 Reading your resume…</p>
+                  )}
+                  {autofill.state === "done" && (
+                    <p className="text-xs text-emerald-700 mt-1.5" aria-live="polite">
+                      {autofill.filled.length
+                        ? `✅ Filled from your resume: ${autofill.filled.join(", ")}. Please check them.`
+                        : "✅ Resume read. Your details were already filled in."}
+                    </p>
+                  )}
+                  {autofill.state === "error" && (
+                    <p className="text-xs text-amber-700 mt-1.5" aria-live="polite">
+                      ⚠️ Couldn't read details from this file ({autofill.message}). You can still apply with it, just fill the fields in yourself.
+                    </p>
                   )}
 
                   {/* AI Resume Matcher Button */}

@@ -7,3 +7,26 @@
 *{
   font-family: 'Outfit', sans-serif;
 }
+/* Help chatbot animations */
+@keyframes hc-pop-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.hc-pop { animation: hc-pop-in 0.22s ease-out; transform-origin: bottom right; }
+
+@keyframes hc-wave-kf {
+  0%, 60%, 100% { transform: rotate(0deg); }
+  10%, 30% { transform: rotate(14deg); }
+  20%, 40% { transform: rotate(-10deg); }
+}
+.hc-wave { display: inline-block; animation: hc-wave-kf 2.5s ease-in-out infinite; }
+
+@keyframes hc-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-4px); opacity: 1; }
+}
+.hc-dot { width: 6px; height: 6px; border-radius: 9999px; background: #6b7280; animation: hc-bounce 1s infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-pop, .hc-wave, .hc-dot { animation: none; }
+}

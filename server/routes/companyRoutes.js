@@ -8,6 +8,7 @@ import {
   getCompanyJobApplicants,
   changeJobApplicationStatus,
   changeVisibility,
+  changeApplicationStage,
 } from "../controllers/companyController.js";
 import { generateJobDescription } from "../controllers/aiController.js";
 import { protectCompany } from "../middleware/authMiddleware.js";
@@ -41,6 +42,9 @@ router.get("/list-jobs",protectCompany, getCompanyPostedJobs);
 router.put("/change-status/:applicationId", protectCompany, changeJobApplicationStatus);
 router.post("/change-status/:applicationId", protectCompany, changeJobApplicationStatus);
 router.post("/change-status", protectCompany, changeJobApplicationStatus);
+
+// Hiring process stage (Applied, Under Review, Shortlisted, Offer Made, Hired)
+router.put("/applications/:applicationId/stage", protectCompany, changeApplicationStage);
 
 
 // Job Visibility

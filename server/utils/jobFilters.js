@@ -46,3 +46,16 @@ export const buildJobFilter = (query = {}) => {
   if (clauses.length) filter.$and = clauses;
   return filter;
 };
+
+/**
+ * Only jobs still accepting applications: the deadline is in the future, or the job has no
+ * deadline (older jobs). Expired jobs disappear from the public job list automatically.
+ * Recruiters still see them in Manage Jobs (that list does not use this filter).
+ */
+export const openJobsOnly = (filter = {}, now = new Date()) => ({
+  ...filter,
+  $and: [
+    ...(filter.$and || []),
+    { $or: [{ applicationDeadline: { $gt: now } }, { applicationDeadline: null }] },
+  ],
+});

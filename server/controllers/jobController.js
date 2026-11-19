@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Job from "../models/Job.js";
 import { analyzeJobMatch, analyzeResumeATS } from "../utils/skillMatcher.js";
-import { buildJobFilter } from "../utils/jobFilters.js";
+import { buildJobFilter, openJobsOnly } from "../utils/jobFilters.js";
 
 // get all jobs
 export const getJobs = async (req, res) => {
@@ -12,7 +12,8 @@ export const getJobs = async (req, res) => {
     return res.status(400).json({ success: false, message: error.message });
   }
   try {
-    const jobs = await Job.find(filter)
+    // Jobs past their application deadline are left out, so they disappear from the site.
+    const jobs = await Job.find(openJobsOnly(filter))
       .populate({
         path: "companyId",
         select: "-password",

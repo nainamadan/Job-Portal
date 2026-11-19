@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ResumeModal from "../components/ResumeModal";
+import JobAlertPreferences from "../components/JobAlertPreferences";
+import ApplicationProgress from "../components/ApplicationProgress";
+import { currentStage, stageBadgeClass, stageInfo } from "../utils/hiringStages";
 import { AppContext } from "../context/AppContext";
 
 const ApplicationDashboard = () => {
@@ -58,18 +61,6 @@ const ApplicationDashboard = () => {
     }
   }, [isSignedIn]);
 
-  const badgeColor = (status) => {
-    switch (status) {
-      case "Accepted":
-        return "bg-green-100 text-green-700";
-      case "Rejected":
-        return "bg-red-100 text-red-700";
-      case "Pending":
-      case "pending":
-      default:
-        return "bg-yellow-100 text-yellow-700";
-    }
-  };
 
   return (
     <div className="bg-slate-100 min-h-screen py-10">
@@ -149,6 +140,8 @@ const ApplicationDashboard = () => {
               )}
 
             </div>
+
+            {isSignedIn && <JobAlertPreferences />}
           </div>
 
           {/* RIGHT */}
@@ -176,13 +169,14 @@ const ApplicationDashboard = () => {
                 {appliedJobs.map((app, index) => {
                   const job = app.jobId || {};
                   const company = app.companyId || {};
-                  const status = app.status || "Pending";
+                  const stage = stageInfo(currentStage(app));
 
                   return (
                     <div
                       key={app._id || index}
-                      className="border rounded-xl p-5 flex justify-between items-center hover:shadow-sm transition"
+                      className="border rounded-xl p-5 hover:shadow-sm transition"
                     >
+                    <div className="flex justify-between items-start gap-3">
                       <div>
                         <div className="flex items-center gap-3">
                           {company.image && (
@@ -214,12 +208,13 @@ const ApplicationDashboard = () => {
                       </div>
 
                       <span
-                        className={`px-4 py-2 rounded-full text-xs font-semibold ${badgeColor(
-                          status
-                        )}`}
+                        className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold ${stageBadgeClass(stage.key)}`}
                       >
-                        {status}
+                        {stage.emoji} {stage.label}
                       </span>
+                    </div>
+
+                    <ApplicationProgress application={app} />
                     </div>
                   );
                 })}

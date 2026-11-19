@@ -5,6 +5,8 @@ import JobApplication from "../models/JobAppliaction.js";
 import { v2 as cloudinary } from "cloudinary";
 import { getAuth } from "@clerk/express";
 import { ensureCandidateProfile } from "../utils/candidateProfile.js";
+import { normalizePreferences } from "../utils/jobAlertMatcher.js";
+import { welcomeForApplication } from "../utils/welcomeMessage.js";
 
 // Helper function to reliably find or provision user in MongoDB
 const findOrCreateUser = ({ userId }) => ensureCandidateProfile(userId);
@@ -183,9 +185,14 @@ export const applyForJob = async (req, res) => {
       companyId: job.companyId,
       jobId,
       date: Date.now(),
+      stage: "applied",
+      stageHistory: [{ stage: "applied", note: "", at: new Date() }],
     });
 
     await jobApplication.save();
+
+    // Start the job-specific chat with this job's recruiter with a welcome message.
+    await welcomeForApplication(jobApplication, { job });
 
     return res.status(201).json({
       success: true,
@@ -383,5 +390,60 @@ export const getSavedJobs = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+
+// ---------------- Job alert preferences ----------------
+// Decide which "new job posted" emails this user receives (see utils/jobAlertMatcher.js).
+
+const currentUserId = (req) => {
+  try {
+    const auth = getAuth(req);
+    if (auth?.userId) return auth.userId;
+  } catch {
+    // Clerk middleware not present.
+  }
+  return req.auth?.userId || null;
+};
+
+const emptyPreferences = { emailAlerts: true, roles: [], skills: [], locations: [], levels: [] };
+
+// GET /api/users/job-preferences
+export const getJobPreferences = async (req, res) => {
+  try {
+    const userId = currentUserId(req);
+    if (!userId) return res.status(401).json({ success: false, message: "Please log in." });
+    const user = await User.findById(userId).select("jobPreferences").lean();
+    res.json({ success: true, preferences: { ...emptyPreferences, ...(user?.jobPreferences || {}) } });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// PUT /api/users/job-preferences  { emailAlerts, roles, skills, locations, levels }
+export const updateJobPreferences = async (req, res) => {
+  try {
+    const userId = currentUserId(req);
+    if (!userId) return res.status(401).json({ success: false, message: "Please log in." });
+
+    let preferences;
+    try {
+      preferences = normalizePreferences(req.body || {});
+    } catch (validationError) {
+      return res.status(400).json({ success: false, message: validationError.message });
+    }
+
+    await findOrCreateUser({ userId });
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      { $set: { jobPreferences: preferences } },
+      { new: true, runValidators: true }
+    ).select("jobPreferences").lean();
+    if (!user) return res.status(404).json({ success: false, message: "Profile not found." });
+
+    res.json({ success: true, message: "Job alert preferences saved.", preferences: user.jobPreferences });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

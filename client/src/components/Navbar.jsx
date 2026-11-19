@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import RecruiterLogin from "./RecruiterLogin";
+import ThemeToggle from "./ThemeToggle";
 import { AppContext } from "../context/AppContext";
 
 import {
@@ -29,12 +30,15 @@ const Navbar = () => {
           <img
             src={assets.logo}
             alt="Logo"
-            className="h-10 sm:h-14 w-auto object-contain"
+            className="theme-logo h-10 sm:h-14 w-auto object-contain"
           />
         </Link>
 
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-2 sm:gap-3">
+
+          {/* Light / dark mode */}
+          <ThemeToggle />
 
           {/* My Applications */}
           <button
@@ -42,6 +46,15 @@ const Navbar = () => {
             className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold transition shadow-sm"
           >
             My Applications
+          </button>
+
+          {/* Messages with recruiters */}
+          <button
+            onClick={() => navigate("/messages")}
+            title="Messages"
+            className="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 text-xs sm:text-sm font-medium transition"
+          >
+            💬<span className="hidden sm:inline ml-1">Messages</span>
           </button>
 
 
