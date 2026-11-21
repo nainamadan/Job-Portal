@@ -818,6 +818,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 import StageUpdateModal from "../components/StageUpdateModal";
+import RecruiterProofVault from "../components/skill-proof/RecruiterProofVault";
 import { ALL_STAGES, MANUAL_STAGES, currentStage, stageBadgeClass, stageInfo } from "../utils/hiringStages";
 
 const SKILLS_LIST = [
@@ -910,6 +911,7 @@ const ViewApplications = () => {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [selectedMatchModal, setSelectedMatchModal] = useState(null);
+  const [proofApplication, setProofApplication] = useState(null);
 
   // Status update modals state
   const [acceptModal, setAcceptModal] = useState(null);
@@ -1080,14 +1082,14 @@ const ViewApplications = () => {
   }, []);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-8 min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
             Applicant Management
           </h2>
           <p className="text-slate-500 text-sm mt-0.5">
-            Review candidate resume AI match scores and take hiring actions.
+            Review resumes, inspect skill proofs and take hiring actions.
           </p>
         </div>
         <span className="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1.5 rounded-full border border-indigo-200">
@@ -1109,8 +1111,8 @@ const ViewApplications = () => {
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-200">
-          <table className="w-full border-collapse text-left text-sm">
+        <div className="table-scroll overflow-x-auto rounded-xl border border-slate-200" tabIndex={0} role="region" aria-label="Candidate applications">
+          <table className="responsive-card-table applicant-table w-full border-collapse text-left text-sm" role="table">
             <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
               <tr>
                 <th className="p-4">#</th>
@@ -1136,12 +1138,12 @@ const ViewApplications = () => {
                     key={application._id || index}
                     className="hover:bg-slate-50/80 transition-colors"
                   >
-                    <td className="px-4 py-4 text-slate-400 font-medium">
+                    <td data-label="#" className="px-4 py-4 text-slate-400 font-medium">
                       {index + 1}
                     </td>
 
                     {/* Candidate */}
-                    <td className="px-4 py-4">
+                    <td data-label="Candidate" className="px-4 py-4">
                       <div className="flex items-center gap-3">
                         <img
                           src={
@@ -1167,7 +1169,7 @@ const ViewApplications = () => {
                     </td>
 
                     {/* Job Title */}
-                    <td className="px-4 py-4 font-semibold text-slate-800">
+                    <td data-label="Applied job" className="px-4 py-4 font-semibold text-slate-800">
                       {job.title || "N/A"}
                       {job.location && (
                         <span className="block text-xs font-normal text-slate-500">
@@ -1177,7 +1179,7 @@ const ViewApplications = () => {
                     </td>
 
                     {/* AI Match Score */}
-                    <td className="px-4 py-4">
+                    <td data-label="Match score" className="px-4 py-4">
                       <button
                         onClick={() =>
                           setSelectedMatchModal({ user, job, match })
@@ -1193,7 +1195,7 @@ const ViewApplications = () => {
                     </td>
 
                     {/* Resume */}
-                    <td className="px-4 py-4">
+                    <td data-label="Resume" className="px-4 py-4">
                       {user.resume && user.resume.trim() !== "" && !user.resume.includes("dummy.pdf") ? (
                         <a
                           href={user.resume}
@@ -1209,11 +1211,14 @@ const ViewApplications = () => {
                           No Resume Uploaded
                         </span>
                       )}
+                      <button type="button" onClick={() => setProofApplication(application)} className="block mt-2 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold border border-indigo-200 whitespace-nowrap">
+                        Review skill proofs
+                      </button>
                     </td>
 
 
                     {/* Hiring stage */}
-                    <td className="px-4 py-4 text-center">
+                    <td data-label="Hiring stage" className="px-4 py-4 text-center">
                       {(() => {
                         const stage = stageInfo(currentStage(application));
                         return (
@@ -1243,7 +1248,7 @@ const ViewApplications = () => {
                     </td>
 
                     {/* Actions */}
-                    <td className="px-4 py-4 text-center">
+                    <td data-label="Actions" className="px-4 py-4 text-center">
                       <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => handleOpenAccept(application)}
@@ -1280,6 +1285,8 @@ const ViewApplications = () => {
         </div>
       )}
 
+      {proofApplication && <RecruiterProofVault key={`${proofApplication._id}-${companyToken}`} application={proofApplication} onClose={() => setProofApplication(null)} />}
+
       {/* Accept & Schedule Interview Modal */}
       {stageModal && (
         <StageUpdateModal
@@ -1293,8 +1300,8 @@ const ViewApplications = () => {
       )}
 
       {acceptModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-7 space-y-5 shadow-2xl border border-slate-200 my-8">
+        <div className="modal-backdrop fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div role="dialog" aria-modal="true" aria-label="Acceptance and interview scheduling" className="modal-panel bg-white rounded-2xl max-w-xl w-full p-6 sm:p-7 space-y-5 shadow-2xl border border-slate-200">
             <div className="flex items-center justify-between border-b pb-4 border-slate-100">
               <div>
                 <span className="text-xs font-extrabold uppercase text-emerald-600 tracking-wider">
@@ -1508,8 +1515,8 @@ const ViewApplications = () => {
 
       {/* Reject Application Modal */}
       {rejectModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 sm:p-7 space-y-5 shadow-2xl border border-slate-200">
+        <div className="modal-backdrop fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div role="dialog" aria-modal="true" aria-label="Application rejection" className="modal-panel bg-white rounded-2xl max-w-md w-full p-6 sm:p-7 space-y-5 shadow-2xl border border-slate-200">
             <div className="flex items-center justify-between border-b pb-4 border-slate-100">
               <div>
                 <span className="text-xs font-extrabold uppercase text-rose-600 tracking-wider">
@@ -1615,8 +1622,8 @@ const ViewApplications = () => {
 
       {/* AI Skill Breakdown Modal */}
       {selectedMatchModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-xl border border-slate-200">
+        <div className="modal-backdrop fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div role="dialog" aria-modal="true" aria-label="Applicant skill breakdown" className="modal-panel bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-xl border border-slate-200">
             <div className="flex items-center justify-between border-b pb-4 border-slate-100">
               <div>
                 <span className="text-xs font-bold uppercase text-indigo-600 tracking-wider">

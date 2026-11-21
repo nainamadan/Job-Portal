@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.61.8",
+    "@xyflow/react": "^13.0.2",
     "axios": "^1.18.1",
     "quill": "^2.0.3",
     "react": "^19.2.6",

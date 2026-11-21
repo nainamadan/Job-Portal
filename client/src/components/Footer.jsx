@@ -11,16 +11,16 @@ const Footer = () => {
     <footer className="border-t border-gray-200 bg-white">
       <div className="w-full px-6 md:px-10 lg:px-16 xl:px-20 py-6 flex flex-col md:flex-row items-center justify-between gap-5">
         {/* Left */}
-        <div className="flex items-center gap-5">
+        <div className="flex flex-col lg:flex-row items-center gap-3 lg:gap-5 min-w-0 text-center lg:text-left">
           <img
             src={assets.logo}
             alt="InsiderJobs"
-            className="theme-logo h-12 w-auto"
+            className="theme-logo w-44 sm:w-52 h-auto shrink-0"
           />
 
-          <span className="text-gray-300 text-3xl hidden md:block">|</span>
+          <span className="text-gray-300 text-3xl hidden lg:block">|</span>
 
-         <p className="text-xl md:text-2xl text-gray-600 font-semibold">
+         <p className="text-sm sm:text-base text-gray-600 font-semibold">
             © {new Date().getFullYear()} InsiderJobs. All rights reserved.
           </p>
         </div>

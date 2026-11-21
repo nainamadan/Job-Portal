@@ -166,11 +166,11 @@ const SavedJobs = () => {
               return (
                 <div
                   key={job._id}
-                  className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between hover:shadow-md transition space-y-4"
+                  className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 flex flex-col justify-between hover:shadow-md transition space-y-4"
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-4">
+                      <div className="flex items-start gap-3 sm:gap-4 min-w-0">
                         {company.image ? (
                           <img
                             src={company.image}
@@ -196,7 +196,7 @@ const SavedJobs = () => {
                       <button
                         onClick={() => handleRemoveSaved(job._id)}
                         title="Remove from saved jobs"
-                        className="text-amber-500 hover:text-rose-600 p-1.5 rounded-lg border border-amber-200 hover:border-rose-300 hover:bg-rose-50 transition"
+                        className="text-amber-500 hover:text-rose-600 shrink-0 w-11 h-11 rounded-lg border border-amber-200 hover:border-rose-300 hover:bg-rose-50 transition"
                       >
                         ★
                       </button>

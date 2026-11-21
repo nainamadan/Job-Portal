@@ -201,7 +201,7 @@ const Applyjob = () => {
       <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-6 items-start">
 
         {/* LEFT */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+        <div className="lg:col-span-2 min-w-0 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-8">
 
           <button
             onClick={() => navigate(-1)}
@@ -260,7 +260,7 @@ const Applyjob = () => {
         </div>
 
         {/* RIGHT */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 h-fit sticky top-6">
+        <div className="min-w-0 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 h-fit lg:sticky lg:top-6">
 
           {submitted ? (
             <div className="text-center py-8">

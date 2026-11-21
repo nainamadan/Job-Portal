@@ -360,9 +360,9 @@ const handleLogoSubmit = async (e) => {
 
   return (
 
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+    <div className="modal-backdrop fixed inset-0 bg-black/50 flex justify-center items-center z-[70]">
 
-      <div className="bg-white rounded-xl w-[420px] p-8">
+      <div role="dialog" aria-modal="true" aria-label={titles[view]} className="modal-panel bg-white rounded-xl w-full max-w-[420px] p-6 sm:p-8">
 
         <div className="flex justify-between items-center">
 

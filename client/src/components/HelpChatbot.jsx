@@ -5,6 +5,22 @@ import { Link } from "react-router-dom";
 // extra keywords that help match questions people type, and the answer.
 // To add a new answer, add one more object to this list.
 const FAQS = [
+  {
+    id: "portfolio-generator",
+    group: "Job seekers",
+    question: "How do I create a portfolio website?",
+    keywords: ["portfolio", "website", "generate", "generator", "personal", "photo"],
+    answer: "Open Portfolio Generator in the navigation menu and sign in. Import a PDF, DOCX or TXT resume, select public GitHub projects, then review your details and choose a style. Add an optional profile photo in the final step and press Generate portfolio. You can save a private draft and download the complete website as an HTML file. It is not published automatically.",
+    link: { to: "/portfolio-generator", label: "Open Portfolio Generator" },
+  },
+  {
+    id: "skill-proof-vault",
+    group: "Job seekers",
+    question: "How can I prove my technical skills?",
+    keywords: ["proof", "vault", "evidence", "prove", "portfolio", "challenge", "github"],
+    answer: "Open Skill Proof Vault in the top bar. Complete a practical challenge or add your own project with source code, optional demo and a description of your contribution. Recruiters at companies you apply to can review the evidence and give feedback. Approval comes from a recruiter; editing a proof clears its previous reviews.",
+    link: { to: "/skill-proof-vault", label: "Open Skill Proof Vault" },
+  },
   // Job seekers
   {
     id: "search",
@@ -239,12 +255,12 @@ const HelpChatbot = () => {
   };
 
   return (
-    <div className="fixed right-4 sm:right-6 bottom-24 md:bottom-6 z-[60] flex flex-col items-end gap-3">
+    <div className="help-chat-widget fixed right-4 sm:right-6 bottom-6 z-40 flex flex-col items-end gap-3">
       {open && (
         <div
           role="dialog"
           aria-label="Help chat"
-          className="hc-pop w-[calc(100vw-2rem)] sm:w-96 h-[min(560px,calc(100vh-9rem))] bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden"
+          className="help-chat-panel hc-pop w-[calc(100vw-2rem)] sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden"
         >
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 flex items-center gap-3">
@@ -371,9 +387,8 @@ const HelpChatbot = () => {
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close help chat" : "Open help chat"}
         aria-expanded={open}
-        className="relative w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 shadow-xl hover:scale-110 transition-transform flex items-center justify-center text-3xl"
+        className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 shadow-xl hover:scale-110 transition-transform flex items-center justify-center text-3xl"
       >
-        {!open && <span className="absolute inset-0 rounded-full bg-blue-500 opacity-40 animate-ping" />}
         <span className={`relative ${open ? "" : "hc-wave"}`}>{open ? "✖️" : "🤖"}</span>
         {!open && (
           <span className="absolute -top-1 -right-1 text-lg bg-white rounded-full w-7 h-7 flex items-center justify-center shadow">

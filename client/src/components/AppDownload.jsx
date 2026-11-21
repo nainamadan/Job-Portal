@@ -6,7 +6,7 @@ const AppDownload = () => {
     <section className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-6">
         {/* CARD */}
-        <div className="bg-gray-50 shadow-lg rounded-2xl p-10 md:p-14 flex flex-col md:flex-row items-center gap-12">
+        <div className="bg-gray-50 shadow-lg rounded-2xl p-6 sm:p-10 md:p-14 flex flex-col md:flex-row items-center gap-8 lg:gap-12">
           {/* LEFT CONTENT */}
           <div className="flex-1 text-center md:text-left">
             <h2 className="text-3xl md:text-5xl font-bold text-gray-800 leading-tight">

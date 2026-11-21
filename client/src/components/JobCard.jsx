@@ -8,7 +8,7 @@ const JobCard = ({ job }) => {
    <div
   className="
     w-full
-    max-w-[420px]
+    min-w-0
     bg-white
     border border-gray-200
     rounded-xl
@@ -21,14 +21,14 @@ const JobCard = ({ job }) => {
   "
 >
       {/* COMPANY + TITLE */}
-      <div className="flex items-center gap-4 mb-5">
+      <div className="flex items-start gap-3 sm:gap-4 mb-5">
        <img
   src={job.companyId.image}
   alt={job.companyId.name}
-  className="w-14 h-14 object-contain"
+  className="w-12 h-12 sm:w-14 sm:h-14 object-contain shrink-0"
 />
 
-        <div>
+        <div className="min-w-0">
           <h3 className="font-semibold text-xl text-gray-800 line-clamp-1">
             {job.title}
           </h3>

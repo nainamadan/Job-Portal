@@ -83,7 +83,7 @@ const MessageRecruiterModal = ({ job, open, onClose }) => {
         role="dialog"
         aria-label={`Message ${company.name || "the recruiter"}`}
         onClick={(e) => e.stopPropagation()}
-        className="w-full sm:max-w-lg h-[85vh] sm:h-[600px] bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+        className="recruiter-chat-panel w-full sm:max-w-lg bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden"
       >
         <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-4 py-3 flex items-center gap-3">
           {company.image ? (

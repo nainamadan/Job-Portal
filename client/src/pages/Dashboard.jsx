@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
@@ -23,22 +23,24 @@ const Dashboard = () => {
 
       {/* Top Navbar */}
 
-      <div className="h-16 bg-white border-b flex items-center justify-between px-8">
+      <div className="dashboard-header min-h-16 bg-white border-b flex items-center justify-between gap-3 px-4 sm:px-6 py-3">
 
         <img
           src={assets.logo}
-          className="theme-logo h-10 cursor-pointer"
+          className="theme-logo w-32 sm:w-44 h-auto cursor-pointer shrink-0"
           alt="Logo"
           onClick={() => navigate("/")}
         />
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         <ThemeToggle />
         <div className="relative">
 
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="flex items-center gap-3"
+            className="flex items-center gap-3 min-w-0"
+            aria-label="Company account menu"
+            aria-expanded={showMenu}
           >
 
             {/* Company Logo */}
@@ -49,14 +51,14 @@ const Dashboard = () => {
             />
 
             {/* Company Name */}
-            <p className="font-medium">
+            <p className="hidden sm:block font-medium truncate max-w-48 lg:max-w-64">
               {companyData?.name || companyData?.companyName || "Recruiter"}
             </p>
 
           </button>
 
           {showMenu && (
-            <div className="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-lg border">
+            <div className="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-lg border z-50">
 
               <button className="w-full text-left px-5 py-3 hover:bg-gray-100">
                 My Profile
@@ -79,11 +81,11 @@ const Dashboard = () => {
 
       {/* Main */}
 
-      <div className="flex">
+      <div className="flex flex-col md:flex-row min-w-0">
 
         {/* Sidebar */}
 
-        <div className="w-64 bg-white border-r min-h-[calc(100vh-64px)]">
+        <nav aria-label="Recruiter navigation" className="dashboard-nav grid grid-cols-2 md:flex md:flex-col md:w-48 lg:w-56 shrink-0 bg-white border-b md:border-b-0 md:border-r md:min-h-[calc(100dvh-64px)]">
 
           <NavLink
             to="/dashboard/manage-jobs"
@@ -157,15 +159,15 @@ const Dashboard = () => {
             <span>Messages</span>
           </NavLink>
 
-        </div>
+        </nav>
 
         {/* Page */}
 
-        <div className="flex-1 p-8">
+        <main className="dashboard-content flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
 
           <Outlet />
 
-        </div>
+        </main>
 
       </div>
 

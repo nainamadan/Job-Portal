@@ -28,6 +28,8 @@ const ApplicationProgress = ({ application }) => {
   return (
     <div className="mt-4">
       {/* Steps */}
+      <p className="md:hidden text-[11px] text-slate-500 mb-1">Swipe to see all hiring stages →</p>
+      <div className="application-steps" tabIndex={0} role="region" aria-label="Hiring stages, swipe or scroll to see all stages">
       <ol className="flex items-start" aria-label="Application progress">
         {STAGES.map((s, i) => {
           const done = i < reachedIndex || (!rejected && i === reachedIndex);
@@ -65,6 +67,7 @@ const ApplicationProgress = ({ application }) => {
           );
         })}
       </ol>
+      </div>
 
       {/* Current status message */}
       <div

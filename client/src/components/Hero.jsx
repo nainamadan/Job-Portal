@@ -6,7 +6,6 @@ import { AppContext } from "../context/AppContext";
 const Hero = () => {
   const { searchFilter, setSearchFilter, setIsSearched } =
     useContext(AppContext);
-const listingRef = useRef(null);
   const titleRef = useRef(null);
   const locRef = useRef(null);
 
@@ -24,29 +23,18 @@ const listingRef = useRef(null);
     setSearchFilter(searchData);
     setIsSearched(true);
 
-    console.log("Search Data:", searchData);
+    requestAnimationFrame(() => document.getElementById("job-listing")?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
-setTimeout(() => {
-  const section = document.getElementById("job-listing");
-
-  if (section) {
-    section.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  }
-}, 100);
   return (
     <>
       <div className="px-4 sm:px-6 lg:px-12 py-6">
 
-        <section className="bg-gradient-to-r from-sky-300 via-blue-500 to-blue-800 min-h-[70vh] flex items-center rounded-2xl sm:rounded-3xl shadow-xl">
+        <section className="bg-gradient-to-r from-sky-300 via-blue-500 to-blue-800 min-h-[70svh] py-10 sm:py-14 flex items-center rounded-2xl sm:rounded-3xl shadow-xl">
 
           <div 
-           ref={listingRef}
           className="max-w-7xl mx-auto px-4 sm:px-6 w-full flex justify-center">
 
-            <div className="max-w-4xl text-white text-center">
+            <div className="w-full min-w-0 max-w-4xl text-white text-center">
 
               {/* Heading */}
               <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight">
@@ -66,26 +54,26 @@ setTimeout(() => {
               <div className="mt-8 sm:mt-10 bg-white rounded-xl p-3 flex flex-col md:flex-row gap-3 shadow-xl max-w-4xl mx-auto">
 
                 {/* Job Search */}
-                <div className="flex items-center flex-1 px-3 sm:px-4 border border-gray-200 rounded-lg">
+                <div className="flex items-center flex-1 min-w-0 px-3 sm:px-4 border border-gray-200 rounded-lg">
                   <FaSearch className="text-gray-500" size={18} />
 
                   <input
                     ref={titleRef}
                     type="text"
                     placeholder="Search jobs..."
-                    className="w-full px-2 sm:px-3 py-2 sm:py-3 outline-none text-gray-700"
+                    className="min-w-0 w-full px-2 sm:px-3 py-2 sm:py-3 outline-none text-gray-700"
                   />
                 </div>
 
                 {/* Location */}
-                <div className="flex items-center flex-1 px-3 sm:px-4 border border-gray-200 rounded-lg">
+                <div className="flex items-center flex-1 min-w-0 px-3 sm:px-4 border border-gray-200 rounded-lg">
                   <FaMapMarkerAlt className="text-gray-500" size={18} />
 
                   <input
                     ref={locRef}
                     type="text"
                     placeholder="Location"
-                    className="w-full px-2 sm:px-3 py-2 sm:py-3 outline-none text-gray-700"
+                    className="min-w-0 w-full px-2 sm:px-3 py-2 sm:py-3 outline-none text-gray-700"
                   />
                 </div>
 

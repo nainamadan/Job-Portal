@@ -17,12 +17,12 @@ const StageUpdateModal = ({ application, stage, saving, onCancel, onConfirm }) =
   const name = application.userId?.name || "the candidate";
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onCancel}>
+    <div className="modal-backdrop fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onCancel}>
       <div
         role="dialog"
         aria-label={`Move to ${info.label}`}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden"
+        className="modal-panel w-full max-w-md bg-white rounded-2xl shadow-2xl"
       >
         <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-5 py-4">
           <p className="text-xs text-indigo-100">Update hiring progress</p>

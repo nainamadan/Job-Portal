@@ -64,10 +64,10 @@ const ResumeModal = ({ open, onClose, existingResume, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4">
-      <div className="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden">
+    <div className="modal-backdrop fixed inset-0 bg-black/50 flex justify-center items-center z-[70] px-4">
+      <div role="dialog" aria-modal="true" aria-label="My resume" className="modal-panel bg-white w-full max-w-xl rounded-2xl shadow-2xl">
         {/* Header */}
-        <div className="flex justify-between items-center px-8 py-6 border-b">
+        <div className="flex justify-between items-center px-4 sm:px-8 py-5 border-b">
           <h2 className="text-2xl font-bold text-gray-800">My Resume</h2>
 
           <button
@@ -79,13 +79,13 @@ const ResumeModal = ({ open, onClose, existingResume, onSuccess }) => {
         </div>
 
         {/* Body */}
-        <div className="p-8">
+        <div className="p-4 sm:p-8">
           {loading ? (
             <div className="py-12 text-center text-blue-600 font-medium">
               Uploading resume to cloud...
             </div>
           ) : !existingResume && !resumeFile ? (
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-10 text-center">
+            <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 sm:p-10 text-center">
               <div className="text-6xl mb-4">📄</div>
 
               <h3 className="text-xl font-semibold">No Resume Uploaded</h3>
@@ -108,7 +108,7 @@ const ResumeModal = ({ open, onClose, existingResume, onSuccess }) => {
               </label>
             </div>
           ) : (
-            <div className="border rounded-xl p-8 text-center bg-gray-50">
+            <div className="border rounded-xl p-4 sm:p-8 text-center bg-gray-50">
               <div className="text-6xl mb-4">📄</div>
 
               <h3 className="text-xl font-bold text-gray-800">
@@ -121,7 +121,7 @@ const ResumeModal = ({ open, onClose, existingResume, onSuccess }) => {
                 </p>
               )}
 
-              <div className="flex justify-center gap-4 mt-8">
+              <div className="flex flex-col sm:flex-row justify-center gap-3 mt-6">
                 <button
                   onClick={existingResume ? handleViewExisting : handleViewLocal}
                   className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition font-medium"

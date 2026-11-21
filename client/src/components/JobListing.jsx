@@ -436,7 +436,9 @@ const JobListing = () => {
       {/* MOBILE FILTER BUTTON */}
       <button
         onClick={() => setShowFilters(true)}
-        className="md:hidden fixed bottom-5 right-5 bg-blue-600 text-white px-5 py-3 rounded-full shadow-lg z-50"
+        aria-expanded={showFilters}
+        aria-controls="job-filters"
+        className="mobile-filter-trigger md:hidden fixed bottom-5 left-4 bg-blue-600 text-white px-5 py-3 rounded-full shadow-lg z-30"
       >
         Filters
       </button>
@@ -451,7 +453,10 @@ const JobListing = () => {
 
       {/* SIDEBAR */}
       <div
+        id="job-filters"
+        aria-label="Job filters"
         className={`
+          job-filter-panel ${showFilters ? "is-open" : ""}
           fixed md:static top-0 left-0 h-full md:h-auto bg-white z-50 md:z-auto
           w-72 p-5 md:p-0 shrink-0 md:-ml-6 overflow-y-auto
           transform transition-transform duration-300
@@ -464,7 +469,8 @@ const JobListing = () => {
           <h2 className="text-lg font-bold">Filters</h2>
           <button
             onClick={() => setShowFilters(false)}
-            className="text-2xl"
+            aria-label="Close job filters"
+            className="text-2xl p-2 min-h-11 min-w-11"
           >
             ✕
           </button>
@@ -649,13 +655,13 @@ const JobListing = () => {
 
         {searchError && <p role="alert" className="text-red-600 mb-4">{searchError} <button className="underline" onClick={clearSearch}>Reset and retry</button></p>}
         {/* JOB GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
           {!loading && !searchError && (currentJobs.length > 0 ? (
             currentJobs.map((job) => (
               <JobCard key={job._id} job={job} />
             ))
           ) : (
-            <div className="col-span-3 py-20 text-center">
+            <div className="col-span-full py-20 text-center">
               <h2 className="text-3xl font-bold">No Jobs Found</h2>
               <p className="text-gray-500 mt-3">
                 Try another salary range or remove filters.
@@ -666,7 +672,7 @@ const JobListing = () => {
 
         {/* PAGINATION */}
         {totalPages > 1 && (
-          <div className="flex justify-center gap-2 mt-10">
+          <div className="flex flex-wrap justify-center gap-2 mt-10">
             <button
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((prev) => prev - 1)}

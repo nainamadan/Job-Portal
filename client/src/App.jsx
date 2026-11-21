@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { lazy, Suspense, useContext } from "react";
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,6 +20,10 @@ import AddJob from "./pages/AddJob";
 import ManageJobs from "./pages/ManageJobs";
 import ViewApplications from "./pages/ViewApplications";
 import { AppContext } from "./context/AppContext";
+
+const LearningRoadmap = lazy(() => import("./pages/LearningRoadmap"));
+const SkillProofVault = lazy(() => import("./pages/SkillProofVault"));
+const PortfolioGenerator = lazy(() => import("./pages/PortfolioGenerator"));
 
 const App = () => {
   const location = useLocation();
@@ -43,6 +47,9 @@ const App = () => {
         <Route path="/my-applications" element={<ApplicationDashboard />} />
         <Route path="/saved-jobs" element={<SavedJobs />} />
         <Route path="/messages" element={<Messages />} />
+        <Route path="/skill-proof-vault" element={<Suspense fallback={<div className="p-12 text-center" role="status">Loading Skill Proof Vault…</div>}><SkillProofVault /></Suspense>} />
+        <Route path="/portfolio-generator" element={<Suspense fallback={<div className="p-12 text-center" role="status">Loading Portfolio Generator…</div>}><PortfolioGenerator /></Suspense>} />
+        <Route path="/learning-roadmap/:roadmapId?" element={<Suspense fallback={<div className="p-12 text-center" role="status">Loading learning roadmap…</div>}><LearningRoadmap /></Suspense>} />
 
 
 

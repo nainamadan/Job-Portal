@@ -61,8 +61,8 @@ const ManageJobs = () => {
   }, []);
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <h2 className="text-2xl font-semibold">Manage Jobs</h2>
 
         <button
@@ -88,8 +88,8 @@ const ManageJobs = () => {
           </button>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="table-scroll overflow-x-auto" tabIndex={0} role="region" aria-label="Posted jobs">
+          <table className="responsive-card-table jobs-table w-full" role="table">
             <thead className="bg-gray-100 text-gray-700">
               <tr>
                 <th className="px-5 py-3 text-left">#</th>
@@ -107,9 +107,9 @@ const ManageJobs = () => {
                   key={job._id || job.id || index}
                   className="border-b hover:bg-gray-50 transition"
                 >
-                  <td className="px-5 py-4">{index + 1}</td>
+                  <td data-label="#" className="px-5 py-4">{index + 1}</td>
 
-                  <td className="px-5 py-4 font-medium">
+                  <td data-label="Job title" className="px-5 py-4 font-medium">
                     {job.title}
                     {!isJobOpen(job) && (
                       <span
@@ -121,7 +121,7 @@ const ManageJobs = () => {
                     )}
                   </td>
 
-                  <td className="px-5 py-4">
+                  <td data-label="Date" className="px-5 py-4">
                     {job.date
                       ? new Date(job.date).toLocaleDateString("en-GB", {
                           day: "2-digit",
@@ -131,16 +131,17 @@ const ManageJobs = () => {
                       : "N/A"}
                   </td>
 
-                  <td className="px-5 py-4">{job.location}</td>
+                  <td data-label="Location" className="px-5 py-4">{job.location}</td>
 
-                  <td className="px-5 py-4 text-center">
+                  <td data-label="Applicants" className="px-5 py-4 text-center">
                     {job.applicants ?? 0}
                   </td>
 
-                  <td className="px-5 py-4 text-center">
+                  <td data-label="Visible" className="px-5 py-4 text-center">
                     <input
                       type="checkbox"
                       checked={!!job.visible}
+                      aria-label={`Show ${job.title} in public listings`}
                       onChange={() => changeJobVisibility(job._id)}
                       className="w-5 h-5 accent-blue-600 cursor-pointer"
                     />

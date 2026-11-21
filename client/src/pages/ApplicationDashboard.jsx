@@ -67,7 +67,7 @@ const ApplicationDashboard = () => {
       <div className="max-w-7xl mx-auto px-5">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
   <div>
-    <h1 className="text-4xl font-bold">My Applications</h1>
+    <h1 className="text-3xl sm:text-4xl font-bold">My Applications</h1>
 
     <p className="text-gray-500 mt-2">
       Track applications and manage resume.
@@ -145,7 +145,7 @@ const ApplicationDashboard = () => {
           </div>
 
           {/* RIGHT */}
-          <div className="lg:col-span-2 bg-white rounded-xl shadow p-6">
+          <div className="lg:col-span-2 min-w-0 bg-white rounded-xl shadow p-4 sm:p-6">
             <h2 className="text-2xl font-bold mb-6">Applied Jobs</h2>
 
             {loading ? (
@@ -174,9 +174,9 @@ const ApplicationDashboard = () => {
                   return (
                     <div
                       key={app._id || index}
-                      className="border rounded-xl p-5 hover:shadow-sm transition"
+                      className="border rounded-xl p-4 sm:p-5 hover:shadow-sm transition"
                     >
-                    <div className="flex justify-between items-start gap-3">
+                    <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
                       <div>
                         <div className="flex items-center gap-3">
                           {company.image && (

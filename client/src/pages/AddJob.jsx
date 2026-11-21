@@ -855,7 +855,7 @@ const AddJob = () => {
   };
 
   return (
-    <div className="max-w-5xl bg-white rounded-2xl shadow-md p-8">
+    <div className="w-full min-w-0 max-w-5xl bg-white rounded-2xl shadow-md p-4 sm:p-8">
 
       <h1 className="text-3xl font-bold mb-2">
         Add New Job

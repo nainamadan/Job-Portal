@@ -129,9 +129,9 @@ const MessagesInbox = ({ side, getHeaders }) => {
   const companyName = (c) => (isUser ? c.company?.name : null);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex h-[calc(100vh-12rem)] min-h-[480px]">
+    <div className="messages-inbox bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex min-w-0">
       {/* Conversation list */}
-      <aside className={`${active ? "hidden md:flex" : "flex"} w-full md:w-80 border-r border-slate-200 flex-col min-h-0`}>
+      <aside className={`${active ? "hidden lg:flex" : "flex"} w-full lg:w-72 border-r border-slate-200 flex-col min-h-0`}>
         <div className="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
           <h2 className="font-bold text-slate-900">💬 {isUser ? "Your job chats" : "Candidate chats"}</h2>
           <button onClick={() => loadList()} title="Refresh" aria-label="Refresh" className="text-slate-500 hover:text-indigo-600">
@@ -214,7 +214,7 @@ const MessagesInbox = ({ side, getHeaders }) => {
       </aside>
 
       {/* Chat */}
-      <section className={`${active ? "flex" : "hidden md:flex"} flex-1 flex-col min-w-0 min-h-0`}>
+      <section className={`${active ? "flex" : "hidden lg:flex"} flex-1 flex-col min-w-0 min-h-0`}>
         {!active ? (
           <div className="flex-1 flex flex-col items-center justify-center text-slate-500 text-sm p-6 text-center">
             <span className="text-5xl mb-3">💬</span>
@@ -223,7 +223,7 @@ const MessagesInbox = ({ side, getHeaders }) => {
         ) : (
           <>
             <div className="px-4 py-3 border-b border-slate-200 flex items-center gap-3">
-              <button onClick={() => setActive(null)} className="md:hidden text-slate-600 text-lg" aria-label="Back">
+              <button onClick={() => setActive(null)} className="lg:hidden text-slate-600 text-lg min-w-9" aria-label="Back to conversations">
                 ←
               </button>
               <Avatar who={activeWho} size="w-9 h-9" />

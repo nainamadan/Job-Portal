@@ -13,6 +13,9 @@ import jobRoutes from "./routes/jobRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
+import roadmapRoutes from "./routes/roadmapRoutes.js";
+import skillProofRoutes from "./routes/skillProofRoutes.js";
+import portfolioRoutes from "./routes/portfolioRoutes.js";
 import {clerkMiddleware} from "@clerk/express";
 
 import path from "path";
@@ -85,6 +88,9 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/users', userRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/resume", resumeRoutes);
+app.use("/api/roadmaps", roadmapRoutes);
+app.use("/api/skill-proofs", skillProofRoutes);
+app.use("/api/portfolios", portfolioRoutes);
 
 // Sentry Error Handler (Keep this at the end)
 Sentry.setupExpressErrorHandler(app);

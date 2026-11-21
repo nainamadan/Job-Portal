@@ -1310,7 +1310,7 @@ const JobDetails = () => {
         <div className="lg:col-span-2 space-y-6 min-w-0 w-full">
 
           {/* JOB HEADER */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-8">
 
             <button
               onClick={() => navigate(-1)}
@@ -1322,9 +1322,9 @@ const JobDetails = () => {
               Back to jobs
             </button>
 
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
 
-              <div className="flex items-start gap-5">
+              <div className="flex items-start gap-3 sm:gap-5">
 
                 {job.companyId?.image ? (
                   <img
